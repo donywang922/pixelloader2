@@ -31,5 +31,6 @@
   "pixelLoader.LoadingThread.start": "start",
   "pixelLoader.LoadingThread.stop": "stop",
   "pixelLoader.LoadingThread.finish": "finish",
-  "pixelLoader.LoadingThread.fill": "The thread queue is full"
+  "pixelLoader.LoadingThread.fill": "The thread queue is full",
+  "pixelLoader.projector.screen": "Projector"
 }

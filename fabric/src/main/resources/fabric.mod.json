@@ -15,6 +15,9 @@
   "entrypoints": {
     "main": [
       "com.ywsuoyi.pixelloader.fabric.PixelLoaderFabric"
+    ],
+    "client": [
+      "com.ywsuoyi.pixelloader.fabric.PixelLoaderFabricClient"
     ]
   },
   "depends": {

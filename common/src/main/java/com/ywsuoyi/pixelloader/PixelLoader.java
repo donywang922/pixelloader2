@@ -1,10 +1,16 @@
 package com.ywsuoyi.pixelloader;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+
+import java.util.function.Supplier;
 
 public class PixelLoader {
     public static final String MOD_ID = "pixelloader";
@@ -19,9 +25,23 @@ public class PixelLoader {
     public static final TraceCenterBlock traceCenterBlock = new TraceCenterBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
     public static final Item traceCenterBlockItem = new BlockItem(traceCenterBlock, new Item.Properties().tab(getTAB()));
 
+    public static final ProjectorBlock projectorBlock = new ProjectorBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
+    public static final Item projectorBlockItem = new BlockItem(projectorBlock, new Item.Properties().tab(getTAB()));
+    public static final BlockEntityType<ProjectorBlockEntity> projectorBlockEntity = buildBlockEntity(ProjectorBlockEntity::new, projectorBlock);
+
     @ExpectPlatform
     public static CreativeModeTab getTAB() {
         throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static <T extends BlockEntity> BlockEntityType<T> buildBlockEntity(Factory<T> entity, Block block) {
+        throw new AssertionError();
+    }
+
+    @FunctionalInterface
+    public interface Factory<T extends BlockEntity> {
+        T create(BlockPos blockPos, BlockState blockState);
     }
 
     public static void init() {

@@ -31,5 +31,6 @@
   "pixelLoader.LoadingThread.start": "开始",
   "pixelLoader.LoadingThread.stop": "停止",
   "pixelLoader.LoadingThread.finish": "完成",
-  "pixelLoader.LoadingThread.fill": "线程列队已满"
+  "pixelLoader.LoadingThread.fill": "线程列队已满",
+  "pixelLoader.projector.screen": "投影块"
 }
