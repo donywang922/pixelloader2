@@ -1,0 +1,470 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "pixelloader:block/tracecenterblock"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": 90
+      },
+      "when": {
+        "pointx": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": -90
+      },
+      "when": {
+        "pointx": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "x": -90
+      },
+      "when": {
+        "pointx": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "x": 90
+      },
+      "when": {
+        "pointx": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": 180
+      },
+      "when": {
+        "pointx": "5"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface"
+      },
+      "when": {
+        "pointx": "6"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge"
+      },
+      "when": {
+        "pointx": "7"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180
+      },
+      "when": {
+        "pointx": "8"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": -90
+      },
+      "when": {
+        "pointx": "9"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 90
+      },
+      "when": {
+        "pointx": "10"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 180
+      },
+      "when": {
+        "pointx": "11"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 180,
+        "x": 180
+      },
+      "when": {
+        "pointx": "12"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "pointx": "13"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 90,
+        "y": -90
+      },
+      "when": {
+        "pointx": "14"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 90
+      },
+      "when": {
+        "pointx": "15"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": -90
+      },
+      "when": {
+        "pointx": "16"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180,
+        "y": 90
+      },
+      "when": {
+        "pointx": "17"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180,
+        "y": -90
+      },
+      "when": {
+        "pointx": "18"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner"
+      },
+      "when": {
+        "pointx": "19"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": -90
+      },
+      "when": {
+        "pointx": "20"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90
+      },
+      "when": {
+        "pointx": "21"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": -90
+      },
+      "when": {
+        "pointx": "22"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": 90
+      },
+      "when": {
+        "pointx": "23"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": 180
+      },
+      "when": {
+        "pointx": "24"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "pointx": "25"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": 180
+      },
+      "when": {
+        "pointx": "26"
+      }
+    },{
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": 90
+      },
+      "when": {
+        "pointy": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": -90
+      },
+      "when": {
+        "pointy": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "x": -90
+      },
+      "when": {
+        "pointy": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "x": 90
+      },
+      "when": {
+        "pointy": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface",
+        "y": 180
+      },
+      "when": {
+        "pointy": "5"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineface"
+      },
+      "when": {
+        "pointy": "6"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge"
+      },
+      "when": {
+        "pointy": "7"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180
+      },
+      "when": {
+        "pointy": "8"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": -90
+      },
+      "when": {
+        "pointy": "9"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 90
+      },
+      "when": {
+        "pointy": "10"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 180
+      },
+      "when": {
+        "pointy": "11"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 180,
+        "x": 180
+      },
+      "when": {
+        "pointy": "12"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "pointy": "13"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 90,
+        "y": -90
+      },
+      "when": {
+        "pointy": "14"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": 90
+      },
+      "when": {
+        "pointy": "15"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "y": -90
+      },
+      "when": {
+        "pointy": "16"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180,
+        "y": 90
+      },
+      "when": {
+        "pointy": "17"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixelloader:block/tracelineedge",
+        "x": 180,
+        "y": -90
+      },
+      "when": {
+        "pointy": "18"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner"
+      },
+      "when": {
+        "pointy": "19"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": -90
+      },
+      "when": {
+        "pointy": "20"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90
+      },
+      "when": {
+        "pointy": "21"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": -90
+      },
+      "when": {
+        "pointy": "22"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": 90
+      },
+      "when": {
+        "pointy": "23"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "y": 180
+      },
+      "when": {
+        "pointy": "24"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "pointy": "25"
+      }
+    },    {
+      "apply": {
+        "model": "pixelloader:block/tracelinecorner",
+        "x": -90,
+        "y": 180
+      },
+      "when": {
+        "pointy": "26"
+      }
+    }
+  ]
+}

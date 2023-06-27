@@ -1,0 +1,29 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "pixelloader"
+version = "${version}"
+displayName = "Pixel Loader"
+authors = "YWsuoyi"
+description = '''
+In game pixel art generator.
+Can automatically load blocks in minecraft and other mods.
+'''
+#logoFile = ""
+
+[[dependencies.pixelloader]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.pixelloader]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.2]"
+ordering = "NONE"
+side = "BOTH"

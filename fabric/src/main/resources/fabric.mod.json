@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "pixelloader",
+  "version": "${version}",
+  "name": "Pixel Loader",
+  "description": "In game pixel art generator.\nCan automatically load blocks in minecraft and other mods.",
+  "authors": [
+    "YWsuoyi"
+  ],
+  "contact": {
+  },
+  "license": "MIT",
+  "icon": "assets/pixelloader/textures/item/coloredblockloader.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.ywsuoyi.pixelloader.fabric.PixelLoaderFabric"
+    ]
+  },
+  "depends": {
+    "fabric": "*",
+    "minecraft": "=1.19.2"
+  }
+}

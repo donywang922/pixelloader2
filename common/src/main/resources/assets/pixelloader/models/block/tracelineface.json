@@ -1,0 +1,30 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "pixelloader:block/traceblock",
+		"particle": "pixelloader:block/traceblock"
+	},
+	"elements": [
+		{
+			"from": [7.5, 7.5, -7],
+			"to": [8.5, 8.5, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [15, 15, 16, 16], "texture": "#0"},
+				"east": {"uv": [2, 15, 16, 16], "texture": "#0"},
+				"south": {"uv": [2, 15, 3, 16], "texture": "#0"},
+				"west": {"uv": [16, 15, 2, 16], "texture": "#0"},
+				"up": {"uv": [2, 15, 16, 16], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [2, 15, 16, 16], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}
