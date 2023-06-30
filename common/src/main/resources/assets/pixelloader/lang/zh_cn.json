@@ -32,12 +32,15 @@
   "pixelLoader.LoadingThread.stop": "停止",
   "pixelLoader.LoadingThread.finish": "完成",
   "pixelLoader.LoadingThread.fill": "线程列队已满",
-
   "pixelLoader.projector.screen": "投影块",
   "pixelLoader.projector.screen.roll": "翻滚角",
   "pixelLoader.projector.screen.yaw": "偏航角",
   "pixelLoader.projector.screen.pitch": "俯仰角",
   "pixelLoader.projector.screen.scale": "缩放",
   "pixelLoader.projector.screen.hintA": "拖拽 滚动 输入",
-  "pixelLoader.projector.screen.hintB": "按住SHIFT精细调整"
+  "pixelLoader.projector.screen.hintB": "按住SHIFT精细调整",
+  "pixelLoader.projector.screen.load": "生成",
+  "pixelLoader.projector.screen.place": "放置",
+  "pixelLoader.projector.screen.save": "保存nbt",
+  "pixelLoader.waiting": "等待……"
 }

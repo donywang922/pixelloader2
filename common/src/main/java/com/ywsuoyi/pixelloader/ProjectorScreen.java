@@ -1,6 +1,7 @@
 package com.ywsuoyi.pixelloader;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,10 @@ public class ProjectorScreen extends Screen {
     public NumberEditBox yaw;
     public NumberEditBox pitch;
     public NumberEditBox scale;
+
+    public Button load;
+    public Button place;
+    public Button save;
 
     protected ProjectorScreen(BlockPos pos, Player player) {
         super(Component.translatable("pixelLoader.projector.screen"));
@@ -43,15 +48,36 @@ public class ProjectorScreen extends Screen {
         yaw.setResponder(this::updateAngle);
         pitch.setResponder(this::updateAngle);
         scale.setResponder(this::updateAngle);
+
+        load = addRenderableWidget(new Button(this.width - 100, 130, 80, 20, Component.translatable("pixelLoader.projector.screen.load"), p -> {
+            if (setting.state == ProjectorSetting.LoadState.Select) {
+                setting.state = ProjectorSetting.LoadState.WaitStart;
+            }
+        }));
+        place = addRenderableWidget(new Button(this.width - 100, 130, 80, 20, Component.translatable("pixelLoader.projector.screen.place"), p -> {
+            if (setting.state == ProjectorSetting.LoadState.Finish)
+                setting.state = ProjectorSetting.LoadState.Placing;
+        }));
+        save = addRenderableWidget(new Button(this.width - 100, 160, 80, 20, Component.translatable("pixelLoader.projector.screen.save"), p -> {
+        }));
     }
 
     @Override
     public void tick() {
         super.tick();
+        boolean editable = setting.state == ProjectorSetting.LoadState.Select;
+        load.visible = editable;
+        place.visible = setting.state == ProjectorSetting.LoadState.Finish;
+        save.visible = place.visible || setting.state == ProjectorSetting.LoadState.Done;
         roll.tick();
         yaw.tick();
         pitch.tick();
         scale.tick();
+        roll.setEditable(editable);
+        yaw.setEditable(editable);
+        pitch.setEditable(editable);
+        scale.setEditable(editable);
+
     }
 
     @Override
@@ -60,16 +86,19 @@ public class ProjectorScreen extends Screen {
         yaw.setFocus(false);
         pitch.setFocus(false);
         scale.setFocus(false);
-        Component s = setting.getFileText();
-        if (d > this.width - 20 - this.font.width(s) && e > 60 && e < 80) {
-            setting.addindex();
-            return true;
+        if (setting.state == ProjectorSetting.LoadState.Select) {
+            Component s = setting.getFileText();
+            if (d > this.width - 20 - this.font.width(s) && e > 60 && e < 80) {
+                setting.addindex();
+                return true;
+            }
         }
         return super.mouseClicked(d, e, i);
     }
 
     @Override
     public boolean mouseDragged(double d, double e, int i, double f, double g) {
+        if (setting.state != ProjectorSetting.LoadState.Select) return true;
         boolean cot = super.mouseDragged(d, e, i, f, g);
         if (!cot) {
             try {
@@ -104,6 +133,8 @@ public class ProjectorScreen extends Screen {
         drawString(poseStack, this.font, s, this.width - 20 - this.font.width(s), 70, 0xd5b767);
         String sz = setting.width + " " + setting.height;
         drawString(poseStack, this.font, sz, this.width - 20 - this.font.width(sz), 90, 0xFFFFFF);
+        if (setting.state != ProjectorSetting.LoadState.Finish && setting.state != ProjectorSetting.LoadState.Done)
+            drawString(poseStack, this.font, setting.message, this.width - 20 - this.font.width(setting.message.getVisualOrderText()), 160, 0xaa0000);
     }
 
     @Override
@@ -118,6 +149,7 @@ public class ProjectorScreen extends Screen {
     }
 
     public void updateAngle(String s) {
-        setting.set(roll.getValue(), yaw.getValue(), pitch.getValue(), scale.getValue(), player);
+        if (setting.state == ProjectorSetting.LoadState.Select)
+            setting.set(roll.getValue(), yaw.getValue(), pitch.getValue(), scale.getValue(), player);
     }
 }

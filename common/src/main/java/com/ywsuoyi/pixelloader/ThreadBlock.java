@@ -52,7 +52,7 @@ public class ThreadBlock extends Block {
     @Override
     public @NotNull InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (Setting.threads.containsKey(state.getValue(threadNO)))
-            player.displayClientMessage(Component.nullToEmpty(Setting.threads.get(state.getValue(threadNO)).message), true);
+            player.displayClientMessage(Setting.threads.get(state.getValue(threadNO)).message, true);
         return InteractionResult.SUCCESS;
     }
 
@@ -62,8 +62,7 @@ public class ThreadBlock extends Block {
         if (Setting.threads.containsKey(world.getBlockState(pos).getValue(threadNO)))
             if (entity instanceof Player)
                 ((Player) entity).displayClientMessage(
-                        Component.nullToEmpty(Setting.threads.get(
-                                world.getBlockState(pos).getValue(threadNO)).message), true);
+                        Setting.threads.get(world.getBlockState(pos).getValue(threadNO)).message, true);
         super.stepOn(world, pos, blockState, entity);
     }
 

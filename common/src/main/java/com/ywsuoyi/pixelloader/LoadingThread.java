@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Map;
 
 public class LoadingThread extends Thread {
-    public String message = "";
+    public Component message = Component.empty();
     public File file;
     public Player player;
     public BlockPos bp;
@@ -23,15 +23,19 @@ public class LoadingThread extends Thread {
     public NonNullList<ColoredBlock> blockList;
     public int no;
 
-    public LoadingThread(File file, UseOnContext context, int cc, int no, boolean fs) {
+    public LoadingThread(File file, int no, boolean fs, Level world, Player player) {
         this.file = file;
-        this.player = context.getPlayer();
-        this.bp = context.getClickedPos().offset(context.getClickedFace().getNormal());
-        context.getLevel().setBlock(bp, PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlock.threadNO, no), 3);
-        this.world = context.getLevel();
-        this.cc = cc;
         this.no = no;
         this.fs = fs;
+        this.world = world;
+        this.player = player;
+    }
+
+    public LoadingThread(File file, UseOnContext context, int cc, int no, boolean fs) {
+        this(file, no, fs, context.getLevel(), context.getPlayer());
+        this.bp = context.getClickedPos().offset(context.getClickedFace().getNormal());
+        context.getLevel().setBlock(bp, PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlock.threadNO, no), 3);
+        this.cc = cc;
     }
 
     public int CRGB(int rgb) {

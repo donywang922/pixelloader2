@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBlockEntity> {
@@ -35,9 +34,7 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
         ProjectorSetting setting = ProjectorSetting.settings.get(blockEntity.getBlockPos());
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        Level l = blockEntity.getLevel();
-        float g = (float) (l == null ? 0 : l.getGameTime()) + f;
-        poseStack.translate(0.0, Mth.sin(g * 0.1f) * 0.01f, 0.0);
+        poseStack.translate(0.0, Mth.sin((blockEntity.tick + f) * 0.1f) * 0.01f, 0.0);
         if (setting != null) {
             poseStack.mulPose(Vector3f.YP.rotationDegrees((float) setting.yaw));
             poseStack.mulPose(Vector3f.XP.rotationDegrees((float) setting.pitch));
@@ -53,16 +50,26 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
         VertexConsumer vertexConsumer = multiBufferSource.getBuffer(projectorRenderType);
         this.model.renderToBuffer(poseStack, vertexConsumer, i, j, 1.0f, 1.0f, 1.0f, 1.0f);
         poseStack.popPose();
+
         if (setting != null) {
-
-            for (BlockPos pos : setting.outLinePos) {
-                poseStack.pushPose();
-                BlockPos pos1 = pos.subtract(blockEntity.getBlockPos());
-                poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());
-                blockRender.renderSingleBlock(PixelLoader.outlineBlock.defaultBlockState(), poseStack, multiBufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
-                poseStack.popPose();
+            if (setting.state == ProjectorSetting.LoadState.Select)
+                for (BlockPos pos : setting.outLinePos) {
+                    poseStack.pushPose();
+                    BlockPos pos1 = pos.subtract(blockEntity.getBlockPos());
+                    poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());
+                    blockRender.renderSingleBlock(PixelLoader.outlineBlock.defaultBlockState(), poseStack, multiBufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                    poseStack.popPose();
+                }
+            else if (setting.state == ProjectorSetting.LoadState.Start || setting.state == ProjectorSetting.LoadState.Finish) {
+                blockEntity.blocks.forEach((pos, state) -> {
+                    poseStack.pushPose();
+                    BlockPos pos1 = pos.subtract(blockEntity.getBlockPos());
+                    poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());
+                    poseStack.scale(1.001f, 1.001f, 1.001f);
+                    blockRender.renderSingleBlock(state, poseStack, multiBufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                    poseStack.popPose();
+                });
             }
-
         }
     }
 }

@@ -78,7 +78,6 @@ public class LoadImgThread extends LoadingThread {
                 }
             }
             int yct = 0;
-            loop:
             for (int y = height - 1 - skipy; y >= read.getMinY() + skipy; y -= cc) {
                 int xct = 0;
                 for (int x = read.getMinX() + skipx; x < width - skipx; x += cc) {
@@ -98,7 +97,7 @@ public class LoadImgThread extends LoadingThread {
                                 block.block.defaultBlockState(), 3);
                     xct++;
                 }
-                this.message = (height - y) + "/" + height;
+                this.message = Component.literal((height - y) + "/" + height);
                 yct++;
             }
         } catch (IOException e) {

@@ -16,6 +16,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class ProjectorBlock extends BaseEntityBlock {
@@ -33,6 +36,10 @@ public class ProjectorBlock extends BaseEntityBlock {
         return true;
     }
 
+    @Override
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        return ProjectorSetting.get(blockPos).editing ? Shapes.empty() : super.getShape(blockState, blockGetter, blockPos, collisionContext);
+    }
 
     @Nullable
     @Override
@@ -67,6 +74,6 @@ public class ProjectorBlock extends BaseEntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         if (level.isClientSide)
             return createTickerHelper(blockEntityType, PixelLoader.projectorBlockEntity, ProjectorBlockEntity::renderTick);
-        return null;
+        return createTickerHelper(blockEntityType, PixelLoader.projectorBlockEntity, ProjectorBlockEntity::serverTick);
     }
 }

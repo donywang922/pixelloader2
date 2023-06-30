@@ -1,15 +1,22 @@
 package com.ywsuoyi.pixelloader;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ProjectorSetting {
     public static final HashMap<BlockPos, ProjectorSetting> settings = new HashMap<>();
@@ -21,6 +28,7 @@ public class ProjectorSetting {
 
     public int width = 0;
     public int height = 0;
+    public boolean fs = true;
 
     public File img;
 
@@ -29,7 +37,14 @@ public class ProjectorSetting {
     public boolean editing = false;
 
     public boolean changed = true;
+
+    public LoadState state = LoadState.Select;
+    public LoadProjectorThread thread;
     public NonNullList<BlockPos> outLinePos = NonNullList.create();
+
+    public ConcurrentHashMap<BlockPos, BlockState> genBlocks = new ConcurrentHashMap<>();
+
+    public Component message = Component.empty();
 
     public ProjectorSetting() {
         loadimg();
@@ -43,13 +58,15 @@ public class ProjectorSetting {
     }
 
     public void addindex() {
-        fileIndex++;
-        if (fileIndex > Setting.imglist.size() - 1) {
-            fileIndex = 0;
-            Setting.updateFileList();
+        if (state == LoadState.Select) {
+            fileIndex++;
+            if (fileIndex > Setting.imglist.size() - 1) {
+                fileIndex = 0;
+                Setting.updateFileList();
+            }
+            loadimg();
+            changed = true;
         }
-        loadimg();
-        changed = true;
     }
 
     private void loadimg() {
@@ -108,6 +125,29 @@ public class ProjectorSetting {
             settings.put(pos, setting);
             return setting;
         }
+    }
+
+    public static Pair<Matrix4f, Vec3> ToM4f(BlockPos pos, ProjectorSetting set) {
+        Matrix4f m4f = Matrix4f.createTranslateMatrix(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
+        m4f.multiply(Vector3f.YP.rotationDegrees((float) set.yaw));
+        m4f.multiply(Vector3f.XP.rotationDegrees((float) set.pitch));
+        m4f.multiply(Vector3f.ZP.rotationDegrees((float) set.roll));
+        Vector4f v4fFrom = new Vector4f(0, 0, 0, 1.0f);
+        v4fFrom.transform(m4f);
+        Vec3 vec3From = new Vec3(v4fFrom.x(), v4fFrom.y(), v4fFrom.z());
+        float f = (float) (256d * (set.scale + 5d) / 16d);
+        m4f.multiply(Matrix4f.createScaleMatrix(f, f, f));
+        return new Pair<>(m4f, vec3From);
+    }
+
+    public enum LoadState {
+        Select,
+        WaitStart,
+        Start,
+        Finish,
+        Placing,
+        Done,
+        Error
     }
 
     @Override

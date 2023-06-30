@@ -60,7 +60,7 @@ public class LoadMapThread extends LoadingThread {
                     }
                     world.setBlock(pos, blist.get(i).defaultBlockState(), 3);
                 }
-                this.message = ((int) x) + "/" + width;
+                this.message = Component.literal(((int) x) + "/" + width);
             }
         } catch (IOException e) {
             e.printStackTrace();

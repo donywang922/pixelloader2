@@ -33,7 +33,7 @@ public class NumberEditBox extends EditBox {
 
     @Override
     protected void setFocused(boolean bl) {
-        if (bl) {
+        if (bl && canConsumeInput()) {
             if (frame - lastClick < 10)
                 this.setValue("0");
             lastClick = frame;
@@ -43,15 +43,18 @@ public class NumberEditBox extends EditBox {
 
     @Override
     public boolean mouseScrolled(double d, double e, double f) {
-        try {
-            double v = Double.parseDouble(this.getValue());
-            v += Screen.hasShiftDown() ? f * 0.1 : f;
-            v = Math.round(v * 1000) / 1000.0;
-            this.setValue(String.valueOf(v));
-        } catch (NumberFormatException ignored) {
-            this.setValue("0");
+        if (canConsumeInput()) {
+            try {
+                double v = Double.parseDouble(this.getValue());
+                v += Screen.hasShiftDown() ? f * 0.1 : f;
+                v = Math.round(v * 1000) / 1000.0;
+                this.setValue(String.valueOf(v));
+            } catch (NumberFormatException ignored) {
+                this.setValue("0");
+            }
+            return true;
         }
-        return true;
+        return super.mouseScrolled(d, e, f);
     }
 
     @Override
