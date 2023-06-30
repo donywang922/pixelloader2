@@ -1,12 +1,11 @@
 package com.ywsuoyi.pixelloader.forge;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
-import com.ywsuoyi.pixelloader.ProjectorBlockEntity;
 import com.ywsuoyi.pixelloader.ProjectorBlockRenderer;
+import com.ywsuoyi.pixelloader.ProjectorModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -33,8 +32,9 @@ public class PixelLoaderForge {
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::register);
         modEventBus.addListener(this::RendererRegister);
-        modEventBus.addListener(this::ServerStop);
+        modEventBus.addListener(this::LayerRegister);
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     public void init(FMLCommonSetupEvent event) {
@@ -45,6 +45,10 @@ public class PixelLoaderForge {
         event.registerBlockEntityRenderer(PixelLoader.projectorBlockEntity, ProjectorBlockRenderer::new);
     }
 
+    public void LayerRegister(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ProjectorModel.projectorLayer, ProjectorModel::createBodyLayer);
+    }
+
     public void register(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.BLOCKS,
                 Registry -> {
@@ -52,6 +56,7 @@ public class PixelLoaderForge {
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "tracecenterblock"), PixelLoader.traceCenterBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlock);
+                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "outlineblock"), PixelLoader.outlineBlock);
                 }
         );
         event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES,
@@ -72,6 +77,7 @@ public class PixelLoaderForge {
         );
     }
 
+    @SubscribeEvent
     public void ServerStop(ServerStoppingEvent event) {
         PixelLoader.end();
     }

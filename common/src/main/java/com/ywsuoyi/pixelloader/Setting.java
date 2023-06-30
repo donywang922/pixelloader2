@@ -53,32 +53,35 @@ public class Setting {
     }
 
     public static void addindex(Player player) {
-            index++;
-            if (index > imglist.size() - 1) {
-                index = 0;
-                imglist.clear();
-                try(Stream<Path> list = Files.list(Paths.get("img/"))){
-                    list.filter(f ->
+        index++;
+        if (index > imglist.size() - 1) {
+            index = 0;
+            updateFileList();
+        }
+        if (player != null) {
+            if (imglist.isEmpty()) {
+                player.displayClientMessage(Component.translatable("pixelLoader.fileNotFind"), true);
+            }
+            player.displayClientMessage(Component.translatable("pixelLoader.selectFile", imglist.get(index).getName()), true);
+        }
+    }
+
+    public static void updateFileList() {
+        imglist.clear();
+        try (Stream<Path> list = Files.list(Paths.get("img/"))) {
+            list.filter(f ->
                             !Files.isDirectory(f) && (
                                     f.getFileName().toString().endsWith(".jpg") ||
                                             f.getFileName().toString().endsWith(".jpeg") ||
                                             f.getFileName().toString().endsWith(".png")))
-                            .forEach(path -> {
-                                if (Files.isDirectory(path))
-                                    return;
-                                imglist.add(path.toFile());
-                            });
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-                if (imglist.isEmpty()) {
-                    if (player != null)
-                        player.displayClientMessage(Component.translatable("pixelLoader.fileNotFind"), true);
-                    return;
-                }
-            }
-            if (player != null)
-                player.displayClientMessage(Component.translatable("pixelLoader.selectFile", imglist.get(index).getName()), true);
+                    .forEach(path -> {
+                        if (Files.isDirectory(path))
+                            return;
+                        imglist.add(path.toFile());
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void startNextThread() {

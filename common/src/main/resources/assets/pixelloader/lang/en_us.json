@@ -32,5 +32,12 @@
   "pixelLoader.LoadingThread.stop": "stop",
   "pixelLoader.LoadingThread.finish": "finish",
   "pixelLoader.LoadingThread.fill": "The thread queue is full",
-  "pixelLoader.projector.screen": "Projector"
+
+  "pixelLoader.projector.screen": "Projector",
+  "pixelLoader.projector.screen.roll": "Roll",
+  "pixelLoader.projector.screen.yaw": "Yaw",
+  "pixelLoader.projector.screen.pitch": "Pitch",
+  "pixelLoader.projector.screen.scale": "Scale",
+  "pixelLoader.projector.screen.hintA": "Drag Scroll type",
+  "pixelLoader.projector.screen.hintB": "Hold shift to fine turn"
 }

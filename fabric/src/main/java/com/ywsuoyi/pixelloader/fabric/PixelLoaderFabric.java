@@ -24,6 +24,7 @@ public class PixelLoaderFabric implements ModInitializer {
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "autotracer"), PixelLoader.autoTracer);
 
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
+        Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "outlineblock"), PixelLoader.outlineBlock);
 
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlock);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlockItem);

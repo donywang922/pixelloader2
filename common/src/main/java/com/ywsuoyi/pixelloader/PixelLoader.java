@@ -10,8 +10,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
-import java.util.function.Supplier;
-
 public class PixelLoader {
     public static final String MOD_ID = "pixelloader";
     public static final Item coloredBlockLoader = new ColoredBlockLoader(new Item.Properties().tab(getTAB()));
@@ -25,9 +23,11 @@ public class PixelLoader {
     public static final TraceCenterBlock traceCenterBlock = new TraceCenterBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
     public static final Item traceCenterBlockItem = new BlockItem(traceCenterBlock, new Item.Properties().tab(getTAB()));
 
-    public static final ProjectorBlock projectorBlock = new ProjectorBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
-    public static final Item projectorBlockItem = new BlockItem(projectorBlock, new Item.Properties().tab(getTAB()));
+    public static final ProjectorBlock projectorBlock = new ProjectorBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion().noCollission());
+    public static final Item projectorBlockItem = new ProjectorBlockItem(projectorBlock, new Item.Properties().tab(getTAB()));
     public static final BlockEntityType<ProjectorBlockEntity> projectorBlockEntity = buildBlockEntity(ProjectorBlockEntity::new, projectorBlock);
+
+    public static final Block outlineBlock = new Block(BlockBehaviour.Properties.of(Material.STONE));
 
     @ExpectPlatform
     public static CreativeModeTab getTAB() {
