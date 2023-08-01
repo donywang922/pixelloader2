@@ -1,5 +1,6 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -58,7 +59,7 @@ public class LoadingThread extends Thread {
         }
         return ((Math.max(Math.min(r, 255), 0) & 0xFF) << 16) |
                 ((Math.max(Math.min(g, 255), 0) & 0xFF) << 8) |
-                ((Math.max(Math.min(b, 255), 0) & 0xFF)) | 0xFF000000;
+                ((Math.max(Math.min(b, 255), 0) & 0xFF));
     }
 
     public ColoredBlock CBlock(Map<Integer, ColoredBlock> blockMap, int rgb) {

@@ -1,5 +1,6 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +25,7 @@ public class ImgLoader extends Item {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (!Setting.ed) {
+        if (!ColorSpace.allLoad()) {
             if (context.getPlayer() != null)
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.colored_block.needload"), true);
             return InteractionResult.FAIL;

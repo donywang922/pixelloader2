@@ -1,5 +1,7 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColorSpaceLoader;
+import com.ywsuoyi.pixelloader.colorspace.ColoredBlockLoader;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.*;
@@ -12,7 +14,7 @@ import net.minecraft.world.level.material.Material;
 
 public class PixelLoader {
     public static final String MOD_ID = "pixelloader";
-    public static final Item coloredBlockLoader = new ColoredBlockLoader(new Item.Properties().tab(getTAB()));
+    public static final Item coloredBlockLoader = new ColorSpaceLoader(new Item.Properties().tab(getTAB()));
     public static final Item imgLoader = new ImgLoader(new Item.Properties().tab(getTAB()));
     public static final Item mapLoader = new MapLoader(new Item.Properties().tab(getTAB()));
     public static final Item autoTracer = new AutoTraceItem(new Item.Properties().tab(getTAB()));

@@ -1,9 +1,11 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.colorspace;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ywsuoyi.pixelloader.Setting;
+import com.ywsuoyi.pixelloader.banBlockInv;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.material.MaterialColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,14 +49,15 @@ public class ColoredBlockLoader extends Item {
     }
 
     public void load(Level world, BlockPos pos, Player player) {
+        ColorSpace.clearAll();
         Map<Block, String> blockStringMap = Maps.newHashMap();
-        Setting.colorBlockMap.clear();
-        Setting.mapColorBlockMap.clear();
-        Setting.mapltColorBlockMap.clear();
+//        Setting.colorBlockMap.clear();
+//        Setting.mapColorBlockMap.clear();
+//        Setting.mapltColorBlockMap.clear();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         for (Block b : Registry.BLOCK) {
-            boolean bool = Block.isShapeFullBlock(b.defaultBlockState().getCollisionShape(world, pos));
-            bool &= !b.defaultBlockState().is(BlockTags.SHULKER_BOXES);
+            boolean bool = Block.isShapeFullBlock(b.defaultBlockState().getShape(world, pos));
+            bool &= !(b instanceof EntityBlock);
             for (ItemStack itemStack : Setting.banItem) {
                 if (itemStack.getItem() == b.asItem()) {
                     bool = false;
@@ -62,9 +66,13 @@ public class ColoredBlockLoader extends Item {
             }
             if (bool) {
                 if (b.defaultBlockState().getMapColor(world, BlockPos.ZERO).col != 0) {
-                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.LOW), b, -1));
-                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.NORMAL), b, 0));
-                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.HIGH), b, 1));
+                    ColorSpace.mapSpace.addBlock(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.LOW), b, -1));
+                    ColorSpace.mapSpace.addBlock(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.NORMAL), b, 0));
+                    ColorSpace.mapFlatSpace.addBlock(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.NORMAL), b, 0));
+                    ColorSpace.mapSpace.addBlock(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.HIGH), b, 1));
+//                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.LOW), b, -1));
+//                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.NORMAL), b, 0));
+//                    Setting.mapBlocks.add(new ColoredBlock(b.defaultBlockState().getMapColor(world, BlockPos.ZERO).calculateRGBColor(MaterialColor.Brightness.HIGH), b, 1));
                 }
 
                 if (ItemBlockRenderTypes.getChunkRenderType(b.defaultBlockState()) == RenderType.solid()) {
@@ -114,7 +122,7 @@ public class ColoredBlockLoader extends Item {
                 }
             }
         }
-        Setting.coloredBlocks.clear();
+//        Setting.coloredBlocks.clear();
         blockStringMap.forEach((block, s) -> {
             try {
                 String[] s1 = decompose(s);
@@ -138,7 +146,8 @@ public class ColoredBlockLoader extends Item {
                     }
                     if (noA) {
                         int num = width * height;
-                        Setting.coloredBlocks.add(new ColoredBlock((int) sumr / num, (int) sumg / num, (int) sumb / num, block));
+//                        Setting.coloredBlocks.add(new ColoredBlock((int) sumr / num, (int) sumg / num, (int) sumb / num, block));
+                        ColorSpace.blockSpace.addBlock(new ColoredBlock((int) sumr / num, (int) sumg / num, (int) sumb / num, block));
                     }
                 }
             } catch (IOException e) {
@@ -153,7 +162,7 @@ public class ColoredBlockLoader extends Item {
 
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player player,InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand handIn) {
         if (!worldIn.isClientSide) if (player.isShiftKeyDown()) {
             load(worldIn, player.getOnPos(), player);
         } else {

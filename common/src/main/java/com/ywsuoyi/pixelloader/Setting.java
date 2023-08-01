@@ -1,6 +1,7 @@
 package com.ywsuoyi.pixelloader;
 
 import com.google.common.collect.Maps;
+import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

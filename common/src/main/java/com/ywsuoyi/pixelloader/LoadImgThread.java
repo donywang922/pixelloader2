@@ -1,10 +1,11 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
+import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -88,7 +89,11 @@ public class LoadImgThread extends LoadingThread {
                         Setting.startNextThread();
                         return;
                     }
-                    ColoredBlock block = CBlock(Setting.colorBlockMap, CRGB(read.getRGB(x, y)));
+//                    ColoredBlock block = CBlock(Setting.colorBlockMap, CRGB(read.getRGB(x, y)));
+                    ColoredBlock block = ColorSpace.blockSpace.getBlock(CRGB(read.getRGB(x, y)));
+                    r -= block.r;
+                    g -= block.g;
+                    b -= block.b;
                     if (trace) {
                         if (xct < axisX.size() && yct < axisY.size())
                             world.setBlock(ct.offset(axisX.get(xct)).offset(axisY.get(yct)), block.block.defaultBlockState(), 3);
