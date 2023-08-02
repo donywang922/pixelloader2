@@ -1,7 +1,7 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpaceLoader;
-import com.ywsuoyi.pixelloader.colorspace.ColoredBlockLoader;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.*;
@@ -81,7 +81,8 @@ public class PixelLoader {
         Setting.banItem.set(17, new ItemStack(Items.INFESTED_MOSSY_STONE_BRICKS));
         Setting.banItem.set(18, new ItemStack(Items.INFESTED_STONE_BRICKS));
         Setting.banItem.set(19, new ItemStack(Items.BUDDING_AMETHYST));
-        Setting.banItem.set(19, new ItemStack(Items.ICE));
+        Setting.banItem.set(20, new ItemStack(Items.ICE));
+        ColorSpace.filter = Setting.banItem;
     }
 
     public static void end() {

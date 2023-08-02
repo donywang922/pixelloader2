@@ -1,13 +1,16 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.colorspace.ColorRGB;
 import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Map;
 
@@ -39,12 +42,12 @@ public class LoadingThread extends Thread {
         this.cc = cc;
     }
 
-    public int CRGB(int rgb) {
+    public ColorRGB CRGB(int rgb) {
         if (
                 (Setting.cutout == 1 && ((rgb >> 16) & 0xFF) > 250 && ((rgb >> 8) & 0xFF) > 250 && (rgb & 0xFF) > 250) ||
                         (Setting.cutout == 2 && ((rgb >> 16) & 0xFF) < 5 && ((rgb >> 8) & 0xFF) < 5 && (rgb & 0xFF) < 5) ||
                         (Setting.cutout == 3 && ((rgb >> 24) & 0xFF) != 255)
-        ) return 0;
+        ) return null;
         if (fs) {
             r = Math.abs(r) > 64 ? 0 : r;
             g = Math.abs(g) > 64 ? 0 : g;
@@ -57,38 +60,30 @@ public class LoadingThread extends Thread {
             g = (rgb >> 8) & 0xFF;
             b = rgb & 0xFF;
         }
-        return ((Math.max(Math.min(r, 255), 0) & 0xFF) << 16) |
-                ((Math.max(Math.min(g, 255), 0) & 0xFF) << 8) |
-                ((Math.max(Math.min(b, 255), 0) & 0xFF));
+        return new ColorRGB(Mth.clamp(r, 0, 255), Mth.clamp(r, 0, 255), Mth.clamp(r, 0, 255));
     }
 
-    public ColoredBlock CBlock(Map<Integer, ColoredBlock> blockMap, int rgb) {
-        if (((rgb >> 24) & 0xFF) == 0) {
+    public ColoredBlock CBlock(Map<Integer, ColoredBlock> blockMap, ColorRGB rgb) {
+        if (rgb == null) {
             return Setting.air;
         }
         ColoredBlock block;
-
-
-        if (blockMap.containsKey(rgb)) {
-            block = blockMap.get(rgb);
-        } else {
-            block = blockList.get(1);
-            double d = Math.pow((block.r - r) * 0.30, 2) + Math.pow((block.g - g) * 0.59, 2) + Math.pow((block.b - b) * 0.11, 2);
-            for (ColoredBlock coloredBlock : blockList) {
-                if (Setting.lt || coloredBlock.y == 0) {
-                    double t = Math.pow((coloredBlock.r - r) * 0.30, 2) + Math.pow((coloredBlock.g - g) * 0.59, 2) + Math.pow((coloredBlock.b - b) * 0.11, 2);
-                    if (t < d) {
-                        d = t;
-                        block = coloredBlock;
-                    }
+        if (blockMap.containsKey(rgb.rgb)) {
+            return blockMap.get(rgb.rgb);
+        }
+        block = blockList.get(0);
+        double d = Math.pow((block.r - rgb.r) * 0.30, 2) + Math.pow((block.g - rgb.g) * 0.59, 2) + Math.pow((block.b - rgb.b) * 0.11, 2);
+        for (ColoredBlock coloredBlock : blockList) {
+            if (Setting.lt || coloredBlock.y == 0) {
+                double t = Math.pow((coloredBlock.r - rgb.r) * 0.30, 2) + Math.pow((coloredBlock.g - rgb.g) * 0.59, 2) + Math.pow((coloredBlock.b - rgb.b) * 0.11, 2);
+                if (t < d) {
+                    d = t;
+                    block = coloredBlock;
                 }
             }
-            blockMap.put(rgb, block);
         }
+        blockMap.put(rgb.rgb, block);
 
-        r -= block.r;
-        g -= block.g;
-        b -= block.b;
         return block;
     }
 

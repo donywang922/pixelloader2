@@ -26,6 +26,8 @@ import java.util.TreeSet;
  * <br>
  * @author Justin Wetherell <phishman3579@gmail.com>
  */
+
+//reference only
 public class KdTree<T extends KdTree.XYZPoint> implements Iterable<T> {
 
     private int k = 3;

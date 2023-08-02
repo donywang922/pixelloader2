@@ -27,7 +27,7 @@ public class LoadImgThread extends LoadingThread {
     public LoadImgThread(File file, UseOnContext context, int cc, boolean pm, int no, boolean fs) {
         super(file, context, cc, no, fs);
         this.pm = pm;
-        this.blockList = Setting.coloredBlocks;
+        this.blockList = ColorSpace.blockSpace.blocks;
         if (context.getLevel().getBlockState(context.getClickedPos()).is(PixelLoader.traceCenterBlock)) {
             axisY.add(BlockPos.ZERO);
             axisX.add(BlockPos.ZERO);
@@ -56,6 +56,7 @@ public class LoadImgThread extends LoadingThread {
 
     @Override
     public void run() {
+        long l = System.currentTimeMillis();
         try {
             BufferedImage read = ImageIO.read(file);
             int width = read.getWidth();
@@ -89,8 +90,7 @@ public class LoadImgThread extends LoadingThread {
                         Setting.startNextThread();
                         return;
                     }
-//                    ColoredBlock block = CBlock(Setting.colorBlockMap, CRGB(read.getRGB(x, y)));
-                    ColoredBlock block = ColorSpace.blockSpace.getBlock(CRGB(read.getRGB(x, y)));
+                    ColoredBlock block = ColorSpace.blockSpace.getBlockTree(CRGB(read.getRGB(x, y)));
                     r -= block.r;
                     g -= block.g;
                     b -= block.b;
@@ -109,6 +109,7 @@ public class LoadImgThread extends LoadingThread {
             e.printStackTrace();
         }
         world.setBlock(bp, Blocks.AIR.defaultBlockState(), 3);
+        System.out.println(System.currentTimeMillis() - l);
         Setting.threads.remove(no);
         Setting.startNextThread();
         if (player != null)

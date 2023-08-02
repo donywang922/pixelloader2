@@ -42,6 +42,7 @@ public class LoadColorSpaceThread extends BaseThread {
         Map<Block, String> colorBlocks = new HashMap<>();
         Set<Integer> colSet = new HashSet<>();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        setMessage(Component.translatable("pixelLoader.colorspace.findblock"));
         for (Block b : Registry.BLOCK) {
             if (state == State.end) {
                 onend(true);
@@ -91,7 +92,7 @@ public class LoadColorSpaceThread extends BaseThread {
                                 boolean b2 = true;
                                 for (Map.Entry<String, JsonElement> variants : json.getAsJsonObject("variants").entrySet()) {
                                     String s = variants.getValue().isJsonArray() ? variants.getValue().getAsJsonArray().get(0).getAsJsonObject().get("model").getAsString() : variants.getValue().getAsJsonObject().get("model").getAsString();
-                                    if (s2.equals("")) s2 = s;
+                                    if (s2.isEmpty()) s2 = s;
                                     else b2 &= s.equals(s2);
                                 }
                                 if (b2) {
@@ -106,7 +107,7 @@ public class LoadColorSpaceThread extends BaseThread {
                                         boolean b1 = true;
                                         if (json1.has("textures")) {
                                             for (Map.Entry<String, JsonElement> j : json1.getAsJsonObject("textures").entrySet()) {
-                                                if (s1.equals("")) s1 = j.getValue().getAsString();
+                                                if (s1.isEmpty()) s1 = j.getValue().getAsString();
                                                 else b1 &= j.getValue().getAsString().equals(s1);
                                             }
                                             if (b1) {
@@ -124,6 +125,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 }
             }
         }
+        setMessage(Component.translatable("pixelLoader.colorspace.getcolor"));
         for (Map.Entry<Block, String> entry : colorBlocks.entrySet()) {
             if (state == State.end) {
                 onend(true);
@@ -158,10 +160,10 @@ public class LoadColorSpaceThread extends BaseThread {
                 e.printStackTrace();
             }
         }
+        setMessage(Component.translatable("pixelLoader.colorspace.map"));
         ColorSpace.buildAll();
         onend(false);
-        setMessage(Component.translatable("pixelLoader.colored_block.loaded"));
-        System.out.println(ColorSpace.blockSpace.blocks.size());
+        setMessage(Component.translatable("pixelLoader.colorspace.loaded"));
     }
 
     public String[] decompose(String resourceName) {
