@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,8 +40,7 @@ public class LoadColorSpaceThread extends BaseThread {
     @Override
     public void run() {
         ColorSpace.clearAll();
-        Map<Block, String> colorBlocks = new HashMap<>();
-        Set<Integer> colSet = new HashSet<>();
+        ArrayList<Tuple<Block, String>> colorBlocks = new ArrayList<>();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         setMessage(Component.translatable("pixelLoader.colorspace.findblock"));
         for (Block b : Registry.BLOCK) {
@@ -58,26 +58,6 @@ public class LoadColorSpaceThread extends BaseThread {
                 }
             }
             if (bool) {
-                MaterialColor color = blockState.getMapColor(world, BlockPos.ZERO);
-                if (color.col != 0) {
-                    int o = color.calculateRGBColor(MaterialColor.Brightness.LOW);
-                    if (!colSet.contains(o)) {
-                        colSet.add(o);
-                        ColorSpace.mapSpace.addBlock(new ColoredBlock(o, b, -1));
-                    }
-                    o = color.calculateRGBColor(MaterialColor.Brightness.NORMAL);
-                    if (!colSet.contains(o)) {
-                        colSet.add(o);
-                        ColorSpace.mapSpace.addBlock(new ColoredBlock(o, b, 0));
-                        ColorSpace.mapFlatSpace.addBlock(new ColoredBlock(o, b, 0));
-                    }
-                    o = color.calculateRGBColor(MaterialColor.Brightness.HIGH);
-                    if (!colSet.contains(o)) {
-                        colSet.add(o);
-                        ColorSpace.mapSpace.addBlock(new ColoredBlock(o, b, 1));
-                    }
-                }
-
                 if (ItemBlockRenderTypes.getChunkRenderType(blockState) == RenderType.solid()) {
                     //block render
                     ResourceLocation id = Registry.BLOCK.getKey(b);
@@ -112,7 +92,7 @@ public class LoadColorSpaceThread extends BaseThread {
                                             }
                                             if (b1) {
 //                                  //texture
-                                                colorBlocks.put(b, s1);
+                                                colorBlocks.add(new Tuple<>(b, s1));
                                             }
                                         }
                                     }
@@ -126,13 +106,13 @@ public class LoadColorSpaceThread extends BaseThread {
             }
         }
         setMessage(Component.translatable("pixelLoader.colorspace.getcolor"));
-        for (Map.Entry<Block, String> entry : colorBlocks.entrySet()) {
+        for (Tuple<Block, String> entry : colorBlocks) {
             if (state == State.end) {
                 onend(true);
                 return;
             }
             try {
-                String[] s1 = decompose(entry.getValue());
+                String[] s1 = decompose(entry.getB());
                 Optional<Resource> Resources = resourceManager.getResource(new ResourceLocation(s1[0], "textures/" + s1[1] + ".png"));
                 Optional<Resource> TResources = resourceManager.getResource(new ResourceLocation(s1[0], "textures/" + s1[1] + ".png.mcmeta"));
                 if (TResources.isEmpty() && Resources.isPresent()) {
@@ -153,7 +133,12 @@ public class LoadColorSpaceThread extends BaseThread {
                     }
                     if (noA) {
                         int num = width * height;
-                        ColorSpace.blockSpace.addBlock(new ColoredBlock((int) sumR / num, (int) sumG / num, (int) sumB / num, entry.getKey()));
+                        MaterialColor color = entry.getA().defaultBlockState().getMapColor(world, BlockPos.ZERO);
+                        ColorSpace.selectBlocks.add(new SelectBlock(entry.getA(),
+                                new ColorRGB((int) sumR / num, (int) sumG / num, (int) sumB / num),
+                                ColorRGB.BGR(color.calculateRGBColor(MaterialColor.Brightness.NORMAL)),
+                                ColorRGB.BGR(color.calculateRGBColor(MaterialColor.Brightness.LOW)),
+                                ColorRGB.BGR(color.calculateRGBColor(MaterialColor.Brightness.HIGH))));
                     }
                 }
             } catch (IOException e) {

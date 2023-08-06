@@ -3,9 +3,9 @@ package com.ywsuoyi.pixelloader.colorspace;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ColorSpace {
     public static final ColorSpace blockSpace = new ColorSpace();
@@ -15,6 +15,7 @@ public class ColorSpace {
     public static LoadColorSpaceThread thread;
 
     public static NonNullList<ItemStack> filter = NonNullList.withSize(54, ItemStack.EMPTY);
+    public static NonNullList<SelectBlock> selectBlocks = NonNullList.create();
     public static Boolean blackList = true;
 
     public static boolean waitPlace = false;
@@ -30,10 +31,6 @@ public class ColorSpace {
         tree = null;
         blocks.clear();
         history = new ColoredBlock[16777216];
-    }
-
-    public void addBlock(ColoredBlock block) {
-        blocks.add(block);
     }
 
     public void build() {
@@ -68,12 +65,30 @@ public class ColorSpace {
     }
 
     public static void clearAll() {
+        selectBlocks.clear();
         blockSpace.clear();
         mapSpace.clear();
         mapFlatSpace.clear();
     }
 
     public static void buildAll() {
+        Set<Integer> colSet = new HashSet<>();
+        for (SelectBlock block : selectBlocks) {
+            blockSpace.blocks.add(new ColoredBlock(block.bc.rgb, block.block, 0));
+            if (!colSet.contains(block.map.rgb)) {
+                mapSpace.blocks.add(new ColoredBlock(block.map.rgb, block.block, 0));
+                mapFlatSpace.blocks.add(new ColoredBlock(block.map.rgb, block.block, 0));
+                colSet.add(block.map.rgb);
+            }
+            if (!colSet.contains(block.mapB.rgb)) {
+                mapSpace.blocks.add(new ColoredBlock(block.mapB.rgb, block.block, -1));
+                colSet.add(block.mapB.rgb);
+            }
+            if (!colSet.contains(block.mapT.rgb)) {
+                mapSpace.blocks.add(new ColoredBlock(block.mapT.rgb, block.block, 1));
+                colSet.add(block.mapT.rgb);
+            }
+        }
         blockSpace.build();
         mapSpace.build();
         mapFlatSpace.build();

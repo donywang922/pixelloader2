@@ -2,13 +2,12 @@ package com.ywsuoyi.pixelloader.colorspace;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ywsuoyi.pixelloader.BaseThread;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ChestMenu;
 
 public class ColorSettingScreen extends Screen {
     Button type, load, stop, filter, place, placeF;
@@ -44,8 +43,7 @@ public class ColorSettingScreen extends Screen {
         }));
         placeF = this.addRenderableWidget(new Button(this.width / 2 + 50, height / 2 + 36, 100, 20,
                 Component.translatable("pixelLoader.screen.colorspace.placef"), p_onPress_1_ -> {
-            ColorSpace.waitPlace = true;
-            onClose();
+            Minecraft.getInstance().setScreen(new SelectBlockScreen());
         }));
         stop = this.addRenderableWidget(new Button(this.width / 2 + 50, height / 2 + 60, 100, 20,
                 Component.translatable("pixelLoader.screen.colorspace.forcestop"), p_onPress_1_ -> {
@@ -71,7 +69,7 @@ public class ColorSettingScreen extends Screen {
                 ColorSpace.thread != null ? ColorSpace.thread.message : Component.empty());
         drawString(poseStack, this.font, msg, this.width / 2 + 50, height / 2 - 36, 0xFFFFFF);
         MutableComponent cnt = Component.translatable("pixelLoader.screen.colorspace.count",
-                ColorSpace.blockSpace.blocks.size());
+                ColorSpace.selectBlocks.size());
         drawString(poseStack, this.font, cnt, this.width / 2 + 50, height / 2 - 24, 0xFFFFFF);
     }
 

@@ -66,7 +66,7 @@ public class PixelLoaderForge {
         );
         event.register(ForgeRegistries.Keys.ITEMS,
                 Registry -> {
-                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "coloredblockloader"), PixelLoader.coloredBlockLoader);
+                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "colorspaceloader"), PixelLoader.coloredBlockLoader);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "imgloader"), PixelLoader.imgLoader);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "maploader"), PixelLoader.mapLoader);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "autotracer"), PixelLoader.autoTracer);

@@ -18,7 +18,7 @@ public class PixelLoaderFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "coloredblockloader"), PixelLoader.coloredBlockLoader);
+        Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "colorspaceloader"), PixelLoader.coloredBlockLoader);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "imgloader"), PixelLoader.imgLoader);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "maploader"), PixelLoader.mapLoader);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "autotracer"), PixelLoader.autoTracer);

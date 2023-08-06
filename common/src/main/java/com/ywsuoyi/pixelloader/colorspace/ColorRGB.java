@@ -12,4 +12,18 @@ public class ColorRGB {
         this.b = b;
         rgb = (r << 16) + (g << 8) + b;
     }
+
+    public ColorRGB(int rgb) {
+        r = (rgb >> 16) & 0xff;
+        g = (rgb >> 8) & 0xff;
+        b = rgb & 0xff;
+        this.rgb = rgb;
+    }
+
+    public static ColorRGB BGR(int bgr) {
+        int b = (bgr >> 16) & 0xff;
+        int g = (bgr >> 8) & 0xff;
+        int r = bgr & 0xff;
+        return new ColorRGB(r, g, b);
+    }
 }

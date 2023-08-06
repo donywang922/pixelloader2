@@ -71,7 +71,11 @@ public class ProjectorSetting {
 
     private void loadimg() {
         if (!Setting.imglist.isEmpty()) {
-            this.img = Setting.imglist.get(fileIndex);
+            img = Setting.imglist.get(fileIndex);
+            if (img == null) {
+                fileIndex = 0;
+                img = Setting.imglist.get(fileIndex);
+            }
             try {
                 BufferedImage read = ImageIO.read(img);
                 width = read.getWidth();
