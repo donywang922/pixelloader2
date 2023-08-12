@@ -3,6 +3,7 @@ package com.ywsuoyi.pixelloader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -61,14 +62,7 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
                     poseStack.popPose();
                 }
             else if (setting.state == ProjectorSetting.LoadState.Start || setting.state == ProjectorSetting.LoadState.Finish) {
-                blockEntity.blocks.forEach((pos, state) -> {
-                    poseStack.pushPose();
-                    BlockPos pos1 = pos.subtract(blockEntity.getBlockPos());
-                    poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());
-                    poseStack.scale(1.001f, 1.001f, 1.001f);
-                    blockRender.renderSingleBlock(state, poseStack, multiBufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
-                    poseStack.popPose();
-                });
+                ThreadBlockRenderer.renderVisualBlocks(poseStack, multiBufferSource, blockEntity.blocks, blockEntity.getBlockPos(), blockRender);
             }
         }
     }

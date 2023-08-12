@@ -1,6 +1,10 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.imgLoader;
 
+import com.ywsuoyi.pixelloader.ImgSettingScreen;
+import com.ywsuoyi.pixelloader.LoadingThread;
+import com.ywsuoyi.pixelloader.Setting;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -33,18 +37,13 @@ public class ImgLoader extends Item {
         if (!context.getLevel().isClientSide && context.getPlayer() != null) {
             if (!context.getPlayer().isShiftKeyDown()) {
                 Setting.addindex(context.getPlayer());
-            } else if (Setting.imglist.size() == 0) {
+            } else if (Setting.imglist.isEmpty()) {
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.noFile"), true);
             } else {
-                for (int i = 1; i <= 16; i++) {
-                    if (!Setting.threads.containsKey(i)) {
-                        LoadingThread thread = new LoadImgThread(Setting.getImg(), context, Setting.imgSize, Setting.pm, i, Setting.fs);
-                        Setting.threads.put(i, thread);
-                        Setting.startNextThread();
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-                context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.LoadingThread.fill"), true);
+                BaseThread.addThread(
+                        new LoadImgThread(context.getPlayer(), Setting.getImg(), Setting.fs, Setting.imgSize, Setting.cutout, context.getLevel(),
+                                context.getClickedPos(), context.getClickedPos().offset(context.getClickedFace().getNormal()), Setting.pm)
+                );
             }
         }
         return InteractionResult.SUCCESS;

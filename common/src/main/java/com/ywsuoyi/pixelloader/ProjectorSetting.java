@@ -51,9 +51,12 @@ public class ProjectorSetting {
     }
 
     public Component getFileText() {
+
         if (Setting.imglist.isEmpty()) {
             return Component.translatable("pixelLoader.fileNotFind");
         }
+        if (img == null)
+            loadimg();
         return Component.translatable("pixelLoader.selectFile", img.getName());
     }
 

@@ -1,7 +1,11 @@
 package com.ywsuoyi.pixelloader;
 
+import com.mojang.logging.LogUtils;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpaceLoader;
+import com.ywsuoyi.pixelloader.imgLoader.ImgLoader;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlock;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockEntity;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.*;
@@ -11,14 +15,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import org.slf4j.Logger;
 
 public class PixelLoader {
+    public static final Logger logger = LogUtils.getLogger();
     public static final String MOD_ID = "pixelloader";
     public static final Item coloredBlockLoader = new ColorSpaceLoader(new Item.Properties().tab(getTAB()));
     public static final Item imgLoader = new ImgLoader(new Item.Properties().tab(getTAB()));
     public static final Item mapLoader = new MapLoader(new Item.Properties().tab(getTAB()));
     public static final Item autoTracer = new AutoTraceItem(new Item.Properties().tab(getTAB()));
-    public static final Block threadBlock = new ThreadBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
+
     public static final TraceBlock traceBlock = new TraceBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
     public static final Item traceBlockItem = new BlockItem(traceBlock, new Item.Properties().tab(getTAB()));
 
@@ -28,6 +34,10 @@ public class PixelLoader {
     public static final ProjectorBlock projectorBlock = new ProjectorBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion().noCollission());
     public static final Item projectorBlockItem = new ProjectorBlockItem(projectorBlock, new Item.Properties().tab(getTAB()));
     public static final BlockEntityType<ProjectorBlockEntity> projectorBlockEntity = buildBlockEntity(ProjectorBlockEntity::new, projectorBlock);
+
+    public static final Block threadBlock = new ThreadBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
+    public static final Item threadBlockItem = new ProjectorBlockItem(threadBlock, new Item.Properties().tab(getTAB()));
+    public static final BlockEntityType<ThreadBlockEntity> threadBlockEntity = buildBlockEntity(ThreadBlockEntity::new, threadBlock);
 
     public static final Block outlineBlock = new Block(BlockBehaviour.Properties.of(Material.STONE));
 

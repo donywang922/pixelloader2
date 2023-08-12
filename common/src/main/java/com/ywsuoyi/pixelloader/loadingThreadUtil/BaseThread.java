@@ -1,14 +1,9 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.loadingThreadUtil;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseThread extends Thread {
     public static final ArrayDeque<BaseThread> threads = new ArrayDeque<>();
@@ -49,6 +44,7 @@ public class BaseThread extends Thread {
 
     public static void addThread(BaseThread thread) {
         threads.add(thread);
+        startNextThread();
     }
 
     public static void startNextThread() {

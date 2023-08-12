@@ -23,7 +23,7 @@ public class PixelLoaderFabric implements ModInitializer {
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "maploader"), PixelLoader.mapLoader);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "autotracer"), PixelLoader.autoTracer);
 
-        Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
+
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "outlineblock"), PixelLoader.outlineBlock);
 
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlock);
@@ -35,6 +35,11 @@ public class PixelLoaderFabric implements ModInitializer {
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlock);
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.traceCenterBlockItem);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(PixelLoader.MOD_ID, "projectorblockentity"), PixelLoader.projectorBlockEntity);
+
+        Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
+        Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlockItem);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(PixelLoader.MOD_ID, "threadblockentity"), PixelLoader.threadBlockEntity);
+
         PixelLoader.init();
         ServerWorldEvents.UNLOAD.register((server, level) -> PixelLoader.end());
     }

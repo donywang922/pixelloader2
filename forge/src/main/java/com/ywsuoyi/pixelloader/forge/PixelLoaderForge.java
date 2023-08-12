@@ -3,6 +3,8 @@ package com.ywsuoyi.pixelloader.forge;
 import com.ywsuoyi.pixelloader.PixelLoader;
 import com.ywsuoyi.pixelloader.ProjectorBlockRenderer;
 import com.ywsuoyi.pixelloader.ProjectorModel;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockModel;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -43,25 +45,29 @@ public class PixelLoaderForge {
 
     public void RendererRegister(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(PixelLoader.projectorBlockEntity, ProjectorBlockRenderer::new);
+        event.registerBlockEntityRenderer(PixelLoader.threadBlockEntity, ThreadBlockRenderer::new);
     }
 
     public void LayerRegister(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ProjectorModel.projectorLayer, ProjectorModel::createBodyLayer);
+        event.registerLayerDefinition(ThreadBlockModel.threadLayer, ThreadBlockModel::createBodyLayer);
     }
 
     public void register(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.BLOCKS,
                 Registry -> {
-                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
+//                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "tracecenterblock"), PixelLoader.traceCenterBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlock);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "outlineblock"), PixelLoader.outlineBlock);
+                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);
                 }
         );
         event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES,
                 Registry -> {
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "projectorblockentity"), PixelLoader.projectorBlockEntity);
+                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "threadblockentity"), PixelLoader.threadBlockEntity);
                 }
         );
         event.register(ForgeRegistries.Keys.ITEMS,
@@ -73,6 +79,7 @@ public class PixelLoaderForge {
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "traceblock"), PixelLoader.traceBlockItem);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "tracecenterblock"), PixelLoader.traceCenterBlockItem);
                     Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlockItem);
+                    Registry.register(new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlockItem);
                 }
         );
     }

@@ -1,7 +1,7 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.loadingThreadUtil;
 
+import com.ywsuoyi.pixelloader.Setting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -18,10 +18,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ThreadBlock extends Block {
+public class ThreadBlockOld extends Block {
     public static final IntegerProperty threadNO = IntegerProperty.create("threadno", 0, 16);
 
-    public ThreadBlock(Properties p_i48440_1_) {
+    public ThreadBlockOld(Properties p_i48440_1_) {
         super(p_i48440_1_);
         this.registerDefaultState(this.stateDefinition.any().setValue(threadNO, 0));
     }

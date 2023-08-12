@@ -3,7 +3,8 @@ package com.ywsuoyi.pixelloader.colorspace;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ywsuoyi.pixelloader.BaseThread;
+import com.ywsuoyi.pixelloader.PixelLoader;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -100,7 +101,7 @@ public class LoadColorSpaceThread extends BaseThread {
                             }
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        PixelLoader.logger.error("Failed to generate colorspace: {}", e.getMessage());
                     }
                 }
             }

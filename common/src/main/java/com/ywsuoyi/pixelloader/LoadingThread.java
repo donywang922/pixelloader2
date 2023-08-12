@@ -2,6 +2,7 @@ package com.ywsuoyi.pixelloader;
 
 import com.ywsuoyi.pixelloader.colorspace.ColorRGB;
 import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockOld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-import java.awt.*;
 import java.io.File;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class LoadingThread extends Thread {
     public LoadingThread(File file, UseOnContext context, int cc, int no, boolean fs) {
         this(file, no, fs, context.getLevel(), context.getPlayer());
         this.bp = context.getClickedPos().offset(context.getClickedFace().getNormal());
-        context.getLevel().setBlock(bp, PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlock.threadNO, no), 3);
+//        context.getLevel().setBlock(bp, PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlockOld.threadNO, no), 3);
         this.cc = cc;
     }
 
@@ -60,7 +60,7 @@ public class LoadingThread extends Thread {
             g = (rgb >> 8) & 0xFF;
             b = rgb & 0xFF;
         }
-        return new ColorRGB(Mth.clamp(r, 0, 255), Mth.clamp(r, 0, 255), Mth.clamp(r, 0, 255));
+        return new ColorRGB(Mth.clamp(r, 0, 255), Mth.clamp(g, 0, 255), Mth.clamp(b, 0, 255));
     }
 
     public ColoredBlock CBlock(Map<Integer, ColoredBlock> blockMap, ColorRGB rgb) {

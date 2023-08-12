@@ -1,7 +1,7 @@
 package com.ywsuoyi.pixelloader.colorspace;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.ywsuoyi.pixelloader.BaseThread;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;

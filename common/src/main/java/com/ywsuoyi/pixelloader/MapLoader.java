@@ -1,5 +1,6 @@
 package com.ywsuoyi.pixelloader;
 
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockOld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -40,7 +41,7 @@ public class MapLoader extends Item {
                     if (!Setting.threads.containsKey(i)) {
                         LoadingThread thread = new LoadMapThread(Setting.getImg(), context, Setting.mapSize, i, Setting.fs);
                         Setting.threads.put(i, thread);
-                        context.getLevel().setBlock(context.getClickedPos(), PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlock.threadNO, i), 3);
+                        context.getLevel().setBlock(context.getClickedPos(), PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlockOld.threadNO, i), 3);
                         Setting.startNextThread();
                         return InteractionResult.SUCCESS;
                     }
