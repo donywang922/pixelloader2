@@ -1,9 +1,10 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import com.ywsuoyi.pixelloader.Setting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;

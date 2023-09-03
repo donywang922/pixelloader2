@@ -1,8 +1,8 @@
 package com.ywsuoyi.pixelloader.fabric;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
-import com.ywsuoyi.pixelloader.ProjectorBlockRenderer;
-import com.ywsuoyi.pixelloader.ProjectorModel;
+import com.ywsuoyi.pixelloader.projector.ProjectorBlockRenderer;
+import com.ywsuoyi.pixelloader.projector.ProjectorModel;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockModel;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockRenderer;
 import net.fabricmc.api.ClientModInitializer;

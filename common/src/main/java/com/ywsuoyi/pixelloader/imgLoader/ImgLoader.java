@@ -1,7 +1,5 @@
 package com.ywsuoyi.pixelloader.imgLoader;
 
-import com.ywsuoyi.pixelloader.ImgSettingScreen;
-import com.ywsuoyi.pixelloader.LoadingThread;
 import com.ywsuoyi.pixelloader.Setting;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
@@ -40,10 +38,17 @@ public class ImgLoader extends Item {
             } else if (Setting.imglist.isEmpty()) {
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.noFile"), true);
             } else {
-                BaseThread.addThread(
-                        new LoadImgThread(context.getPlayer(), Setting.getImg(), Setting.fs, Setting.imgSize, Setting.cutout, context.getLevel(),
-                                context.getClickedPos(), context.getClickedPos().offset(context.getClickedFace().getNormal()), Setting.pm)
-                );
+                BaseThread.addThread(new LoadImgThread(
+                        context.getPlayer(),
+                        Setting.getImg(),
+                        Setting.fs,
+                        Setting.imgSize,
+                        Setting.cutout,
+                        context.getLevel(),
+                        context.getClickedPos(),
+                        context.getClickedPos().offset(context.getClickedFace().getNormal()),
+                        Setting.pm
+                ));
             }
         }
         return InteractionResult.SUCCESS;

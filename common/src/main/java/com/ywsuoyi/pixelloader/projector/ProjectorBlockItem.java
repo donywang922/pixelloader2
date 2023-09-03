@@ -1,4 +1,4 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

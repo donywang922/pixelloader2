@@ -1,4 +1,4 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 // Made with Blockbench 4.7.4
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
@@ -6,6 +6,7 @@ package com.ywsuoyi.pixelloader;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.ywsuoyi.pixelloader.PixelLoader;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

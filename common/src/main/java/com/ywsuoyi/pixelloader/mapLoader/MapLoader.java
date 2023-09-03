@@ -1,5 +1,8 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.mapLoader;
 
+import com.ywsuoyi.pixelloader.*;
+import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockOld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -26,7 +29,7 @@ public class MapLoader extends Item {
     @Override
 
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (!Setting.ed) {
+        if (!ColorSpace.allLoad()) {
             if (context.getPlayer() != null)
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.colored_block.needload"), true);
             return InteractionResult.FAIL;
@@ -34,19 +37,19 @@ public class MapLoader extends Item {
         if (!context.getLevel().isClientSide && context.getPlayer() != null) {
             if (!context.getPlayer().isShiftKeyDown()) {
                 Setting.addindex(context.getPlayer());
-            } else if (Setting.imglist.size() == 0) {
+            } else if (Setting.imglist.isEmpty()) {
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.noFile"), true);
             } else {
-                for (int i = 1; i <= 16; i++) {
-                    if (!Setting.threads.containsKey(i)) {
-                        LoadingThread thread = new LoadMapThread(Setting.getImg(), context, Setting.mapSize, i, Setting.fs);
-                        Setting.threads.put(i, thread);
-                        context.getLevel().setBlock(context.getClickedPos(), PixelLoader.threadBlock.defaultBlockState().setValue(ThreadBlockOld.threadNO, i), 3);
-                        Setting.startNextThread();
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-                context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.LoadingThread.fill"), true);
+                BaseThread.addThread(new LoadMapThread(
+                        context.getPlayer(),
+                        Setting.getImg(),
+                        Setting.fs,
+                        Setting.mapSize,
+                        Setting.cutout,
+                        context.getLevel(),
+                        context.getClickedPos().offset(context.getClickedFace().getNormal()),
+                        !Setting.lt
+                ));
             }
         }
         return InteractionResult.SUCCESS;

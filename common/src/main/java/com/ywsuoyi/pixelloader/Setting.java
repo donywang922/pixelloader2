@@ -60,10 +60,10 @@ public class Setting {
             updateFileList();
         }
         if (player != null) {
-            if (imglist.isEmpty()) {
+            if (imglist.isEmpty())
                 player.displayClientMessage(Component.translatable("pixelLoader.fileNotFind"), true);
-            }
-            player.displayClientMessage(Component.translatable("pixelLoader.selectFile", imglist.get(index).getName()), true);
+            else
+                player.displayClientMessage(Component.translatable("pixelLoader.selectFile", imglist.get(index).getName()), true);
         }
     }
 

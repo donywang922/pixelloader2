@@ -13,11 +13,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +42,7 @@ public class ThreadBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ThreadBlockEntity(blockPos, blockState);
+        return PixelLoader.getThreadBlock().create(blockPos, blockState);
     }
 
     @Override
@@ -73,4 +76,5 @@ public class ThreadBlock extends BaseEntityBlock {
         ThreadData.data.remove(blockPos);
         super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
+
 }

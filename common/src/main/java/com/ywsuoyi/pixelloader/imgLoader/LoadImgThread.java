@@ -2,14 +2,14 @@ package com.ywsuoyi.pixelloader.imgLoader;
 
 
 import com.ywsuoyi.pixelloader.PixelLoader;
-import com.ywsuoyi.pixelloader.TraceBlock;
-import com.ywsuoyi.pixelloader.TraceCenterBlock;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.LoadingThread;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +49,10 @@ public class LoadImgThread extends LoadingThread {
                 else axisY.add(curpos.subtract(center));
             }
             trace = true;
-        }
+        } else data.center = anchor.east();
+        if (trace) data.directions = Direction.values();
+        else if (flat) data.directions = new Direction[]{Direction.UP, Direction.DOWN};
+        else data.directions = new Direction[]{Direction.NORTH, Direction.SOUTH};
     }
 
     @Override
@@ -90,9 +93,9 @@ public class LoadImgThread extends LoadingThread {
                     b -= block.b;
                     if (trace) {
                         if (xct < axisX.size() && yct < axisY.size())
-                            data.genBlocks.put(center.offset(axisX.get(xct)).offset(axisY.get(yct)), block.block.defaultBlockState());
+                            data.genBlocks.add(new Tuple<>(new BlockPos(axisX.get(xct)).offset(axisY.get(yct)), block.block.defaultBlockState()));
                     } else
-                        data.genBlocks.put(center.offset(xct, flat ? 0 : yct, flat ? -yct : 0), block.block.defaultBlockState());
+                        data.genBlocks.add(new Tuple<>(new BlockPos(xct, flat ? 0 : yct, flat ? -yct : 0), block.block.defaultBlockState()));
                     xct++;
                 }
                 this.message = Component.literal((height - y) + "/" + height);
@@ -101,6 +104,10 @@ public class LoadImgThread extends LoadingThread {
         } catch (IOException e) {
             PixelLoader.logger.error("Failed to generate image: {}", e.getMessage());
         }
+        if (data.genBlocks.size() > 10000)
+            data.renderPercentage = Math.round(1000000f / data.genBlocks.size()) / 100f;
+        else
+            data.renderPercentage = 1;
         onend(false);
     }
 }

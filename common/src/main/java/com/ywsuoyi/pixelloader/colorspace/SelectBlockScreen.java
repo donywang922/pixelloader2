@@ -5,11 +5,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SelectBlockScreen extends Screen {
     float scrollY = 0;
 
     int lineHeight = 24;
+    Component check = Component.literal("☑"), uncheck = Component.literal("☐");
     int h = 0;
+    Set<Integer> pass = new HashSet<>();
 
     protected SelectBlockScreen() {
         super(Component.translatable("pixelLoader.screen.selectblock"));
@@ -30,8 +35,28 @@ public class SelectBlockScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        if (i == 1) {
+        if (i == 1 || (i == 0 && d > width - 20)) {
             scrollY = Mth.clamp((float) e / height * h, 0, h);
+        }
+        if (i == 0 && d < width - 20 && d > width - 40) {
+            int idx = (int) ((scrollY + e - 12.5) / lineHeight);
+            if (pass.contains(idx) || idx < 0 || idx >= ColorSpace.selectBlocks.size()) return true;
+            SelectBlock block = ColorSpace.selectBlocks.get(idx);
+            block.active = !block.active;
+            pass.add(idx);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double d, double e, int i) {
+        if (i == 0 && d < width - 20 && d > width - 40) {
+            int idx = (int) ((scrollY + e - 12.5) / lineHeight);
+            if (idx < 0 || idx >= ColorSpace.selectBlocks.size()) return true;
+            SelectBlock block = ColorSpace.selectBlocks.get(idx);
+            block.active = !block.active;
+            pass.clear();
+            pass.add(idx);
         }
         return true;
     }
@@ -39,7 +64,9 @@ public class SelectBlockScreen extends Screen {
     @Override
     public void render(PoseStack poseStack, int i, int j, float f) {
         super.render(poseStack, i, j, f);
-        renderBackground(poseStack);
+        fill(poseStack, 0, 0, width, height, 0x66000000);
+        int j1 = (int) (scrollY / h * (height - lineHeight));
+        fill(poseStack, width - 10, j1, width, j1 + lineHeight, 0x33ffffff);
         for (int idx = 0; idx < ColorSpace.selectBlocks.size(); idx++) {
             if (idx * lineHeight + lineHeight > scrollY && idx * lineHeight - lineHeight < scrollY + height) {
                 SelectBlock block = ColorSpace.selectBlocks.get(idx);
@@ -68,9 +95,19 @@ public class SelectBlockScreen extends Screen {
                 String descriptionId = block.block.getDescriptionId();
                 drawString(poseStack, font, block.block.getName(), 220, yOffset, 0xFFFFFF);
                 drawString(poseStack, font, descriptionId, 220, yOffset + 10, 0xFFFFFF);
-                drawString(poseStack, font, Component.literal("☑"), width - 24, yOffset + 5, 0xFFFFFF);
-
+                drawString(poseStack, font, block.active ? check : uncheck, width - 34, yOffset + 5, 0xFFFFFF);
             }
         }
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        ColorSpace.reBuildAll();
     }
 }

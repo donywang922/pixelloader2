@@ -1,5 +1,6 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.imgLoader;
 
+import com.ywsuoyi.pixelloader.PixelLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;

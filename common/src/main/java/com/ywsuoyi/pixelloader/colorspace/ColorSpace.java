@@ -16,7 +16,7 @@ public class ColorSpace {
 
     public static NonNullList<ItemStack> filter = NonNullList.withSize(54, ItemStack.EMPTY);
     public static NonNullList<SelectBlock> selectBlocks = NonNullList.create();
-    public static Boolean blackList = true;
+    public static boolean whiteList = false;
 
     public static boolean waitPlace = false;
     public static boolean openFilter = false;
@@ -74,6 +74,7 @@ public class ColorSpace {
     public static void buildAll() {
         Set<Integer> colSet = new HashSet<>();
         for (SelectBlock block : selectBlocks) {
+            if (!block.active) continue;
             blockSpace.blocks.add(new ColoredBlock(block.bc.rgb, block.block, 0));
             if (!colSet.contains(block.map.rgb)) {
                 mapSpace.blocks.add(new ColoredBlock(block.map.rgb, block.block, 0));
@@ -94,7 +95,15 @@ public class ColorSpace {
         mapFlatSpace.build();
     }
 
+    public static void reBuildAll() {
+        blockSpace.clear();
+        mapSpace.clear();
+        mapFlatSpace.clear();
+        buildAll();
+    }
+
     public static boolean allLoad() {
         return blockSpace.load & mapFlatSpace.load & mapSpace.load;
     }
+
 }

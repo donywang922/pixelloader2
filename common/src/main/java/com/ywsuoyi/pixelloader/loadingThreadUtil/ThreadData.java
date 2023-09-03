@@ -1,17 +1,22 @@
 package com.ywsuoyi.pixelloader.loadingThreadUtil;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.LinkedList;
 
 public class ThreadData {
     public static HashMap<BlockPos, ThreadData> data = new HashMap<>();
     public State state = State.loading;
     public LoadingThread thread;
-    public ConcurrentHashMap<BlockPos, BlockState> genBlocks = new ConcurrentHashMap<>();
+    public LinkedList<Tuple<BlockPos, BlockState>> genBlocks = new LinkedList<>();
+    public Direction[] directions = Direction.values();
+    public float renderPercentage = 0;
+    public boolean autoLowerPercentage = true;
+    public BlockPos center;
 
     public ThreadData(LoadingThread thread) {
         this.thread = thread;

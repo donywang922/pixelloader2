@@ -2,6 +2,8 @@ package com.ywsuoyi.pixelloader;
 
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.colorspace.ColoredBlock;
+import com.ywsuoyi.pixelloader.imgLoader.TraceBlock;
+import com.ywsuoyi.pixelloader.imgLoader.TraceCenterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;

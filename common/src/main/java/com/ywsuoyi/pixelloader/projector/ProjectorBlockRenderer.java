@@ -1,8 +1,9 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import com.ywsuoyi.pixelloader.PixelLoader;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -27,6 +29,11 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
 
     @Override
     public boolean shouldRender(ProjectorBlockEntity blockEntity, Vec3 vec3) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRenderOffScreen(ProjectorBlockEntity blockEntity) {
         return true;
     }
 
@@ -62,7 +69,7 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
                     poseStack.popPose();
                 }
             else if (setting.state == ProjectorSetting.LoadState.Start || setting.state == ProjectorSetting.LoadState.Finish) {
-                ThreadBlockRenderer.renderVisualBlocks(poseStack, multiBufferSource, blockEntity.blocks, blockEntity.getBlockPos(), blockRender);
+                ThreadBlockRenderer.renderVisualBlocks(poseStack, multiBufferSource, blockEntity.blocks, blockRender, Direction.values(), 1);
             }
         }
     }

@@ -1,6 +1,7 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ywsuoyi.pixelloader.guiComponent.NumberEditBox;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;

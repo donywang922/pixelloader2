@@ -1,5 +1,7 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.imgLoader;
 
+import com.ywsuoyi.pixelloader.PixelLoader;
+import com.ywsuoyi.pixelloader.imgLoader.TraceBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

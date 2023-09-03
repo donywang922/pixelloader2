@@ -3,9 +3,16 @@ package com.ywsuoyi.pixelloader;
 import com.mojang.logging.LogUtils;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpaceLoader;
+import com.ywsuoyi.pixelloader.imgLoader.AutoTraceItem;
 import com.ywsuoyi.pixelloader.imgLoader.ImgLoader;
+import com.ywsuoyi.pixelloader.imgLoader.TraceBlock;
+import com.ywsuoyi.pixelloader.imgLoader.TraceCenterBlock;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlock;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockEntity;
+import com.ywsuoyi.pixelloader.mapLoader.MapLoader;
+import com.ywsuoyi.pixelloader.projector.ProjectorBlock;
+import com.ywsuoyi.pixelloader.projector.ProjectorBlockEntity;
+import com.ywsuoyi.pixelloader.projector.ProjectorBlockItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.*;
@@ -37,9 +44,9 @@ public class PixelLoader {
 
     public static final Block threadBlock = new ThreadBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion());
     public static final Item threadBlockItem = new ProjectorBlockItem(threadBlock, new Item.Properties().tab(getTAB()));
-    public static final BlockEntityType<ThreadBlockEntity> threadBlockEntity = buildBlockEntity(ThreadBlockEntity::new, threadBlock);
+    public static final BlockEntityType<ThreadBlockEntity> threadBlockEntity = buildBlockEntity(getThreadBlock(), threadBlock);
 
-    public static final Block outlineBlock = new Block(BlockBehaviour.Properties.of(Material.STONE));
+    public static final Block outlineBlock = new Block(BlockBehaviour.Properties.of(Material.STONE).noOcclusion().noCollission());
 
     @ExpectPlatform
     public static CreativeModeTab getTAB() {
@@ -48,6 +55,11 @@ public class PixelLoader {
 
     @ExpectPlatform
     public static <T extends BlockEntity> BlockEntityType<T> buildBlockEntity(Factory<T> entity, Block block) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Factory<ThreadBlockEntity> getThreadBlock() {
         throw new AssertionError();
     }
 

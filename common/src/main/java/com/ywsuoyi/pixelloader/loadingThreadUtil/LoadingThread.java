@@ -2,6 +2,7 @@ package com.ywsuoyi.pixelloader.loadingThreadUtil;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
 import com.ywsuoyi.pixelloader.colorspace.ColorRGB;
+import com.ywsuoyi.pixelloader.projector.ProjectorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +15,6 @@ public class LoadingThread extends BaseThread {
     public int size;
     public File file;
     public int cutout;
-    public BlockPos center;
     public BlockPos anchor;
     public Level level;
     public ThreadData data;
@@ -27,11 +27,12 @@ public class LoadingThread extends BaseThread {
         this.dither = dither;
         this.size = size;
         this.cutout = cutout;
-        this.center = center;
         this.anchor = anchor;
         this.level = level;
         this.data = ThreadData.getData(this);
-        level.setBlock(anchor, PixelLoader.threadBlock.defaultBlockState(), 3);
+        data.center = center;
+        if (level.getBlockState(anchor).getBlock() != PixelLoader.projectorBlock)
+            level.setBlock(anchor, PixelLoader.threadBlock.defaultBlockState(), 3);
     }
 
     public ColorRGB calcRGB(int rgb) {

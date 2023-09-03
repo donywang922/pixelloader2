@@ -1,4 +1,4 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.guiComponent;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;

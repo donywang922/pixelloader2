@@ -33,7 +33,7 @@ public class PixelLoaderFabric implements ModInitializer {
         Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "tracecenterblock"), PixelLoader.traceCenterBlockItem);
 
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlock);
-        Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.traceCenterBlockItem);
+        Registry.register(Registry.ITEM, new ResourceLocation(PixelLoader.MOD_ID, "projectorblock"), PixelLoader.projectorBlockItem);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(PixelLoader.MOD_ID, "projectorblockentity"), PixelLoader.projectorBlockEntity);
 
         Registry.register(Registry.BLOCK, new ResourceLocation(PixelLoader.MOD_ID, "threadblock"), PixelLoader.threadBlock);

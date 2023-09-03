@@ -1,6 +1,8 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.mapLoader;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ywsuoyi.pixelloader.Setting;
+import com.ywsuoyi.pixelloader.SettingScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 

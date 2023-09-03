@@ -7,6 +7,7 @@ import java.util.Objects;
 public class SelectBlock {
     public ColorRGB bc, map, mapB, mapT;
     public Block block;
+    public boolean active = true;
 
     public SelectBlock(Block block, ColorRGB bc, ColorRGB map, ColorRGB mapB, ColorRGB mapT) {
         this.bc = bc;

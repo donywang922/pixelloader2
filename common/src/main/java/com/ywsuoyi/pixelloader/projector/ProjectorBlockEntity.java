@@ -1,15 +1,16 @@
-package com.ywsuoyi.pixelloader;
+package com.ywsuoyi.pixelloader.projector;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import com.ywsuoyi.pixelloader.PixelLoader;
+import com.ywsuoyi.pixelloader.Setting;
+import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -20,12 +21,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectorBlockEntity extends BlockEntity {
     public ProjectorSetting setting;
     public int tick = 0;
-    public HashMap<BlockPos, BlockState> blocks = new HashMap<>();
+    public List<Tuple<BlockPos, BlockState>> blocks = new ArrayList<>();
 
 
     public ProjectorBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -46,25 +48,25 @@ public class ProjectorBlockEntity extends BlockEntity {
             return;
         }
         if (set.state == ProjectorSetting.LoadState.WaitStart) {
-            if (!Setting.ed) {
+            if (!ColorSpace.allLoad()) {
                 set.state = ProjectorSetting.LoadState.Select;
                 set.message = Component.translatable("pixelLoader.colored_block.needload");
                 return;
             }
-            if (Setting.imglist.size() == 0) {
+            if (Setting.imglist.isEmpty()) {
                 set.state = ProjectorSetting.LoadState.Select;
                 set.message = Component.translatable("pixelLoader.noFile");
                 return;
             }
-            for (int i = 1; i <= 16; i++) {
-                if (!Setting.threads.containsKey(i)) {
-                    set.thread = new LoadProjectorThread(set.img, i, level, set, pos);
-                    Setting.threads.put(i, set.thread);
-                    Setting.startNextThread();
-                    return;
-                }
-            }
-            set.message = Component.translatable("pixelLoader.LoadingThread.fill");
+            BaseThread.addThread(new LoadProjectorThread(
+                    null,
+                    Setting.getImg(),
+                    Setting.fs,
+                    Setting.imgSize,
+                    Setting.cutout,
+                    level,
+                    pos
+            ));
         }
     }
 
@@ -91,7 +93,7 @@ public class ProjectorBlockEntity extends BlockEntity {
         }
         if ((set.state == ProjectorSetting.LoadState.Start || set.state == ProjectorSetting.LoadState.Finish) && entity.tick % 40 == 0) {
             entity.blocks.clear();
-            entity.blocks.putAll(set.genBlocks);
+            set.genBlocks.forEach((blockPos, blockState) -> entity.blocks.add(new Tuple<>(blockPos.subtract(pos), blockState)));
         }
     }
 
