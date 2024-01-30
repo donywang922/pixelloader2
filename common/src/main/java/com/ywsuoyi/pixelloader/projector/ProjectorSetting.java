@@ -39,9 +39,12 @@ public class ProjectorSetting {
 
     public boolean changed = true;
 
+    public Sample sample = Sample.center;
+
     public LoadState state = LoadState.Select;
     public LoadProjectorThread thread;
     public NonNullList<BlockPos> outLinePos = NonNullList.create();
+    public NonNullList<BlockPos> latticePos = NonNullList.create();
 
     public ConcurrentHashMap<BlockPos, BlockState> genBlocks = new ConcurrentHashMap<>();
 
@@ -49,6 +52,10 @@ public class ProjectorSetting {
 
     public ProjectorSetting() {
         loadimg();
+    }
+
+    public File getImg() {
+        return Setting.imglist.get(fileIndex);
     }
 
     public Component getFileText() {
@@ -114,7 +121,7 @@ public class ProjectorSetting {
         this.roll = tryParse(roll);
         this.yaw = tryParse(yaw);
         this.pitch = tryParse(pitch);
-        this.scale = tryParse(scale);
+        this.scale = Math.max(tryParse(scale), 1);
         changed = true;
     }
 
@@ -156,6 +163,12 @@ public class ProjectorSetting {
         Placing,
         Done,
         Error
+    }
+
+    public enum Sample {
+        center,
+        lattice,
+        edge,
     }
 
     @Override

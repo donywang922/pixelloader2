@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import static com.ywsuoyi.pixelloader.PixelLoader.neb;
+
 public class TraceCenterBlock extends Block {
     public static final IntegerProperty pointX = IntegerProperty.create("pointx", 0, 26);
     public static final IntegerProperty pointY = IntegerProperty.create("pointy", 0, 26);
@@ -58,12 +60,12 @@ public class TraceCenterBlock extends Block {
         boolean flagPX = false;
         blockState = blockState.setValue(pointX,0).setValue(pointY,0);
         for (int i = 0; i < 26; i++) {
-            BlockPos tmpPos = blockPos.offset(TraceBlock.neb[i * 3], TraceBlock.neb[i * 3 + 1], TraceBlock.neb[i * 3 + 2]);
+            BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = level.getBlockState(tmpPos);
             if (nb.is(PixelLoader.traceBlock)) {
                 boolean flagNpt = true;
                 for (int j = 0; j < 26; j++) {
-                    BlockPos tmpPos2 = tmpPos.offset(TraceBlock.neb[j * 3], TraceBlock.neb[j * 3 + 1], TraceBlock.neb[j * 3 + 2]);
+                    BlockPos tmpPos2 = tmpPos.offset(neb[j]);
                     BlockState nb2 = level.getBlockState(tmpPos2);
                     if (nb2.is(PixelLoader.traceBlock) && tmpPos2.offset(TraceBlock.fromID(nb2.getValue(TraceBlock.point))).equals(tmpPos)) {
                         flagNpt = false;
@@ -72,10 +74,10 @@ public class TraceCenterBlock extends Block {
                 }
                 if (flagNpt) {
                     if (!flagPX) {
-                        blockState = blockState.setValue(pointX, TraceBlock.toID(TraceBlock.neb[i * 3], TraceBlock.neb[i * 3 + 1], TraceBlock.neb[i * 3 + 2]));
+                        blockState = blockState.setValue(pointX, TraceBlock.toID(neb[i]));
                         flagPX = true;
                     } else {
-                        blockState = blockState.setValue(pointY, TraceBlock.toID(TraceBlock.neb[i * 3], TraceBlock.neb[i * 3 + 1], TraceBlock.neb[i * 3 + 2]));
+                        blockState = blockState.setValue(pointY, TraceBlock.toID(neb[i]));
                         break;
                     }
                 }

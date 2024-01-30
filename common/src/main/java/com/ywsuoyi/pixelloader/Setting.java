@@ -71,10 +71,10 @@ public class Setting {
         imglist.clear();
         try (Stream<Path> list = Files.list(Paths.get("img/"))) {
             list.filter(f ->
-                            !Files.isDirectory(f) && (
-                                    f.getFileName().toString().endsWith(".jpg") ||
-                                            f.getFileName().toString().endsWith(".jpeg") ||
-                                            f.getFileName().toString().endsWith(".png")))
+                    {
+                        String n = f.getFileName().toString().toLowerCase();
+                        return !Files.isDirectory(f) && (n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png"));
+                    })
                     .forEach(path -> {
                         if (Files.isDirectory(path))
                             return;
@@ -90,7 +90,7 @@ public class Setting {
         for (Map.Entry<Integer, LoadingThread> entry : threads.entrySet()) {
             run |= entry.getValue().run;
         }
-        if (!run && threads.size() > 0) {
+        if (!run && !threads.isEmpty()) {
             Map.Entry<Integer, LoadingThread> next = threads.entrySet().iterator().next();
             try {
                 next.getValue().start();

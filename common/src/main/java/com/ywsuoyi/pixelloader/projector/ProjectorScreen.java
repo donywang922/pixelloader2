@@ -23,6 +23,7 @@ public class ProjectorScreen extends Screen {
     public NumberEditBox pitch;
     public NumberEditBox scale;
 
+    public Button sample;
     public Button load;
     public Button place;
     public Button save;
@@ -41,6 +42,7 @@ public class ProjectorScreen extends Screen {
         yaw = addRenderableWidget(new NumberEditBox(font, 20, 80, 80, 20, yawText));
         pitch = addRenderableWidget(new NumberEditBox(font, 20, 120, 80, 20, pitchText));
         scale = addRenderableWidget(new NumberEditBox(font, 20, 160, 80, 20, scaleText));
+
         roll.setValue(String.valueOf(setting.roll));
         yaw.setValue(String.valueOf(setting.yaw));
         pitch.setValue(String.valueOf(setting.pitch));
@@ -49,6 +51,14 @@ public class ProjectorScreen extends Screen {
         yaw.setResponder(this::updateAngle);
         pitch.setResponder(this::updateAngle);
         scale.setResponder(this::updateAngle);
+
+        sample = addRenderableWidget(new Button(20, 200, 80, 20, Component.translatable("pixelLoader.projector.screen.sample." + setting.sample), p -> {
+            if (setting.sample == ProjectorSetting.Sample.center) setting.sample = ProjectorSetting.Sample.edge;
+            else if (setting.sample == ProjectorSetting.Sample.edge) setting.sample = ProjectorSetting.Sample.lattice;
+            else if (setting.sample == ProjectorSetting.Sample.lattice) setting.sample = ProjectorSetting.Sample.center;
+            sample.setMessage(Component.translatable("pixelLoader.projector.screen.sample." + setting.sample));
+            setting.changed = true;
+        }));
 
         load = addRenderableWidget(new Button(this.width - 100, 130, 80, 20, Component.translatable("pixelLoader.projector.screen.load"), p -> {
             if (setting.state == ProjectorSetting.LoadState.Select) {
@@ -107,7 +117,7 @@ public class ProjectorScreen extends Screen {
                 double y = Double.parseDouble(yaw.getValue());
                 x += Screen.hasShiftDown() ? g * 0.1 : g;
                 x = Math.round(x * 1000) / 1000.0;
-                y += Screen.hasShiftDown() ? f * 0.1 : f;
+                y -= Screen.hasShiftDown() ? f * 0.1 : f;
                 y = Math.round(y * 1000) / 1000.0;
                 pitch.setValue(String.valueOf(x));
                 yaw.setValue(String.valueOf(y));

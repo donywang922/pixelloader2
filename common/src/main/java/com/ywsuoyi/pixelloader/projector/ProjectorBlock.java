@@ -1,6 +1,7 @@
 package com.ywsuoyi.pixelloader.projector;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -76,5 +77,14 @@ public class ProjectorBlock extends BaseEntityBlock {
         if (level.isClientSide)
             return createTickerHelper(blockEntityType, PixelLoader.projectorBlockEntity, ProjectorBlockEntity::renderTick);
         return createTickerHelper(blockEntityType, PixelLoader.projectorBlockEntity, ProjectorBlockEntity::serverTick);
+    }
+
+    @Override
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+        ProjectorSetting setting = ProjectorSetting.get(blockPos);
+        if (setting.thread != null)
+            setting.thread.forceStop();
+        ProjectorSetting.settings.remove(blockPos);
+        super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
 }

@@ -66,5 +66,8 @@
   "pixelLoader.projector.screen.load": "生成",
   "pixelLoader.projector.screen.place": "放置",
   "pixelLoader.projector.screen.save": "保存nbt",
+  "pixelLoader.projector.screen.sample.center": "中心采样",
+  "pixelLoader.projector.screen.sample.lattice": "全屏采样",
+  "pixelLoader.projector.screen.sample.edge": "边缘采样",
   "pixelLoader.waiting": "等待……"
 }

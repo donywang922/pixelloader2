@@ -15,6 +15,7 @@ import com.ywsuoyi.pixelloader.projector.ProjectorBlockEntity;
 import com.ywsuoyi.pixelloader.projector.ProjectorBlockItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +28,8 @@ import org.slf4j.Logger;
 public class PixelLoader {
     public static final Logger logger = LogUtils.getLogger();
     public static final String MOD_ID = "pixelloader";
+
+    public static final Vec3i[] neb = new Vec3i[26];
     public static final Item coloredBlockLoader = new ColorSpaceLoader(new Item.Properties().tab(getTAB()));
     public static final Item imgLoader = new ImgLoader(new Item.Properties().tab(getTAB()));
     public static final Item mapLoader = new MapLoader(new Item.Properties().tab(getTAB()));
@@ -74,9 +77,7 @@ public class PixelLoader {
             for (int j = -1; j < 2; j++) {
                 for (int k = -1; k < 2; k++) {
                     if (i != 0 || j != 0 || k != 0) {
-                        TraceBlock.neb[c++] = i;
-                        TraceBlock.neb[c++] = j;
-                        TraceBlock.neb[c++] = k;
+                        neb[c++] = new Vec3i(i, j, k);
                     }
                 }
             }

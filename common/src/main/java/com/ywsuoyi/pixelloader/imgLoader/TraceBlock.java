@@ -2,6 +2,7 @@ package com.ywsuoyi.pixelloader.imgLoader;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
+import static com.ywsuoyi.pixelloader.PixelLoader.neb;
+
 public class TraceBlock extends Block {
     public static final IntegerProperty point = IntegerProperty.create("point", 0, 26);
 
     public static final int[] round = new int[]{1, 0, 1, 1, 0, 1, -1, 1, -1, 0, -1, -1, 0, -1, 1, -1};
 
-    public static final int[] neb = new int[78];
 
     public TraceBlock(Properties properties) {
         super(properties);
@@ -50,11 +52,11 @@ public class TraceBlock extends Block {
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
         super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
         for (int i = 0; i < 26; i++) {
-            BlockPos tmpPos = blockPos.offset(neb[i * 3], neb[i * 3 + 1], neb[i * 3 + 2]);
+            BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = level.getBlockState(tmpPos);
             if (nb.is(this)) {
                 if (nb.getValue(point) == 0) {
-                    level.setBlock(tmpPos, blockState.setValue(point, toID(-neb[i * 3], -neb[i * 3 + 1], -neb[i * 3 + 2])), 3);
+                    level.setBlock(tmpPos, blockState.setValue(point, toID(neb[i].multiply(-1))), 3);
                     break;
                 }
             }
@@ -65,12 +67,12 @@ public class TraceBlock extends Block {
 
     public void tryPoint(LevelAccessor level, BlockPos blockPos, BlockState blockState) {
         for (int i = 0; i < 26; i++) {
-            BlockPos tmpPos = blockPos.offset(neb[i * 3], neb[i * 3 + 1], neb[i * 3 + 2]);
+            BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = level.getBlockState(tmpPos);
             if (nb.is(this) && !tmpPos.offset(fromID(nb.getValue(point))).equals(blockPos)) {
                 boolean flagNpt = true;
                 for (int j = 0; j < 26; j++) {
-                    BlockPos tmpPos2 = tmpPos.offset(neb[j * 3], neb[j * 3 + 1], neb[j * 3 + 2]);
+                    BlockPos tmpPos2 = tmpPos.offset(neb[j]);
                     if (tmpPos2.equals(blockPos)) break;
                     BlockState nb2 = level.getBlockState(tmpPos2);
                     if (nb2.is(this) && tmpPos2.offset(fromID(nb2.getValue(point))).equals(tmpPos)) {
@@ -79,7 +81,7 @@ public class TraceBlock extends Block {
                     }
                 }
                 if (flagNpt) {
-                    level.setBlock(blockPos, blockState.setValue(point, toID(neb[i * 3], neb[i * 3 + 1], neb[i * 3 + 2])), 3);
+                    level.setBlock(blockPos, blockState.setValue(point, toID(neb[i])), 3);
                     return;
                 }
             }
@@ -91,7 +93,7 @@ public class TraceBlock extends Block {
     public void destroy(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
         super.destroy(levelAccessor, blockPos, blockState);
         for (int i = 0; i < 26; i++) {
-            BlockPos tmpPos = blockPos.offset(neb[i * 3], neb[i * 3 + 1], neb[i * 3 + 2]);
+            BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = levelAccessor.getBlockState(tmpPos);
             if (nb.is(this) && tmpPos.offset(fromID(nb.getValue(point))).equals(blockPos)) {
                 tryPoint(levelAccessor, tmpPos, nb);
@@ -103,7 +105,7 @@ public class TraceBlock extends Block {
 
     private void updateCenter(LevelAccessor levelAccessor, BlockPos blockPos) {
         for (int i = 0; i < 26; i++) {
-            BlockPos tmpPos = blockPos.offset(neb[i * 3], neb[i * 3 + 1], neb[i * 3 + 2]);
+            BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = levelAccessor.getBlockState(tmpPos);
             if (nb.is(PixelLoader.traceCenterBlock)) {
                 PixelLoader.traceCenterBlock.updatePoint(levelAccessor, tmpPos, nb);
@@ -181,6 +183,10 @@ public class TraceBlock extends Block {
             }
         }
         return BlockPos.ZERO;
+    }
+
+    public static int toID(Vec3i vec3i) {
+        return toID(vec3i.getX(), vec3i.getY(), vec3i.getZ());
     }
 
     public static int toID(int x, int y, int z) {

@@ -66,5 +66,8 @@
   "pixelLoader.projector.screen.load": "generate",
   "pixelLoader.projector.screen.place": "place",
   "pixelLoader.projector.screen.save": "save",
+  "pixelLoader.projector.screen.sample.center": "center",
+  "pixelLoader.projector.screen.sample.lattice": "lattice",
+  "pixelLoader.projector.screen.sample.edge": "edge",
   "pixelLoader.waiting": "waiting..."
 }

@@ -2,7 +2,6 @@ package com.ywsuoyi.pixelloader.loadingThreadUtil;
 
 import com.ywsuoyi.pixelloader.PixelLoader;
 import com.ywsuoyi.pixelloader.colorspace.ColorRGB;
-import com.ywsuoyi.pixelloader.projector.ProjectorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;

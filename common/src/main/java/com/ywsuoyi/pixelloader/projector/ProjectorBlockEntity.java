@@ -8,9 +8,11 @@ import com.ywsuoyi.pixelloader.Setting;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -58,15 +60,16 @@ public class ProjectorBlockEntity extends BlockEntity {
                 set.message = Component.translatable("pixelLoader.noFile");
                 return;
             }
-            BaseThread.addThread(new LoadProjectorThread(
+            set.thread = new LoadProjectorThread(
                     null,
-                    Setting.getImg(),
+                    set.getImg(),
                     Setting.fs,
                     Setting.imgSize,
                     Setting.cutout,
                     level,
                     pos
-            ));
+            );
+            BaseThread.addThread(set.thread);
         }
     }
 
@@ -75,19 +78,54 @@ public class ProjectorBlockEntity extends BlockEntity {
         ProjectorSetting set = entity.setting;
         if (set.state == ProjectorSetting.LoadState.Select && set.changed && entity.tick % 5 == 0) {
             set.outLinePos.clear();
+            set.latticePos.clear();
             Pair<Matrix4f, Vec3> pair = ProjectorSetting.ToM4f(pos, set);
             Matrix4f m4f = pair.getFirst();
             Vec3 vec3From = pair.getSecond();
-            for (int i = 0; i < set.width; i += 20) {
-                float h = 2f / set.width * set.height;
-                Vec3 vec3To = toVec3(-1f + (2f / set.width) * i, -h / 2, (float) (set.scale + 5) / 16, m4f);
-                BlockHitResult hitResult = level.clip(new ClipContext(vec3From, vec3To, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
-                if (hitResult.getType() != HitResult.Type.MISS)
-                    set.outLinePos.add(hitResult.getBlockPos());
-                vec3To = toVec3(-1f + (2f / set.width) * i, h / 2, (float) (set.scale + 5) / 16, m4f);
-                hitResult = level.clip(new ClipContext(vec3From, vec3To, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
-                if (hitResult.getType() != HitResult.Type.MISS)
-                    set.outLinePos.add(hitResult.getBlockPos());
+            set.scale = Math.max(set.scale, 1);
+            float px = 2f / set.width;
+            float h = px * set.height / 2;
+            float z = (float) (set.scale + 5) / 16;
+
+            int step = set.width / 25;
+            for (int i = 0; i < set.width; i += step) {
+                for (int j = 0; j < set.height; j += step) {
+                    tryAddOutLine(-1f + px * i, -h + px * j, z, m4f, vec3From, set.latticePos, level);
+                }
+            }
+
+            switch (set.sample) {
+                case center -> {
+                    for (int i = 0; i < 5; i++) {
+                        tryAddOutLine(-1f + px * i * 20, -h, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(-1f, -h + px * i * 20, z, m4f, vec3From, set.outLinePos, level);
+
+                        tryAddOutLine(1f - px * i * 20, -h, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(1f, -h + px * i * 20, z, m4f, vec3From, set.outLinePos, level);
+
+                        tryAddOutLine(-1f + px * i * 20, h, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(-1f, h - px * i * 20, z, m4f, vec3From, set.outLinePos, level);
+
+                        tryAddOutLine(1f - px * i * 20, h, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(1f, h - px * i * 20, z, m4f, vec3From, set.outLinePos, level);
+                    }
+                    tryAddOutLine(0, 0, z, m4f, vec3From, set.outLinePos, level);
+                }
+                case edge -> {
+                    step = set.width / 100;
+                    for (int i = 0; i < set.width; i += step) {
+                        tryAddOutLine(-1f + px * i, -h, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(-1f + px * i, h, z, m4f, vec3From, set.outLinePos, level);
+                    }
+                    step = set.height / 100;
+                    for (int i = 0; i < set.height; i += step) {
+                        tryAddOutLine(-1f, -h + px * i, z, m4f, vec3From, set.outLinePos, level);
+                        tryAddOutLine(1f, h - px * i, z, m4f, vec3From, set.outLinePos, level);
+                    }
+                }
+                case lattice -> {
+                    set.outLinePos.addAll(set.latticePos);
+                }
             }
             set.changed = false;
         }
@@ -101,6 +139,16 @@ public class ProjectorBlockEntity extends BlockEntity {
         Vector4f v4fTo = new Vector4f(x, y, z, 1.0f);
         v4fTo.transform(m4f);
         return new Vec3(v4fTo.x(), v4fTo.y(), v4fTo.z());
+    }
+
+    public static void tryAddOutLine(float x, float y, float z, Matrix4f m4f, Vec3 vec3From, NonNullList<BlockPos> set, Level level) {
+        Vec3 vec3To = toVec3(x, y, z, m4f);
+        BlockPos target = BlockGetter.traverseBlocks(vec3From, vec3To, null, (con, pos) -> {
+            BlockState blockState = level.getBlockState(pos);
+            return blockState.getCollisionShape(level, pos).isEmpty() ? null : pos;
+        }, con -> null);
+        if (target != null)
+            set.add(target);
     }
 
     @Override
