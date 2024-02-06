@@ -2,16 +2,19 @@ package com.ywsuoyi.pixelloader.colorspace;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ColorSpace {
-    public static final ColorSpace blockSpace = new ColorSpace();
-    public static final ColorSpace mapSpace = new ColorSpace();
-    public static final ColorSpace mapFlatSpace = new ColorSpace();
-    public static final ColoredBlock air = new ColoredBlock(0, Blocks.AIR, 0);
+    public static final TreeColorSpace blockSpace = new TreeColorSpace();
+    public static final TreeColorSpace mapSpace = new TreeColorSpace();
+    public static final TreeColorSpace map0Space = new TreeColorSpace();
+    public static final TreeColorSpace mapDownSpace = new TreeColorSpace();
+    public static final TreeColorSpace mapUpSpace = new TreeColorSpace();
+    public static final ArrayColorSpace beaconSpace = new ArrayColorSpace();
+
     public static LoadColorSpaceThread thread;
 
     public static NonNullList<ItemStack> filter = NonNullList.withSize(54, ItemStack.EMPTY);
@@ -20,90 +23,56 @@ public class ColorSpace {
 
     public static boolean waitPlace = false;
     public static boolean openFilter = false;
-    ColoredBlock[] history;
-    ColorTree tree;
-    public NonNullList<ColoredBlock> blocks = NonNullList.create();
-    boolean load = false;
-
-
-    public void clear() {
-        load = false;
-        tree = null;
-        blocks.clear();
-        history = new ColoredBlock[16777216];
-    }
-
-    public void build() {
-        tree = new ColorTree(blocks);
-        load = true;
-    }
-
-    public ColoredBlock getBlockTree(ColorRGB rgb) {
-        if (rgb == null) return air;
-        if (history[rgb.rgb] != null)
-            return history[rgb.rgb];
-        ColoredBlock block = tree.getBlock(rgb);
-        history[rgb.rgb] = block;
-        return block;
-    }
-
-    public ColoredBlock getBlock(ColorRGB rgb) {
-        if (rgb == null) return air;
-        if (history[rgb.rgb] != null)
-            return history[rgb.rgb];
-        ColoredBlock block = air;
-        float d = Float.MAX_VALUE;
-        for (ColoredBlock coloredBlock : blocks) {
-            float t = coloredBlock.rgbSq(rgb);
-            if (t < d) {
-                d = t;
-                block = coloredBlock;
-            }
-        }
-        history[rgb.rgb] = block;
-        return block;
-    }
 
     public static void clearAll() {
         selectBlocks.clear();
         blockSpace.clear();
         mapSpace.clear();
-        mapFlatSpace.clear();
+        map0Space.clear();
+        mapUpSpace.clear();
+        mapDownSpace.clear();
+        beaconSpace.clear();
     }
 
     public static void buildAll() {
         Set<Integer> colSet = new HashSet<>();
+        Set<Integer> col0Set = new HashSet<>();
+        Set<Integer> coldSet = new HashSet<>();
+        Set<Integer> coluSet = new HashSet<>();
         for (SelectBlock block : selectBlocks) {
             if (!block.active) continue;
             blockSpace.blocks.add(new ColoredBlock(block.bc.rgb, block.block, 0));
-            if (!colSet.contains(block.map.rgb)) {
-                mapSpace.blocks.add(new ColoredBlock(block.map.rgb, block.block, 0));
-                mapFlatSpace.blocks.add(new ColoredBlock(block.map.rgb, block.block, 0));
-                colSet.add(block.map.rgb);
-            }
-            if (!colSet.contains(block.mapB.rgb)) {
-                mapSpace.blocks.add(new ColoredBlock(block.mapB.rgb, block.block, -1));
-                colSet.add(block.mapB.rgb);
-            }
-            if (!colSet.contains(block.mapT.rgb)) {
-                mapSpace.blocks.add(new ColoredBlock(block.mapT.rgb, block.block, 1));
-                colSet.add(block.mapT.rgb);
-            }
+
+            addMBlock(block.map.rgb, block.block, 0, mapSpace, colSet);
+            addMBlock(block.mapB.rgb, block.block, -1, mapSpace, colSet);
+            addMBlock(block.mapT.rgb, block.block, 1, mapSpace, colSet);
+
+            addMBlock(block.map.rgb, block.block, 0, map0Space, col0Set);
+            addMBlock(block.mapB.rgb, block.block, -1, mapDownSpace, coldSet);
+            addMBlock(block.mapT.rgb, block.block, 1, mapUpSpace, coluSet);
         }
         blockSpace.build();
         mapSpace.build();
-        mapFlatSpace.build();
+        map0Space.build();
+        mapDownSpace.build();
+        mapUpSpace.build();
+        beaconSpace.build();
+    }
+
+    private static void addMBlock(int rgb, Block block, int y, AbstractColorSpace space, Set<Integer> his) {
+        if (!his.contains(rgb)) {
+            space.blocks.add(new ColoredBlock(rgb, block, y));
+            his.add(rgb);
+        }
     }
 
     public static void reBuildAll() {
-        blockSpace.clear();
-        mapSpace.clear();
-        mapFlatSpace.clear();
+        clearAll();
         buildAll();
     }
 
     public static boolean allLoad() {
-        return blockSpace.load & mapFlatSpace.load & mapSpace.load;
+        return blockSpace.load && mapSpace.load && map0Space.load && mapUpSpace.load && mapDownSpace.load;
     }
 
 }

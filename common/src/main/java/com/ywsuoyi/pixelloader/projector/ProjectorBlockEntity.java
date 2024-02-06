@@ -13,14 +13,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -63,7 +60,7 @@ public class ProjectorBlockEntity extends BlockEntity {
             set.thread = new LoadProjectorThread(
                     null,
                     set.getImg(),
-                    Setting.fs,
+                    Setting.dither,
                     Setting.imgSize,
                     Setting.cutout,
                     level,
@@ -88,8 +85,8 @@ public class ProjectorBlockEntity extends BlockEntity {
             float z = (float) (set.scale + 5) / 16;
 
             int step = set.width / 25;
-            for (int i = 0; i < set.width; i += step) {
-                for (int j = 0; j < set.height; j += step) {
+            for (int j = 0; j < set.height; j += step) {
+                for (int i = 0; i < set.width; i += step) {
                     tryAddOutLine(-1f + px * i, -h + px * j, z, m4f, vec3From, set.latticePos, level);
                 }
             }
@@ -123,9 +120,7 @@ public class ProjectorBlockEntity extends BlockEntity {
                         tryAddOutLine(1f, h - px * i, z, m4f, vec3From, set.outLinePos, level);
                     }
                 }
-                case lattice -> {
-                    set.outLinePos.addAll(set.latticePos);
-                }
+                case lattice -> set.outLinePos.addAll(set.latticePos);
             }
             set.changed = false;
         }

@@ -1,6 +1,7 @@
 package com.ywsuoyi.pixelloader;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -19,11 +20,11 @@ public class SettingScreen extends Screen {
             Setting.cutout = Setting.cutout > 3 ? 0 : Setting.cutout;
             cutout.setMessage(Component.translatable("pixelLoader.screen.cutout." + Setting.cutout));
         }));
-        fs = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 - 36, 200, 20, Component.translatable("pixelLoader.screen.fs." + Setting.fs), p_onPress_1_ -> {
-            Setting.fs = !Setting.fs;
-            fs.setMessage(Component.translatable("pixelLoader.screen.fs." + Setting.fs));
+        fs = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 - 36, 200, 20, Component.translatable("pixelLoader.screen.fs." + Setting.dither), p_onPress_1_ -> {
+            Setting.dither = !Setting.dither;
+            fs.setMessage(Component.translatable("pixelLoader.screen.fs." + Setting.dither));
         }));
-        this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 36, 200, 20, Component.translatable("pixelLoader.screen.stop"), p_onPress_1_ -> Setting.stopAllThread()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 36, 200, 20, Component.translatable("pixelLoader.screen.stop"), p_onPress_1_ -> BaseThread.stopAllThread()));
         this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 60, 200, 20, Component.translatable("pixelLoader.screen.close"), p_onPress_1_ -> this.onClose()));
     }
 

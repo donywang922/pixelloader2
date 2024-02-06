@@ -18,9 +18,9 @@ public class ImgSettingScreen extends SettingScreen {
             Setting.imgSize = Setting.imgSize > 8 ? 1 : Setting.imgSize;
             imgsize.setMessage(Component.translatable("pixelLoader.screen.imgsize", Setting.imgSize));
         }));
-        pm = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 12, 200, 20, Component.translatable("pixelLoader.screen.pm." + Setting.pm), p_onPress_1_ -> {
-            Setting.pm = !Setting.pm;
-            pm.setMessage(Component.translatable("pixelLoader.screen.pm." + Setting.pm));
+        pm = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 12, 200, 20, Component.translatable("pixelLoader.screen.pm." + Setting.flat), p_onPress_1_ -> {
+            Setting.flat = !Setting.flat;
+            pm.setMessage(Component.translatable("pixelLoader.screen.pm." + Setting.flat));
         }));
     }
 

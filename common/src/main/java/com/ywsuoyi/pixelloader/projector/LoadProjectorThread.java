@@ -108,7 +108,7 @@ public class LoadProjectorThread extends LoadingThread {
                     Vec2i pixel = new Vec2i(x, y);
                     if (!pixelToBlock.containsKey(pixel)) continue;
                     for (BlockPos pos : pixelToBlock.get(pixel)) {
-                        ColoredBlock block = ColorSpace.blockSpace.getBlockTree(calcRGB(read.getRGB(width - x - 1, height - y - 1)));
+                        ColoredBlock block = ColorSpace.blockSpace.getBlock(calcRGB(read.getRGB(width - x - 1, height - y - 1)));
                         r -= block.r;
                         g -= block.g;
                         b -= block.b;

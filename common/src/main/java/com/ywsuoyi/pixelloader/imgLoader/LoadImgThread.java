@@ -87,7 +87,7 @@ public class LoadImgThread extends LoadingThread {
                         onend(true);
                         return;
                     }
-                    ColoredBlock block = ColorSpace.blockSpace.getBlockTree(calcRGB(read.getRGB(x, y)));
+                    ColoredBlock block = ColorSpace.blockSpace.getBlock(calcRGB(read.getRGB(x, y)));
                     r -= block.r;
                     g -= block.g;
                     b -= block.b;

@@ -41,13 +41,13 @@ public class ImgLoader extends Item {
                 BaseThread.addThread(new LoadImgThread(
                         context.getPlayer(),
                         Setting.getImg(),
-                        Setting.fs,
+                        Setting.dither,
                         Setting.imgSize,
                         Setting.cutout,
                         context.getLevel(),
                         context.getClickedPos(),
                         context.getClickedPos().offset(context.getClickedFace().getNormal()),
-                        Setting.pm
+                        Setting.flat
                 ));
             }
         }

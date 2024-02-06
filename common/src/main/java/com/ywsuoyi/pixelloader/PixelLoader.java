@@ -7,6 +7,7 @@ import com.ywsuoyi.pixelloader.imgLoader.AutoTraceItem;
 import com.ywsuoyi.pixelloader.imgLoader.ImgLoader;
 import com.ywsuoyi.pixelloader.imgLoader.TraceBlock;
 import com.ywsuoyi.pixelloader.imgLoader.TraceCenterBlock;
+import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlock;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockEntity;
 import com.ywsuoyi.pixelloader.mapLoader.MapLoader;
@@ -109,6 +110,6 @@ public class PixelLoader {
     }
 
     public static void end() {
-        Setting.threads.forEach((integer, loadingThread) -> loadingThread.ForceStop());
+        BaseThread.stopAllThread();
     }
 }

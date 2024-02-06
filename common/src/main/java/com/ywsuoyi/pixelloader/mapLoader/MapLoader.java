@@ -1,9 +1,8 @@
 package com.ywsuoyi.pixelloader.mapLoader;
 
-import com.ywsuoyi.pixelloader.*;
+import com.ywsuoyi.pixelloader.Setting;
 import com.ywsuoyi.pixelloader.colorspace.ColorSpace;
 import com.ywsuoyi.pixelloader.loadingThreadUtil.BaseThread;
-import com.ywsuoyi.pixelloader.loadingThreadUtil.ThreadBlockOld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -43,12 +42,12 @@ public class MapLoader extends Item {
                 BaseThread.addThread(new LoadMapThread(
                         context.getPlayer(),
                         Setting.getImg(),
-                        Setting.fs,
+                        Setting.dither,
                         Setting.mapSize,
                         Setting.cutout,
                         context.getLevel(),
                         context.getClickedPos().offset(context.getClickedFace().getNormal()),
-                        !Setting.lt
+                        Setting.mapMode
                 ));
             }
         }

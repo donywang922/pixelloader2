@@ -17,9 +17,14 @@ public class MapSettingScreen extends SettingScreen {
             Setting.mapSize = Setting.mapSize > 8 ? 1 : Setting.mapSize;
             mapsize.setMessage(Component.translatable("pixelLoader.screen.mapsize", Setting.mapSize));
         }));
-        lt = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 12, 200, 20, Component.translatable("pixelLoader.screen.lt." + Setting.lt), p_onPress_1_ -> {
-            Setting.lt = !Setting.lt;
-            lt.setMessage(Component.translatable("pixelLoader.screen.lt." + Setting.lt));
+        lt = this.addRenderableWidget(new Button(this.width / 2 - 100, height / 2 + 12, 200, 20,
+                Component.translatable("pixelLoader.screen.mapmode." + Setting.mapMode), p_onPress_1_ -> {
+            if (Setting.mapMode == Setting.MapMode.flat) Setting.mapMode = Setting.MapMode.threeD;
+            else if (Setting.mapMode == Setting.MapMode.threeD) Setting.mapMode = Setting.MapMode.cover;
+            else if (Setting.mapMode == Setting.MapMode.cover) Setting.mapMode = Setting.MapMode.cover_c;
+            else if (Setting.mapMode == Setting.MapMode.cover_c) Setting.mapMode = Setting.MapMode.cover_c2;
+            else Setting.mapMode = Setting.MapMode.flat;
+            lt.setMessage(Component.translatable("pixelLoader.screen.mapmode." + Setting.mapMode));
         }));
     }
 

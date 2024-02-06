@@ -60,6 +60,7 @@ public class BaseThread extends Thread {
     }
 
     public static void stopAllThread() {
+        if (threads.isEmpty()) return;
         BaseThread thread = threads.getFirst();
         threads.clear();
         thread.forceStop();
