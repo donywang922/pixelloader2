@@ -1,27 +1,35 @@
 {
   "schemaVersion": 1,
-  "id": "pixelloader",
+  "id": "pixel_loader",
   "version": "${version}",
-  "name": "Pixel Loader",
-  "description": "In game pixel art generator.\nCan automatically load blocks in minecraft and other mods.",
+  "name": "pixel loader",
+  "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "YWsuoyi"
+    "Me!"
   ],
   "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-  "license": "MIT",
-  "icon": "assets/pixelloader/textures/item/coloredblockloader.png",
+  "license": "CC0-1.0",
+  "icon": "assets/pixel_loader/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.ywsuoyi.pixelloader.fabric.PixelLoaderFabric"
+      "com.ywsuoyi.fabric.PixelLoaderFabric"
     ],
-    "client": [
-      "com.ywsuoyi.pixelloader.fabric.PixelLoaderFabricClient"
-    ]
+    "client": []
   },
+  "mixins": [
+    "pixel_loader.mixins.json"
+  ],
   "depends": {
-    "fabric": "*",
-    "minecraft": "=1.19.2"
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
   }
 }

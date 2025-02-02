@@ -1,29 +1,28 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[47,)"
 #issueTrackerURL = ""
-license = "MIT"
+license = "Insert License Here"
 
 [[mods]]
-modId = "pixelloader"
+modId = "pixel_loader"
 version = "${version}"
-displayName = "Pixel Loader"
-authors = "YWsuoyi"
+displayName = "pixel loader"
+authors = "Me!"
 description = '''
-In game pixel art generator.
-Can automatically load blocks in minecraft and other mods.
+This is an example description! Tell everyone what your mod is about!
 '''
-#logoFile = ""
+#logoFile = "assets/pixel_loader/icon.png"
 
-[[dependencies.pixelloader]]
+[[dependencies.pixel_loader]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.pixelloader]]
+[[dependencies.pixel_loader]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2]"
+versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"

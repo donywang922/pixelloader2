@@ -1,0 +1,240 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "pixel_loader:block/traceblock"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface",
+        "y": 90
+      },
+      "when": {
+        "point": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface",
+        "y": -90
+      },
+      "when": {
+        "point": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface",
+        "x": -90
+      },
+      "when": {
+        "point": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface",
+        "x": 90
+      },
+      "when": {
+        "point": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface",
+        "y": 180
+      },
+      "when": {
+        "point": "5"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineface"
+      },
+      "when": {
+        "point": "6"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge"
+      },
+      "when": {
+        "point": "7"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": 180
+      },
+      "when": {
+        "point": "8"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": -90
+      },
+      "when": {
+        "point": "9"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": 90
+      },
+      "when": {
+        "point": "10"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "y": 180
+      },
+      "when": {
+        "point": "11"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "y": 180,
+        "x": 180
+      },
+      "when": {
+        "point": "12"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "point": "13"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": 90,
+        "y": -90
+      },
+      "when": {
+        "point": "14"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "y": 90
+      },
+      "when": {
+        "point": "15"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "y": -90
+      },
+      "when": {
+        "point": "16"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": 180,
+        "y": 90
+      },
+      "when": {
+        "point": "17"
+      }
+    },
+    {
+      "apply": {
+        "model": "pixel_loader:block/tracelineedge",
+        "x": 180,
+        "y": -90
+      },
+      "when": {
+        "point": "18"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner"
+      },
+      "when": {
+        "point": "19"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "y": -90
+      },
+      "when": {
+        "point": "20"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "x": -90
+      },
+      "when": {
+        "point": "21"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "x": -90,
+        "y": -90
+      },
+      "when": {
+        "point": "22"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "y": 90
+      },
+      "when": {
+        "point": "23"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "y": 180
+      },
+      "when": {
+        "point": "24"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "point": "25"
+      }
+    },    {
+      "apply": {
+        "model": "pixel_loader:block/tracelinecorner",
+        "x": -90,
+        "y": 180
+      },
+      "when": {
+        "point": "26"
+      }
+    }
+  ]
+}
