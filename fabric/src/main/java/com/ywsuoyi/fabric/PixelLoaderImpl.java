@@ -1,11 +1,8 @@
 package com.ywsuoyi.fabric;
 
 import com.ywsuoyi.PixelLoader;
-import com.ywsuoyi.loadingThreadUtil.ThreadBlockEntity;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

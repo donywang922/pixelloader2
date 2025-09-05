@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.ywsuoyi.fabric.ExampleModFabric"
+      "com.ywsuoyi.fabric.PixelLoaderFabric"
     ],
     "client": [
-      "com.ywsuoyi.fabric.client.ExampleModFabricClient"
+      "com.ywsuoyi.fabric.PixelLoaderFabricClient"
     ]
   },
   "mixins": [

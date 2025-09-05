@@ -1,9 +1,6 @@
 package com.ywsuoyi.neoforge;
 
 import com.ywsuoyi.PixelLoader;
-import com.ywsuoyi.loadingThreadUtil.ThreadBlockEntity;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

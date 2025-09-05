@@ -2,7 +2,6 @@ package com.ywsuoyi.imgLoader;
 
 import com.ywsuoyi.Setting;
 import com.ywsuoyi.SettingScreen;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 

@@ -1,7 +1,6 @@
 package com.ywsuoyi;
 
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
