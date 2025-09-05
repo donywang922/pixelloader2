@@ -67,10 +67,9 @@ public class MapLoader extends Item {
         return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
     }
 
-
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.translatable("pixelLoader.imgLoader.tip"));
-        super.appendHoverText(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.translatable("pixelLoader.imgLoader.tip"));
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 }

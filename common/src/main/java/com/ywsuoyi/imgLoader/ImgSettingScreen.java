@@ -25,10 +25,4 @@ public class ImgSettingScreen extends SettingScreen {
                     pm.setMessage(Component.translatable("pixelLoader.screen.pm." + Setting.flat));
                 }).bounds(this.width / 2 - 100, height / 2 + 12, 200, 20).build());
     }
-
-    @Override
-    public void render(GuiGraphics matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        renderBackground(matrixStack);
-        super.render(matrixStack, p_230430_2_, p_230430_3_, p_230430_4_);
-    }
 }

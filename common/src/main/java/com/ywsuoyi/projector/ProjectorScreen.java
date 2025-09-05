@@ -86,10 +86,6 @@ public class ProjectorScreen extends Screen {
         load.visible = editable;
         place.visible = setting.state == ProjectorSetting.LoadState.Finish;
         save.visible = place.visible || setting.state == ProjectorSetting.LoadState.Done;
-        roll.tick();
-        yaw.tick();
-        pitch.tick();
-        scale.tick();
         roll.setEditable(editable);
         yaw.setEditable(editable);
         pitch.setEditable(editable);

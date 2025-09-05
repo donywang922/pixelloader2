@@ -1,39 +1,45 @@
-package com.ywsuoyi.fabric;
+package com.ywsuoyi.neoforge;
 
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlockEntity;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class PixelLoaderImpl {
     public static <T extends BlockEntity> BlockEntityType<T> buildBlockEntity(PixelLoader.Factory<T> entity, Block block) {
         return BlockEntityType.Builder.of(entity::create, block).build(null);
     }
 
+    public static RegisterEvent.RegisterHelper<Item> itemRegisterHelper;
+
     public static Item regItem(String name, Item item) {
-        Registry.register(BuiltInRegistries.ITEM, PixelLoader.loc(name), item);
+        itemRegisterHelper.register(PixelLoader.loc(name), item);
         return item;
     }
 
+    public static RegisterEvent.RegisterHelper<Block> blockRegisterHelper;
+
     public static <T extends Block> T regBlock(String name, T block) {
-        Registry.register(BuiltInRegistries.BLOCK, PixelLoader.loc(name), block);
+        blockRegisterHelper.register(PixelLoader.loc(name), block);
         return block;
     }
 
+    public static RegisterEvent.RegisterHelper<BlockEntityType<?>> blockEntityRegisterHelper;
+
     public static <T extends BlockEntity> BlockEntityType<T> regBlockEntity(String name, BlockEntityType<T> blockEntity) {
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, PixelLoader.loc(name), blockEntity);
+        blockEntityRegisterHelper.register(PixelLoader.loc(name), blockEntity);
         return blockEntity;
     }
 
+    public static RegisterEvent.RegisterHelper<CreativeModeTab> creativeModeTabRegisterHelper;
     public static CreativeModeTab regTab(String name, CreativeModeTab tab) {
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, PixelLoader.loc(name), tab);
+        creativeModeTabRegisterHelper.register(PixelLoader.loc(name), tab);
         return tab;
     }
 }

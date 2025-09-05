@@ -6,6 +6,7 @@ import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.ColorSpace;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -147,24 +148,21 @@ public class ProjectorBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
         compoundTag.putDouble("roll", setting.roll);
         compoundTag.putDouble("yaw", setting.yaw);
         compoundTag.putDouble("pitch", setting.pitch);
         compoundTag.putDouble("scale", setting.scale);
-
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
         setting.roll = compoundTag.getDouble("roll");
         setting.yaw = compoundTag.getDouble("yaw");
         setting.pitch = compoundTag.getDouble("pitch");
         setting.scale = compoundTag.getDouble("scale");
         setChanged();
     }
-
-
 }

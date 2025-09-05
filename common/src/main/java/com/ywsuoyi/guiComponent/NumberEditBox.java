@@ -1,5 +1,6 @@
 package com.ywsuoyi.guiComponent;
 
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -7,8 +8,7 @@ import net.minecraft.network.chat.Component;
 
 public class NumberEditBox extends EditBox {
 
-    int lastClick = 0;
-    int frame = 0;
+    long lastClick = 0;
 
     public NumberEditBox(Font font, int i, int j, int k, int l, Component component) {
         super(font, i, j, k, l, component);
@@ -16,17 +16,11 @@ public class NumberEditBox extends EditBox {
     }
 
     @Override
-    public void tick() {
-        frame++;
-        super.tick();
-    }
-
-    @Override
     public void setFocused(boolean bl) {
         if (bl && canConsumeInput()) {
-            if (frame - lastClick < 10)
+            if (Util.getMillis() - lastClick < 500)
                 this.setValue("0");
-            lastClick = frame;
+            lastClick = Util.getMillis();
         }
         if (!bl) {
             try {
@@ -39,11 +33,11 @@ public class NumberEditBox extends EditBox {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
+    public boolean mouseScrolled(double d, double e, double f, double g) {
         if (canConsumeInput()) {
             try {
                 double v = Double.parseDouble(this.getValue());
-                v += Screen.hasShiftDown() ? f * 0.1 : f;
+                v += Screen.hasShiftDown() ? g * 0.1 : g;
                 v = Math.round(v * 1000) / 1000.0;
                 this.setValue(String.valueOf(v));
             } catch (NumberFormatException ignored) {
@@ -51,13 +45,13 @@ public class NumberEditBox extends EditBox {
             }
             return true;
         }
-        return super.mouseScrolled(d, e, f);
+        return super.mouseScrolled(d, e, f, g);
     }
 
     @Override
     protected void onDrag(double d, double e, double f, double g) {
         super.onDrag(d, e, f, g);
-        mouseScrolled(d, e, f);
+        mouseScrolled(d, e, g, f);
     }
 
     @Override

@@ -115,8 +115,7 @@ public class TraceBlock extends Block {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (!player.getItemInHand(interactionHand).isEmpty()) return InteractionResult.PASS;
+    protected @NotNull InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         int pn = blockState.getValue(point);
         if (pn == 0) {
             level.setBlock(blockPos, blockState.setValue(point, 1), 3);

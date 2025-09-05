@@ -15,9 +15,13 @@ import com.ywsuoyi.projector.ProjectorBlock;
 import com.ywsuoyi.projector.ProjectorBlockEntity;
 import com.ywsuoyi.projector.ProjectorBlockItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,57 +30,48 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
+
 public class PixelLoader {
     public static final Logger logger = LogUtils.getLogger();
     public static final String MOD_ID = "pixel_loader";
 
     public static final Vec3i[] neb = new Vec3i[26];
-    public static final Item coloredBlockLoader = new ColorSpaceLoader(new Item.Properties());
-    public static final Item imgLoader = new ImgLoader(new Item.Properties());
-    public static final Item mapLoader = new MapLoader(new Item.Properties());
-    public static final Item autoTracer = new AutoTraceItem(new Item.Properties());
+    public static Item coloredBlockLoader;
+    public static Item imgLoader;
+    public static Item mapLoader;
+    public static Item autoTracer;
 
-    public static final TraceBlock traceBlock = new TraceBlock(BlockBehaviour.Properties.of().noOcclusion());
-    public static final Item traceBlockItem = new BlockItem(traceBlock, new Item.Properties());
+    public static TraceBlock traceBlock;
+    public static Item traceBlockItem;
 
-    public static final TraceCenterBlock traceCenterBlock = new TraceCenterBlock(BlockBehaviour.Properties.of().noOcclusion());
-    public static final Item traceCenterBlockItem = new BlockItem(traceCenterBlock, new Item.Properties());
+    public static TraceCenterBlock traceCenterBlock;
+    public static Item traceCenterBlockItem;
 
-    public static final ProjectorBlock projectorBlock = new ProjectorBlock(BlockBehaviour.Properties.of().noOcclusion().noCollission());
-    public static final Item projectorBlockItem = new ProjectorBlockItem(projectorBlock, new Item.Properties());
-    public static final BlockEntityType<ProjectorBlockEntity> projectorBlockEntity = buildBlockEntity(ProjectorBlockEntity::new, projectorBlock);
+    public static ProjectorBlock projectorBlock;
+    public static Item projectorBlockItem;
+    public static BlockEntityType<ProjectorBlockEntity> projectorBlockEntity;
+    public static ModelLayerLocation projectorBlockLayer = new ModelLayerLocation(PixelLoader.loc("projectorblock"), "projectorblock");
+    public static Material projectorBlockMaterial = new Material(TextureAtlas.LOCATION_BLOCKS, loc("block/projectorblock"));
 
-    public static final Block threadBlock = new ThreadBlock(BlockBehaviour.Properties.of().noOcclusion());
-    public static final BlockEntityType<ThreadBlockEntity> threadBlockEntity = buildBlockEntity(getThreadBlock(), threadBlock);
+    public static Block threadBlock;
+    public static BlockEntityType<ThreadBlockEntity> threadBlockEntity;
+    public static ModelLayerLocation threadBlockLayer = new ModelLayerLocation(PixelLoader.loc("threadblock"), "threadblock");
+    public static Material threadBlockMaterial = new Material(TextureAtlas.LOCATION_BLOCKS, loc("block/threadblock"));
 
-    public static final Block outlineBlock = new Block(BlockBehaviour.Properties.of().noOcclusion().noCollission());
+    public static Block outlineBlock;
 
-    public static final CreativeModeTab TAB = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
-            // Set name of tab to display
-            .title(Component.translatable("item_group." + MOD_ID))
-            // Set icon of creative tab
-            .icon(() -> new ItemStack(PixelLoader.mapLoader))
-            // Add default items to tab
-            .displayItems((params, output) -> {
-                output.accept(PixelLoader.coloredBlockLoader);
-                output.accept(PixelLoader.imgLoader);
-                output.accept(PixelLoader.mapLoader);
-                output.accept(PixelLoader.autoTracer);
+    public static CreativeModeTab TAB;
 
-                output.accept(PixelLoader.traceBlock);
-                output.accept(PixelLoader.traceCenterBlock);
-                output.accept(PixelLoader.projectorBlock);
+    public static ResourceLocation loc(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
 
-            })
-            .build();
-
-    @ExpectPlatform
-    public static <T extends BlockEntity> BlockEntityType<T> buildBlockEntity(Factory<T> entity, Block block) {
-        throw new AssertionError();
+    public static ResourceLocation loc(String namespace, String path) {
+        return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 
     @ExpectPlatform
-    public static Factory<ThreadBlockEntity> getThreadBlock() {
+    public static <T extends BlockEntity> BlockEntityType<T> buildBlockEntity(Factory<T> entity, Block block) {
         throw new AssertionError();
     }
 
@@ -124,5 +119,69 @@ public class PixelLoader {
 
     public static void end() {
         BaseThread.stopAllThread();
+    }
+
+    @ExpectPlatform
+    public static CreativeModeTab regTab(String name, CreativeModeTab tab) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Item regItem(String name, Item item) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static <T extends Block> T regBlock(String name, T block) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static <T extends BlockEntity> BlockEntityType<T> regBlockEntity(String name, BlockEntityType<T> blockEntity) {
+        throw new AssertionError();
+    }
+
+    public static void regAllTabs() {
+        TAB = regTab("tab", CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                // Set name of tab to display
+                .title(Component.translatable("item_group." + MOD_ID))
+                // Set icon of creative tab
+                .icon(() -> new ItemStack(PixelLoader.mapLoader))
+                // Add default items to tab
+                .displayItems((params, output) -> {
+                    output.accept(PixelLoader.coloredBlockLoader);
+                    output.accept(PixelLoader.imgLoader);
+                    output.accept(PixelLoader.mapLoader);
+                    output.accept(PixelLoader.autoTracer);
+
+                    output.accept(PixelLoader.traceBlock);
+                    output.accept(PixelLoader.traceCenterBlock);
+                    output.accept(PixelLoader.projectorBlock);
+
+                })
+                .build());
+    }
+
+    public static void regAllBlocks() {
+        outlineBlock = regBlock("outlineblock", new Block(BlockBehaviour.Properties.of().noOcclusion().noCollission()));
+        threadBlock = regBlock("traceblock", new TraceBlock(BlockBehaviour.Properties.of().noOcclusion()));
+        traceCenterBlock = regBlock("tracecenterblock", new TraceCenterBlock(BlockBehaviour.Properties.of().noOcclusion()));
+        projectorBlock = regBlock("projectorblock", new ProjectorBlock(BlockBehaviour.Properties.of().noOcclusion().noCollission()));
+        threadBlock = regBlock("threadblock", new ThreadBlock(BlockBehaviour.Properties.of().noOcclusion()));
+    }
+
+    public static void regAllItems() {
+        coloredBlockLoader = regItem("colorspaceloader", new ColorSpaceLoader(new Item.Properties()));
+        imgLoader = regItem("imgloader", new ImgLoader(new Item.Properties()));
+        mapLoader = regItem("maploader", new MapLoader(new Item.Properties()));
+        autoTracer = regItem("autotracer", new AutoTraceItem(new Item.Properties()));
+        traceBlockItem = regItem("traceblock", new BlockItem(traceBlock, new Item.Properties()));
+        traceCenterBlockItem = regItem("tracecenterblock", new BlockItem(traceCenterBlock, new Item.Properties()));
+        projectorBlockItem = regItem("projectorblock", new ProjectorBlockItem(projectorBlock, new Item.Properties()));
+    }
+
+    public static void regAllBlockEntity() {
+        projectorBlockEntity = regBlockEntity("projectorblockentity", buildBlockEntity(ProjectorBlockEntity::new, projectorBlock));
+        threadBlockEntity = regBlockEntity("threadblockentity", buildBlockEntity(ThreadBlockEntity::new, threadBlock));
     }
 }

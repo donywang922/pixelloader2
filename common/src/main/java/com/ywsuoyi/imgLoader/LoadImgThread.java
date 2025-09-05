@@ -66,7 +66,7 @@ public class LoadImgThread extends LoadingThread {
             if (trace) {
                 if (width > height && axisX.size() < axisY.size() || width < height && axisX.size() > axisY.size()) {
                     NonNullList<BlockPos> tmp = axisX;
-                    axisX = axisY;
+                    axisX = axisY;//rotate 90 degree
                     axisY = tmp;
                 }
                 int xcc = width / axisX.size();
@@ -104,10 +104,8 @@ public class LoadImgThread extends LoadingThread {
         } catch (IOException e) {
             PixelLoader.logger.error("Failed to generate image: {}", e.getMessage());
         }
-        if (data.genBlocks.size() > 10000)
-            data.renderPercentage = Math.round(1000000f / data.genBlocks.size()) / 100f;
-        else
-            data.renderPercentage = 1;
+        if (data.genBlocks.size() > 10000) data.renderPercentage = Math.round(1000000f / data.genBlocks.size()) / 100f;
+        else data.renderPercentage = 1;
         onend(false);
     }
 }

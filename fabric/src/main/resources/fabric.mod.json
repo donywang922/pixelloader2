@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "pixel_loader",
   "version": "${version}",
-  "name": "pixel loader",
+  "name": "Pixel loader",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -16,17 +16,19 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.ywsuoyi.fabric.PixelLoaderFabric"
+      "com.ywsuoyi.fabric.ExampleModFabric"
     ],
-    "client": []
+    "client": [
+      "com.ywsuoyi.fabric.client.ExampleModFabricClient"
+    ]
   },
   "mixins": [
     "pixel_loader.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.10",
-    "minecraft": "~1.20.1",
-    "java": ">=17",
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
     "fabric-api": "*"
   },
   "suggests": {

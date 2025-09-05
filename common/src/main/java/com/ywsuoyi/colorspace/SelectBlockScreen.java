@@ -27,7 +27,7 @@ public class SelectBlockScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
+    public boolean mouseScrolled(double d, double e, double f, double g) {
         scrollY -= (float) f * 10;
         scrollY = Mth.clamp(scrollY, 0, h);
         return true;

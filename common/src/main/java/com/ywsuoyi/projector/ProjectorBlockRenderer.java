@@ -1,10 +1,10 @@
 package com.ywsuoyi.projector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlockRenderer;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -13,20 +13,19 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 
 public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBlockEntity> {
-    private static final RenderType projectorRenderType = RenderType.entityCutout(new ResourceLocation(PixelLoader.MOD_ID, "textures/block/projector.png"));
-    public final ProjectorModel model;
+    private static final RenderType projectorRenderType = RenderType.entityCutout(PixelLoader.loc("textures/block/projector.png"));
+    public final ModelPart model;
     public final BlockRenderDispatcher blockRender;
 
-    public ProjectorBlockRenderer(BlockEntityRendererProvider.Context arg) {
-        blockRender = arg.getBlockRenderDispatcher();
-        model = new ProjectorModel(arg.bakeLayer(ProjectorModel.projectorLayer));
+    public ProjectorBlockRenderer(BlockEntityRendererProvider.Context context) {
+        blockRender = context.getBlockRenderDispatcher();
+        model = context.bakeLayer(PixelLoader.projectorBlockLayer);
     }
 
     @Override
@@ -54,12 +53,11 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
             if (setting.width > 0 && setting.height > 0) {
                 h = 32f / setting.width * setting.height;
             }
-            model.frametop.setPos(0f, -h / 2, (float) (5.125f + setting.scale));
-            model.framebot.setPos(0f, h / 2, (float) (5.125f + setting.scale));
-            model.projector.visible = !setting.editing;
+            model.getChild("frametop").setPos(0f, -h / 2, (float) (5.125f + setting.scale));
+            model.getChild("framebot").setPos(0f, h / 2, (float) (5.125f + setting.scale));
+            model.getChild("projector").visible = !setting.editing;
         }
-        VertexConsumer vertexConsumer = multiBufferSource.getBuffer(projectorRenderType);
-        this.model.renderToBuffer(poseStack, vertexConsumer, i, j, 1.0f, 1.0f, 1.0f, 1.0f);
+        model.render(poseStack, PixelLoader.projectorBlockMaterial.buffer(multiBufferSource, RenderType::entityCutout), i, j);
         poseStack.popPose();
 
         if (setting != null) {

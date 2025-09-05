@@ -13,9 +13,9 @@ public class PixelLoaderFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockEntityRenderers.register(PixelLoader.projectorBlockEntity, ProjectorBlockRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(ProjectorModel.projectorLayer, ProjectorModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PixelLoader.projectorBlockLayer, ProjectorModel::createBodyLayer);
 
         BlockEntityRenderers.register(PixelLoader.threadBlockEntity, ThreadBlockRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(ThreadBlockModel.threadLayer, ThreadBlockModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PixelLoader.projectorBlockLayer, ThreadBlockModel::createBodyLayer);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class ProjectorBlockItem extends BlockItem {
     public ProjectorBlockItem(Block block, Properties properties) {
@@ -16,7 +17,7 @@ public class ProjectorBlockItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         BlockPos pos = player.blockPosition().above();
         level.setBlock(pos, getBlock().defaultBlockState(), 11);
         BlockState state = level.getBlockState(pos);

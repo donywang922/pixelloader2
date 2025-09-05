@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.ywsuoyi.PixelLoader;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.Util;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -15,7 +17,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Tuple;
@@ -28,14 +29,13 @@ import java.util.List;
 public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntity> {
 
     public static float[] ofst = new float[]{0, 2.7475f, 1.1775f, 0.785f, 1.9625f, 1.57f, 2.355f, 0.3925f};
-    private static final RenderType threadBlockRenderType = RenderType.entityCutout(new ResourceLocation(PixelLoader.MOD_ID, "textures/block/threadblock.png"));
 
     public final BlockRenderDispatcher blockRender;
-    public final ThreadBlockModel model;
+    public final ModelPart model;
 
-    public ThreadBlockRenderer(BlockEntityRendererProvider.Context arg) {
-        blockRender = arg.getBlockRenderDispatcher();
-        model = new ThreadBlockModel(arg.bakeLayer(ThreadBlockModel.threadLayer));
+    public ThreadBlockRenderer(BlockEntityRendererProvider.Context context) {
+        blockRender = context.getBlockRenderDispatcher();
+        model = context.bakeLayer(PixelLoader.threadBlockLayer);
     }
 
     @Override
@@ -57,13 +57,11 @@ public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntit
     public void render(ThreadBlockEntity blockEntity, float f, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        VertexConsumer vertexConsumer = multiBufferSource.getBuffer(threadBlockRenderType);
         for (int l = 0; l < 8; l++) {
-            model.modelParts[l + 1].setPos(0, Mth.sin((blockEntity.tick + f) * 0.1f + ofst[l] * 2) * 4, 0);
+            model.getChild("l" + l).setPos(0, Mth.sin((blockEntity.tick + f) * 0.1f + ofst[l] * 2) * 4, 0);
         }
-        model.center.setRotation(0, (blockEntity.tick + f) * 0.01f, 0);
-
-        this.model.renderToBuffer(poseStack, vertexConsumer, i, j, 1.0f, 1.0f, 1.0f, 1.0f);
+        model.getChild("center").yRot = (blockEntity.tick + f) * 0.01f;
+        model.render(poseStack, PixelLoader.threadBlockMaterial.buffer(multiBufferSource, RenderType::entityCutout), i, j);
         poseStack.popPose();
 
         ThreadData data = ThreadData.data.get(blockEntity.getBlockPos());
@@ -72,9 +70,9 @@ public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntit
             BlockPos caOffset = data.center.subtract(blockEntity.getBlockPos());
             poseStack.pushPose();
             poseStack.translate(caOffset.getX(), caOffset.getY(), caOffset.getZ());
-            long tm = System.currentTimeMillis();
+            long tm = Util.getMillis();
             renderVisualBlocks(poseStack, multiBufferSource, data.genBlocks, blockRender, data.directions, data.renderPercentage);
-            if (data.autoLowerPercentage && System.currentTimeMillis() - tm > 200) {
+            if (data.autoLowerPercentage && Util.getMillis() - tm > 200) {
                 data.renderPercentage = 0;
                 data.autoLowerPercentage = false;
             }
@@ -99,7 +97,7 @@ public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntit
             BakedModel blockModel = blockRender.getBlockModel(tuple.getB());
             for (Direction direction : directions) {
                 for (BakedQuad quad : blockModel.getQuads(tuple.getB(), direction, randomSource)) {
-                    vertexConsumer.putBulkData(poseStack.last(), quad, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                    vertexConsumer.putBulkData(poseStack.last(), quad, 1, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
                 }
             }
             poseStack.popPose();

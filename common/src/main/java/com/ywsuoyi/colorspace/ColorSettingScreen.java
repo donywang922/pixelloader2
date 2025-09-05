@@ -74,8 +74,7 @@ public class ColorSettingScreen extends Screen {
         MutableComponent msg = Component.translatable("pixelLoader.screen.colorspace.message",
                 ColorSpace.thread != null ? ColorSpace.thread.message : Component.empty());
         poseStack.drawString(this.font, msg, this.width - 120, 45, 0xFFFFFF);
-        MutableComponent cnt = Component.translatable("pixelLoader.screen.colorspace.count",
-                ColorSpace.selectBlocks.size());
+        MutableComponent cnt = Component.translatable("pixelLoader.screen.colorspace.count", ColorSpace.selectBlocks.size());
         poseStack.drawString(this.font, cnt, this.width - 120, 55, 0xFFFFFF);
     }
 

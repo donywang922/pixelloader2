@@ -18,11 +18,6 @@ public class IntegerEditBox extends EditBox {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     public void setFocused(boolean bl) {
         if (bl && canConsumeInput()) {
             if (frame - lastClick < 10)
@@ -42,11 +37,11 @@ public class IntegerEditBox extends EditBox {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
+    public boolean mouseScrolled(double d, double e, double f, double g) {
         if (canConsumeInput()) {
             try {
                 int v = Integer.parseInt(this.getValue());
-                v += (int) Math.round(f);
+                v += (int) Math.round(g);
                 v = Mth.clamp(v, min, max);
                 this.setValue(String.valueOf(v));
             } catch (NumberFormatException ignored) {
@@ -54,13 +49,13 @@ public class IntegerEditBox extends EditBox {
             }
             return true;
         }
-        return super.mouseScrolled(d, e, f);
+        return super.mouseScrolled(d, e, f, g);
     }
 
     @Override
     public void onDrag(double d, double e, double f, double g) {
         super.onDrag(d, e, f, g);
-        mouseScrolled(d, e, f);
+        mouseScrolled(d, e, g, f);
     }
 
     @Override

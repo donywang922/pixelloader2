@@ -1,5 +1,6 @@
 package com.ywsuoyi.projector;
 
+import com.mojang.serialization.MapCodec;
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.EndGatewayBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,7 +29,12 @@ public class ProjectorBlock extends BaseEntityBlock {
     public ProjectorBlock(Properties properties) {
         super(properties);
     }
+    public static final MapCodec<ProjectorBlock> CODEC = simpleCodec(ProjectorBlock::new);
 
+    @Override
+    public @NotNull MapCodec<ProjectorBlock> codec() {
+        return CODEC;
+    }
     @Override
     public float getShadeBrightness(BlockState arg, BlockGetter arg2, BlockPos arg3) {
         return 1.0f;
@@ -61,7 +68,7 @@ public class ProjectorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected @NotNull InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         ProjectorSetting setting = ProjectorSetting.get(blockPos);
         player.moveTo(blockPos.getX() + 0.5, blockPos.getY() - player.getEyeHeight() + 0.5, blockPos.getZ() + 0.5, (float) -setting.yaw, (float) setting.pitch + 0.0000001f);
         player.setDeltaMovement(Vec3.ZERO);

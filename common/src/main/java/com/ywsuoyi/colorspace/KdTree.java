@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * reference only
  * A k-d tree (short for k-dimensional tree) is a space-partitioning data
  * structure for organizing points in a k-dimensional space. k-d trees are a
  * useful data structure for several applications, such as searches involving a
@@ -27,7 +28,6 @@ import java.util.TreeSet;
  * @author Justin Wetherell <phishman3579@gmail.com>
  */
 
-//reference only
 public class KdTree<T extends KdTree.XYZPoint> implements Iterable<T> {
 
     private int k = 3;
@@ -78,11 +78,6 @@ public class KdTree<T extends KdTree.XYZPoint> implements Iterable<T> {
     protected static final int X_AXIS = 0;
     protected static final int Y_AXIS = 1;
     protected static final int Z_AXIS = 2;
-
-    /**
-     * Default constructor.
-     */
-    public KdTree() { }
 
     /**
      * Constructor for creating a more balanced tree. It uses the

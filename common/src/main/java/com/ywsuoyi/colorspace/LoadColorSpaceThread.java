@@ -83,7 +83,7 @@ public class LoadColorSpaceThread extends BaseThread {
             if (ItemBlockRenderTypes.getChunkRenderType(blockState) != RenderType.solid()) continue;//opaque texture
             //block render
             ResourceLocation id = BuiltInRegistries.BLOCK.getKey(b);
-            ResourceLocation id2 = new ResourceLocation(id.getNamespace(), "blockstates/" + id.getPath() + ".json");
+            ResourceLocation id2 = PixelLoader.loc(id.getNamespace(), "blockstates/" + id.getPath() + ".json");
             try {
                 Optional<Resource> Resources = resourceManager.getResource(id2);
                 if (Resources.isEmpty()) continue;//must have states
@@ -100,7 +100,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 if (!b2) continue;//only has one model
                 //state
                 String[] s3 = decompose(s2);
-                ResourceLocation id3 = new ResourceLocation(s3[0], "models/" + s3[1] + ".json");
+                ResourceLocation id3 = PixelLoader.loc(s3[0], "models/" + s3[1] + ".json");
                 Optional<Resource> Resources1 = resourceManager.getResource(id3);
                 if (Resources1.isEmpty()) continue;//must have model
                 Resource r1 = Resources1.get();
@@ -126,8 +126,8 @@ public class LoadColorSpaceThread extends BaseThread {
             }
             try {
                 String[] s1 = decompose(entry.getB());
-                Optional<Resource> Resources = resourceManager.getResource(new ResourceLocation(s1[0], "textures/" + s1[1] + ".png"));
-                Optional<Resource> TResources = resourceManager.getResource(new ResourceLocation(s1[0], "textures/" + s1[1] + ".png.mcmeta"));
+                Optional<Resource> Resources = resourceManager.getResource(PixelLoader.loc(s1[0], "textures/" + s1[1] + ".png"));
+                Optional<Resource> TResources = resourceManager.getResource(PixelLoader.loc(s1[0], "textures/" + s1[1] + ".png.mcmeta"));
                 if (TResources.isEmpty() && Resources.isPresent()) {
                     Resource resource = Resources.get();
                     BufferedImage read = ImageIO.read(resource.open());

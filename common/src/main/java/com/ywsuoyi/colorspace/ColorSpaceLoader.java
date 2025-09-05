@@ -54,10 +54,10 @@ public class ColorSpaceLoader extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.translatable("pixelLoader.colorspace.tip"));
-        tooltip.add(Component.translatable("pixelLoader.screen.colorspace.message",
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.translatable("pixelLoader.colorspace.tip"));
+        list.add(Component.translatable("pixelLoader.screen.colorspace.message",
                 ColorSpace.thread != null ? ColorSpace.thread.message : Component.empty()));
-        super.appendHoverText(stack, world, tooltip, context);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 }

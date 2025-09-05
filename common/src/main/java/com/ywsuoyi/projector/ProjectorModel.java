@@ -4,31 +4,10 @@ package com.ywsuoyi.projector;
 // Paste this class into your mod and generate all required imports
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.ywsuoyi.PixelLoader;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 
-public class ProjectorModel extends Model {
-    // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation projectorLayer = new ModelLayerLocation(new ResourceLocation(PixelLoader.MOD_ID, "projector"), "main");
-    public final ModelPart projector;
-    public final ModelPart frametop;
-    public final ModelPart framebot;
-
-    public ProjectorModel(ModelPart root) {
-        super(RenderType::entitySolid);
-        this.projector = root.getChild("projector");
-        this.frametop = root.getChild("frametop");
-        this.framebot = root.getChild("framebot");
-    }
-
+public class ProjectorModel{
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -65,12 +44,5 @@ public class ProjectorModel extends Model {
                 .texOffs(31, 30).addBox(15.75F, -2.0F, -0.125F, 0.25F, 1.75F, 0.25F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.125F));
 
         return LayerDefinition.create(meshdefinition, 32, 32);
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        projector.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        frametop.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        framebot.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

@@ -1,9 +1,9 @@
 package com.ywsuoyi.loadingThreadUtil;
 
+import com.mojang.serialization.MapCodec;
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ThreadBlock extends BaseEntityBlock {
+    public static final MapCodec<ThreadBlock> CODEC = simpleCodec(ThreadBlock::new);
+
+    @Override
+    public @NotNull MapCodec<ThreadBlock> codec() {
+        return CODEC;
+    }
+
     public ThreadBlock(Properties properties) {
         super(properties);
     }
@@ -36,11 +43,11 @@ public class ThreadBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return PixelLoader.getThreadBlock().create(blockPos, blockState);
+        return new ThreadBlockEntity(blockPos, blockState);
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected @NotNull InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (level.isClientSide)
             Minecraft.getInstance().setScreen(new ThreadScreen(blockPos));
         return InteractionResult.SUCCESS;
