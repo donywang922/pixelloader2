@@ -164,7 +164,7 @@ public class PixelLoader {
 
     public static void regAllBlocks() {
         outlineBlock = regBlock("outlineblock", new Block(BlockBehaviour.Properties.of().noOcclusion().noCollission()));
-        threadBlock = regBlock("traceblock", new TraceBlock(BlockBehaviour.Properties.of().noOcclusion()));
+        traceBlock = regBlock("traceblock", new TraceBlock(BlockBehaviour.Properties.of().noOcclusion()));
         traceCenterBlock = regBlock("tracecenterblock", new TraceCenterBlock(BlockBehaviour.Properties.of().noOcclusion()));
         projectorBlock = regBlock("projectorblock", new ProjectorBlock(BlockBehaviour.Properties.of().noOcclusion().noCollission()));
         threadBlock = regBlock("threadblock", new ThreadBlock(BlockBehaviour.Properties.of().noOcclusion()));

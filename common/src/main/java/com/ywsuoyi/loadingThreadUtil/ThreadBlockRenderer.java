@@ -58,7 +58,7 @@ public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntit
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         for (int l = 0; l < 8; l++) {
-            model.getChild("l" + l).setPos(0, Mth.sin((blockEntity.tick + f) * 0.1f + ofst[l] * 2) * 4, 0);
+            model.getChild("l" + (l + 1)).setPos(0, Mth.sin((blockEntity.tick + f) * 0.1f + ofst[l] * 2) * 4, 0);
         }
         model.getChild("center").yRot = (blockEntity.tick + f) * 0.01f;
         model.render(poseStack, PixelLoader.threadBlockMaterial.buffer(multiBufferSource, RenderType::entityCutout), i, j);

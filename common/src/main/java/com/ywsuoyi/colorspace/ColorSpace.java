@@ -67,7 +67,12 @@ public class ColorSpace {
     }
 
     public static void reBuildAll() {
-        clearAll();
+        blockSpace.clear();
+        mapSpace.clear();
+        map0Space.clear();
+        mapUpSpace.clear();
+        mapDownSpace.clear();
+        beaconSpace.clear();
         buildAll();
     }
 

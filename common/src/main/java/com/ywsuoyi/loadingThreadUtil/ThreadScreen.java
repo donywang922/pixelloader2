@@ -64,7 +64,7 @@ public class ThreadScreen extends Screen {
         if (data != null) {
             guiGraphics.drawString(this.font, Component.literal(data.thread.file.getName()), 20, 20, 0xFFFFFF);
             guiGraphics.drawString(this.font, data.thread.message, 20, 30, 0xFFFFFF);
-            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.center", data.center), 20, 40, 0xFFFFFF);
+            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.center", data.center.toShortString()), 20, 40, 0xFFFFFF);
             guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.blocks", data.genBlocks.size()), 20, 50, 0xFFFFFF);
 
             guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.percentage"), width - 140, 50, 0xFFFFFF);

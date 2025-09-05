@@ -6,29 +6,19 @@ import com.ywsuoyi.loadingThreadUtil.ThreadBlockRenderer;
 import com.ywsuoyi.projector.ProjectorBlockRenderer;
 import com.ywsuoyi.projector.ProjectorModel;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(PixelLoader.MOD_ID)
+@EventBusSubscriber(modid = PixelLoader.MOD_ID)
 public class PixelLoaderForge {
-
-
-    public PixelLoaderForge(IEventBus modEventBus, ModContainer modContainer) {
-
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::register);
-        modEventBus.addListener(this::registerLayerDefinitions);
-        modEventBus.addListener(this::registerEntityRenderers);
-        NeoForge.EVENT_BUS.addListener(this::serverStop);
-    }
-
-    public void register(RegisterEvent event) {
+    @SubscribeEvent
+    public static void register(RegisterEvent event) {
         event.register(Registries.BLOCK,
                 registry -> {
                     PixelLoaderImpl.blockRegisterHelper = registry;
@@ -38,13 +28,13 @@ public class PixelLoaderForge {
         event.register(Registries.BLOCK_ENTITY_TYPE,
                 registry -> {
                     PixelLoaderImpl.blockEntityRegisterHelper = registry;
-                    PixelLoader.regAllBlocks();
+                    PixelLoader.regAllBlockEntity();
                 }
         );
         event.register(Registries.ITEM,
                 registry -> {
                     PixelLoaderImpl.itemRegisterHelper = registry;
-                    PixelLoader.regAllBlocks();
+                    PixelLoader.regAllItems();
                 }
         );
         event.register(Registries.CREATIVE_MODE_TAB,
@@ -55,22 +45,26 @@ public class PixelLoaderForge {
         );
     }
 
-    public void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    @SubscribeEvent
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        PixelLoader.init();
+    }
+
+    @SubscribeEvent
+    public static void serverStop(ServerStoppingEvent event) {
+        PixelLoader.end();
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         // Add our layer here.
         event.registerLayerDefinition(PixelLoader.projectorBlockLayer, ProjectorModel::createBodyLayer);
         event.registerLayerDefinition(PixelLoader.threadBlockLayer, ThreadBlockModel::createBodyLayer);
     }
 
-    public void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    @SubscribeEvent
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(PixelLoader.threadBlockEntity, ThreadBlockRenderer::new);
         event.registerBlockEntityRenderer(PixelLoader.projectorBlockEntity, ProjectorBlockRenderer::new);
-    }
-
-    public void commonSetup(FMLCommonSetupEvent event) {
-        PixelLoader.init();
-    }
-
-    public void serverStop(ServerStoppingEvent event) {
-        PixelLoader.end();
     }
 }
