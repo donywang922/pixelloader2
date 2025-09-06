@@ -2,8 +2,6 @@ package com.ywsuoyi.neoforge;
 
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlockModel;
-import com.ywsuoyi.loadingThreadUtil.ThreadBlockRenderer;
-import com.ywsuoyi.projector.ProjectorBlockRenderer;
 import com.ywsuoyi.projector.ProjectorModel;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -64,7 +62,7 @@ public class PixelLoaderForge {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(PixelLoader.threadBlockEntity, ThreadBlockRenderer::new);
-        event.registerBlockEntityRenderer(PixelLoader.projectorBlockEntity, ProjectorBlockRenderer::new);
+        event.registerBlockEntityRenderer(PixelLoader.threadBlockEntity, ThreadBlockRendererForge::new);
+        event.registerBlockEntityRenderer(PixelLoader.projectorBlockEntity, ProjectorBlockRendererForge::new);
     }
 }

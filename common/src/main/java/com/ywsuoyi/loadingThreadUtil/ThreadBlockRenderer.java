@@ -3,8 +3,6 @@ package com.ywsuoyi.loadingThreadUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.ywsuoyi.PixelLoader;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-@Environment(value = EnvType.CLIENT)
 public class ThreadBlockRenderer implements BlockEntityRenderer<ThreadBlockEntity> {
 
     public static float[] ofst = new float[]{0, 2.7475f, 1.1775f, 0.785f, 1.9625f, 1.57f, 2.355f, 0.3925f};
