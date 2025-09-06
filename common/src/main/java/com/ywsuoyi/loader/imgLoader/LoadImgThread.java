@@ -1,9 +1,11 @@
-package com.ywsuoyi.imgLoader;
+package com.ywsuoyi.loader.imgLoader;
 
 
 import com.ywsuoyi.PixelLoader;
-import com.ywsuoyi.colorspace.ColorSpace;
+import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColoredBlock;
+import com.ywsuoyi.simpleContent.TraceBlock;
+import com.ywsuoyi.simpleContent.TraceCenterBlock;
 import com.ywsuoyi.loadingThreadUtil.LoadingThread;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +27,7 @@ public class LoadImgThread extends LoadingThread {
     public NonNullList<BlockPos> axisX = NonNullList.create();
     public NonNullList<BlockPos> axisY = NonNullList.create();
 
-    public LoadImgThread(Player player, File file, boolean dither, int size, int cutout, Level level, BlockPos center, BlockPos anchor, boolean flat) {
+    public LoadImgThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos center, BlockPos anchor, boolean flat) {
         super(player, file, dither, size, cutout, level, center, anchor);
         this.flat = flat;
         if (level.getBlockState(center).is(PixelLoader.traceCenterBlock)) {
@@ -87,7 +89,7 @@ public class LoadImgThread extends LoadingThread {
                         onend(true);
                         return;
                     }
-                    ColoredBlock block = ColorSpace.blockSpace.getBlock(calcRGB(read.getRGB(x, y)));
+                    ColoredBlock block = ColorSpaces.blockSpace.getBlock(calcRGB(read.getRGB(x, y)));
                     r -= block.r;
                     g -= block.g;
                     b -= block.b;

@@ -14,7 +14,7 @@ public class FilterInv implements Container {
 
     @Override
     public boolean isEmpty() {
-        for (ItemStack itemstack : ColorSpace.filter) {
+        for (ItemStack itemstack : ColorSpaces.filter) {
             if (!itemstack.isEmpty()) {
                 return false;
             }
@@ -24,7 +24,7 @@ public class FilterInv implements Container {
 
     @Override
     public @NotNull ItemStack getItem(int index) {
-        return index >= 0 && index < ColorSpace.filter.size() ? ColorSpace.filter.get(index) : ItemStack.EMPTY;
+        return index >= 0 && index < ColorSpaces.filter.size() ? ColorSpaces.filter.get(index) : ItemStack.EMPTY;
     }
 
     @Override
@@ -39,23 +39,23 @@ public class FilterInv implements Container {
 
     @Override
     public @NotNull ItemStack removeItem(int index, int count) {
-        return ContainerHelper.removeItem(ColorSpace.filter, index, count);
+        return ContainerHelper.removeItem(ColorSpaces.filter, index, count);
     }
 
     @Override
     public @NotNull ItemStack removeItemNoUpdate(int index) {
-        ItemStack itemstack = ColorSpace.filter.get(index);
+        ItemStack itemstack = ColorSpaces.filter.get(index);
         if (itemstack.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
-            ColorSpace.filter.set(index, ItemStack.EMPTY);
+            ColorSpaces.filter.set(index, ItemStack.EMPTY);
             return itemstack;
         }
     }
 
     @Override
     public void setItem(int index, ItemStack stack) {
-        ColorSpace.filter.set(index, stack);
+        ColorSpaces.filter.set(index, stack);
         if (!stack.isEmpty() && stack.getCount() > this.getMaxStackSize()) {
             stack.setCount(this.getMaxStackSize());
         }
@@ -64,6 +64,6 @@ public class FilterInv implements Container {
 
     @Override
     public void clearContent() {
-        ColorSpace.filter.clear();
+        ColorSpaces.filter.clear();
     }
 }

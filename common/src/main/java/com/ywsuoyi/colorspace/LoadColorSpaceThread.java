@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -40,6 +42,7 @@ public class LoadColorSpaceThread extends BaseThread {
     public Level world;
     private final HashSet<TagKey<Block>> tagFilter = new HashSet<>();
     private final HashSet<Block> blockFilter = new HashSet<>();
+    private static final float MAX_ANIMATION_COLOR_DIFF = 15.0f; // 最大允许的帧间色差
 
     public LoadColorSpaceThread(Player player, Level world) {
         super(player);
@@ -49,19 +52,34 @@ public class LoadColorSpaceThread extends BaseThread {
     @Override
     public void run() {
         setMessage(Component.translatable("pixelLoader.colorspace.checkfilter"));
-        for (ItemStack stack : ColorSpace.filter) {
+        for (ItemStack stack : ColorSpaces.filter) {
             if (stack.getItem() instanceof BlockItem block) {
-                if (stack.getCount() > 1) {
-                    block.getBlock().defaultBlockState().getTags().forEach(blockTagKey -> {
-                        System.out.println(blockTagKey.location().getPath());
-                        if (!blockTagKey.location().getPath().startsWith("mineable")) tagFilter.add(blockTagKey);
-                    });
-                } else {
-                    blockFilter.add(block.getBlock());
+                blockFilter.add(block.getBlock());
+            } else if (stack.getItem() == Items.NAME_TAG) {
+                // 处理命名牌：使用命名牌的名字作为标签过滤器
+                Component customName = stack.get(DataComponents.CUSTOM_NAME);
+                if (customName != null) {
+                    String tagName = customName.getString();
+                    try {
+                        // 尝试解析标签名称为 ResourceLocation
+                        ResourceLocation tagLocation;
+                        if (tagName.contains(":")) {
+                            tagLocation = ResourceLocation.parse(tagName);
+                        } else {
+                            // 如果没有命名空间，默认使用 minecraft
+                            tagLocation = ResourceLocation.fromNamespaceAndPath("minecraft", tagName);
+                        }
+
+                        // 创建标签键并添加到过滤器
+                        TagKey<Block> tagKey = TagKey.create(BuiltInRegistries.BLOCK.key(), tagLocation);
+                        tagFilter.add(tagKey);
+                    } catch (Exception e) {
+                        PixelLoader.logger.warn("Invalid tag name in name tag: {}", tagName);
+                    }
                 }
             }
         }
-        ColorSpace.clearAll();
+        ColorSpaces.clearAll();
         ArrayList<Tuple<Block, String>> colorBlocks = new ArrayList<>();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         setMessage(Component.translatable("pixelLoader.colorspace.findblock"));
@@ -79,7 +97,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 if (tagFilter.contains(blockTagKey)) inFilter.set(true);//in tag filter
             });
             if (blockFilter.contains(b)) inFilter.set(true);//in filter
-            if (inFilter.get() != ColorSpace.whiteList) continue;//in filter & white list | out filter & black list
+            if (inFilter.get() != ColorSpaces.whiteList) continue;//in filter & white list | out filter & black list
             if (ItemBlockRenderTypes.getChunkRenderType(blockState) != RenderType.solid()) continue;//opaque texture
             //block render
             ResourceLocation id = BuiltInRegistries.BLOCK.getKey(b);
@@ -128,37 +146,154 @@ public class LoadColorSpaceThread extends BaseThread {
                 String[] s1 = decompose(entry.getB());
                 Optional<Resource> Resources = resourceManager.getResource(PixelLoader.loc(s1[0], "textures/" + s1[1] + ".png"));
                 Optional<Resource> TResources = resourceManager.getResource(PixelLoader.loc(s1[0], "textures/" + s1[1] + ".png.mcmeta"));
-                if (TResources.isEmpty() && Resources.isPresent()) {
+
+                if (Resources.isPresent()) {
                     Resource resource = Resources.get();
-                    BufferedImage read = ImageIO.read(resource.open());
-                    int width = read.getWidth();
-                    int height = read.getHeight();
-                    long sumR = 0, sumG = 0, sumB = 0;
-                    for (int y = read.getMinY(); y < height; y++) {
-                        for (int x = read.getMinX(); x < width; x++) {
-                            Color pixel = new Color(read.getRGB(x, y), true);
-                            if (pixel.getAlpha() != 255) continue L1;//texture not opaque
-                            sumR += pixel.getRed();
-                            sumG += pixel.getGreen();
-                            sumB += pixel.getBlue();
+                    BufferedImage image = ImageIO.read(resource.open());
+                    int width = image.getWidth();
+                    int height = image.getHeight();
+
+                    // 检查是否有动画
+                    boolean hasAnimation = TResources.isPresent();
+                    ColorRGB averageColor = null;
+                    boolean isValidTexture = false;
+
+                    if (!hasAnimation) {
+                        // 无动画，直接处理
+                        ColorRGB frameColor = calculateFrameColor(image, width, height);
+                        if (frameColor != null) {
+                            averageColor = frameColor;
+                            isValidTexture = true;
+                        }
+                    } else {
+                        // 有动画，需要检查帧间色差
+                        AnimationResult animResult = processAnimatedTexture(image, TResources.get(), width, height);
+                        if (animResult != null && animResult.isValid) {
+                            averageColor = animResult.averageColor;
+                            isValidTexture = true;
                         }
                     }
-                    int num = width * height;
-                    MapColor color = entry.getA().defaultBlockState().getMapColor(world, BlockPos.ZERO);
-                    ColorSpace.selectBlocks.add(new SelectBlock(entry.getA(),
-                            new ColorRGB((int) sumR / num, (int) sumG / num, (int) sumB / num),
-                            ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.NORMAL)),
-                            ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.LOW)),
-                            ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.HIGH))));
+
+                    if (isValidTexture && averageColor != null) {
+                        MapColor color = entry.getA().defaultBlockState().getMapColor(world, BlockPos.ZERO);
+                        ColorSpaces.selectBlocks.add(new SelectBlock(entry.getA(),
+                                averageColor,
+                                ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.NORMAL)),
+                                ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.LOW)),
+                                ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.HIGH))));
+                    }
                 }
             } catch (IOException e) {
                 PixelLoader.logger.error("Failed to load color space: {}", e.getMessage());
             }
         }
         setMessage(Component.translatable("pixelLoader.colorspace.map"));
-        ColorSpace.buildAll();
+        ColorSpaces.buildAll();
         onend(false);
         setMessage(Component.translatable("pixelLoader.colorspace.loaded"));
+    }
+
+    /**
+     * 计算单帧图像的平均颜色
+     */
+    private ColorRGB calculateFrameColor(BufferedImage image, int width, int height) {
+        long sumR = 0, sumG = 0, sumB = 0;
+        int validPixels = 0;
+
+        for (int y = image.getMinY(); y < height; y++) {
+            for (int x = image.getMinX(); x < width; x++) {
+                Color pixel = new Color(image.getRGB(x, y), true);
+                if (pixel.getAlpha() != 255) {
+                    // 纹理不完全不透明，跳过这个方块
+                    return null;
+                }
+                sumR += pixel.getRed();
+                sumG += pixel.getGreen();
+                sumB += pixel.getBlue();
+                validPixels++;
+            }
+        }
+
+        if (validPixels == 0) return null;
+
+        return new ColorRGB((int) (sumR / validPixels), (int) (sumG / validPixels), (int) (sumB / validPixels));
+    }
+
+    /**
+     * 处理动画纹理
+     */
+    private AnimationResult processAnimatedTexture(BufferedImage image, Resource metaResource, int width, int height) {
+        try {
+            // 读取动画元数据
+            JsonObject meta = JsonParser.parseReader(new InputStreamReader(metaResource.open())).getAsJsonObject();
+            JsonObject animation = meta.has("animation") ? meta.getAsJsonObject("animation") : new JsonObject();
+
+            // 计算帧数
+            int frameHeight = animation.has("height") ? animation.get("height").getAsInt() : width;
+            int frameCount = height / frameHeight;
+
+            if (frameCount <= 1) {
+                // 不是真正的动画，按静态纹理处理
+                return new AnimationResult(calculateFrameColor(image, width, frameHeight), true);
+            }
+
+            // 计算每帧的平均颜色
+            java.util.List<ColorRGB> frameColors = new ArrayList<>();
+            for (int frame = 0; frame < frameCount; frame++) {
+                BufferedImage frameImage = image.getSubimage(0, frame * frameHeight, width, frameHeight);
+                ColorRGB frameColor = calculateFrameColor(frameImage, width, frameHeight);
+                if (frameColor == null) {
+                    // 某帧包含透明像素，跳过整个方块
+                    return null;
+                }
+                frameColors.add(frameColor);
+            }
+
+            // 计算帧间色差
+            float maxColorDiff = 0;
+            for (int i = 0; i < frameColors.size(); i++) {
+                for (int j = i + 1; j < frameColors.size(); j++) {
+                    float diff = rgbSq2(frameColors.get(i), frameColors.get(j));
+                    maxColorDiff = Math.max(maxColorDiff, diff);
+                }
+            }
+
+            // 检查色差是否在允许范围内
+            if (maxColorDiff <= MAX_ANIMATION_COLOR_DIFF * MAX_ANIMATION_COLOR_DIFF) {
+                // 计算所有帧的平均颜色
+                long totalR = 0, totalG = 0, totalB = 0;
+                for (ColorRGB color : frameColors) {
+                    totalR += color.r;
+                    totalG += color.g;
+                    totalB += color.b;
+                }
+
+                ColorRGB averageColor = new ColorRGB(
+                        (int) (totalR / frameColors.size()),
+                        (int) (totalG / frameColors.size()),
+                        (int) (totalB / frameColors.size())
+                );
+
+                return new AnimationResult(averageColor, true);
+            } else {
+                // 帧间色差过大，拒绝这个方块
+                return new AnimationResult(null, false);
+            }
+
+        } catch (IOException e) {
+            PixelLoader.logger.error("Failed to process animated texture: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 计算加权RGB色差的平方
+     */
+    private float rgbSq2(ColorRGB color1, ColorRGB color2) {
+        float x = (color1.r - color2.r) * 0.3f;
+        float y = (color1.g - color2.g) * 0.59f;
+        float z = (color1.b - color2.b) * 0.11f;
+        return x * x + y * y + z * z;
     }
 
     public String[] decompose(String resourceName) {
@@ -171,5 +306,18 @@ public class LoadColorSpaceThread extends BaseThread {
             }
         }
         return astring;
+    }
+
+    /**
+     * 动画处理结果
+     */
+    private static class AnimationResult {
+        final ColorRGB averageColor;
+        final boolean isValid;
+
+        AnimationResult(ColorRGB averageColor, boolean isValid) {
+            this.averageColor = averageColor;
+            this.isValid = isValid;
+        }
     }
 }

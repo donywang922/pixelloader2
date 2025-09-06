@@ -3,7 +3,7 @@ package com.ywsuoyi.projector;
 import com.mojang.datafixers.util.Pair;
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.Setting;
-import com.ywsuoyi.colorspace.ColorSpace;
+import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,7 +48,7 @@ public class ProjectorBlockEntity extends BlockEntity {
             return;
         }
         if (set.state == ProjectorSetting.LoadState.WaitStart) {
-            if (!ColorSpace.allLoad()) {
+            if (!ColorSpaces.allLoad()) {
                 set.state = ProjectorSetting.LoadState.Select;
                 set.message = Component.translatable("pixelLoader.colored_block.needload");
                 return;

@@ -27,18 +27,18 @@ public class ColorSpaceLoader extends Item {
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int i, boolean bl) {
         super.inventoryTick(itemStack, level, entity, i, bl);
         if (!level.isClientSide) {
-            if (ColorSpace.waitPlace) {
-                ColorSpace.waitPlace = false;
+            if (ColorSpaces.waitPlace) {
+                ColorSpaces.waitPlace = false;
                 BlockPos pos = entity.blockPosition();
-                if (ColorSpace.allLoad()) {
-                    ColorSpace.blockSpace.blocks.forEach(coloredBlock -> {
+                if (ColorSpaces.allLoad()) {
+                    ColorSpaces.blockSpace.blocks.forEach(coloredBlock -> {
                         level.setBlock(pos.offset(coloredBlock.r / 6, coloredBlock.g / 6 - 1, coloredBlock.b / 6), Blocks.GLASS.defaultBlockState(), 3);
                         level.setBlock(pos.offset(coloredBlock.r / 6, coloredBlock.g / 6, coloredBlock.b / 6), coloredBlock.block.defaultBlockState(), 3);
                     });
                 }
             }
-            if (ColorSpace.openFilter && entity instanceof Player) {
-                ColorSpace.openFilter = false;
+            if (ColorSpaces.openFilter && entity instanceof Player) {
+                ColorSpaces.openFilter = false;
                 ((Player) entity).openMenu(new SimpleMenuProvider((id, inventory, playerIn) ->
                         ChestMenu.sixRows(id, inventory, new FilterInv()),
                         Component.translatable("pixelLoader.screen.colorspace.filter")));
@@ -57,7 +57,7 @@ public class ColorSpaceLoader extends Item {
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         list.add(Component.translatable("pixelLoader.colorspace.tip"));
         list.add(Component.translatable("pixelLoader.screen.colorspace.message",
-                ColorSpace.thread != null ? ColorSpace.thread.message : Component.empty()));
+                ColorSpaces.thread != null ? ColorSpaces.thread.message : Component.empty()));
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 }

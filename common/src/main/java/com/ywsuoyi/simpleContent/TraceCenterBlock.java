@@ -1,11 +1,14 @@
-package com.ywsuoyi.imgLoader;
+package com.ywsuoyi.simpleContent;
 
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,6 +19,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 import static com.ywsuoyi.PixelLoader.neb;
 
@@ -83,5 +88,11 @@ public class TraceCenterBlock extends Block {
             }
         }
         level.setBlock(blockPos, blockState, 3);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.translatable("pixelLoader.traceCenter.tip"));
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 }

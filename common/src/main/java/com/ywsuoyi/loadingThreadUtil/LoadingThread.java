@@ -20,10 +20,10 @@ public class LoadingThread extends BaseThread {
 
     public int r = 0, g = 0, b = 0;
 
-    public LoadingThread(Player player, File file, boolean dither, int size, int cutout, Level level, BlockPos center, BlockPos anchor) {
+    public LoadingThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos center, BlockPos anchor) {
         super(player);
         this.file = file;
-        this.dither = dither;
+        this.dither = dither == 1;
         this.size = size;
         this.cutout = cutout;
         this.anchor = anchor;

@@ -1,4 +1,4 @@
-package com.ywsuoyi.imgLoader;
+package com.ywsuoyi.loader.imgLoader;
 
 import com.ywsuoyi.Setting;
 import com.ywsuoyi.SettingScreen;

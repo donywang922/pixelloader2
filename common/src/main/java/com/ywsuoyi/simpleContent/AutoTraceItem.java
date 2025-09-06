@@ -1,13 +1,17 @@
-package com.ywsuoyi.imgLoader;
+package com.ywsuoyi.simpleContent;
 
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class AutoTraceItem extends Item {
     public AutoTraceItem(Properties properties) {
@@ -34,4 +38,9 @@ public class AutoTraceItem extends Item {
         return super.useOn(useOnContext);
     }
 
+    @Override
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.translatable("pixelLoader.autoTrace.tip"));
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+    }
 }

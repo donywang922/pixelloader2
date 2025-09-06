@@ -4,7 +4,7 @@ import com.mojang.math.Axis;
 import org.joml.Matrix4f;
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.Vec2i;
-import com.ywsuoyi.colorspace.ColorSpace;
+import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColoredBlock;
 import com.ywsuoyi.loadingThreadUtil.LoadingThread;
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,7 @@ import static com.ywsuoyi.PixelLoader.neb;
 public class LoadProjectorThread extends LoadingThread {
     public ProjectorSetting setting;
 
-    public LoadProjectorThread(Player player, File file, boolean dither, int size, int cutout, Level level, BlockPos anchor) {
+    public LoadProjectorThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos anchor) {
         super(player, file, dither, size, cutout, level, anchor, anchor);
         setting = ProjectorSetting.get(anchor);
         setting.message = Component.translatable("pixelLoader.waiting");
@@ -108,7 +108,7 @@ public class LoadProjectorThread extends LoadingThread {
                     Vec2i pixel = new Vec2i(x, y);
                     if (!pixelToBlock.containsKey(pixel)) continue;
                     for (BlockPos pos : pixelToBlock.get(pixel)) {
-                        ColoredBlock block = ColorSpace.blockSpace.getBlock(calcRGB(read.getRGB(width - x - 1, height - y - 1)));
+                        ColoredBlock block = ColorSpaces.blockSpace.getBlock(calcRGB(read.getRGB(width - x - 1, height - y - 1)));
                         r -= block.r;
                         g -= block.g;
                         b -= block.b;

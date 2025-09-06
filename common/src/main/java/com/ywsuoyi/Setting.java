@@ -20,7 +20,7 @@ public class Setting {
     public static int index = 0;
     public static final NonNullList<ItemStack> banItem = NonNullList.withSize(54, ItemStack.EMPTY);
 
-    public static boolean dither = true;
+    public static int dither = 1;
     public static int cutout = 0;
 
     public static int mapSize = 1;

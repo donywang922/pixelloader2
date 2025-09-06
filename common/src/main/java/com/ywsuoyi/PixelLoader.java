@@ -1,19 +1,20 @@
 package com.ywsuoyi;
 
 import com.mojang.logging.LogUtils;
-import com.ywsuoyi.colorspace.ColorSpace;
+import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColorSpaceLoader;
-import com.ywsuoyi.imgLoader.AutoTraceItem;
-import com.ywsuoyi.imgLoader.ImgLoader;
-import com.ywsuoyi.imgLoader.TraceBlock;
-import com.ywsuoyi.imgLoader.TraceCenterBlock;
+import com.ywsuoyi.simpleContent.AutoTraceItem;
+import com.ywsuoyi.loader.imgLoader.ImgLoader;
+import com.ywsuoyi.simpleContent.TraceBlock;
+import com.ywsuoyi.simpleContent.TraceCenterBlock;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlock;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlockEntity;
-import com.ywsuoyi.mapLoader.MapLoader;
+import com.ywsuoyi.loader.mapLoader.MapLoader;
 import com.ywsuoyi.projector.ProjectorBlock;
 import com.ywsuoyi.projector.ProjectorBlockEntity;
 import com.ywsuoyi.projector.ProjectorBlockItem;
+import com.ywsuoyi.simpleContent.TagSplitItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -36,6 +37,7 @@ public class PixelLoader {
     public static final String MOD_ID = "pixel_loader";
 
     public static final Vec3i[] neb = new Vec3i[26];
+    public static Item tagSplitter;
     public static Item coloredBlockLoader;
     public static Item imgLoader;
     public static Item mapLoader;
@@ -99,22 +101,35 @@ public class PixelLoader {
         Setting.banItem.set(3, new ItemStack(Items.FIRE_CORAL_BLOCK));
         Setting.banItem.set(4, new ItemStack(Items.HORN_CORAL_BLOCK));
         Setting.banItem.set(5, new ItemStack(Items.BEDROCK));
+
         Setting.banItem.set(6, new ItemStack(Items.COPPER_BLOCK));
         Setting.banItem.set(7, new ItemStack(Items.CUT_COPPER));
-        Setting.banItem.set(8, new ItemStack(Items.EXPOSED_COPPER));
-        Setting.banItem.set(9, new ItemStack(Items.EXPOSED_CUT_COPPER));
-        Setting.banItem.set(10, new ItemStack(Items.WEATHERED_COPPER));
-        Setting.banItem.set(11, new ItemStack(Items.WEATHERED_CUT_COPPER));
-        Setting.banItem.set(12, new ItemStack(Items.INFESTED_COBBLESTONE));
-        Setting.banItem.set(13, new ItemStack(Items.INFESTED_CHISELED_STONE_BRICKS));
-        Setting.banItem.set(14, new ItemStack(Items.INFESTED_CRACKED_STONE_BRICKS));
-        Setting.banItem.set(15, new ItemStack(Items.INFESTED_DEEPSLATE));
-        Setting.banItem.set(16, new ItemStack(Items.INFESTED_STONE));
-        Setting.banItem.set(17, new ItemStack(Items.INFESTED_MOSSY_STONE_BRICKS));
-        Setting.banItem.set(18, new ItemStack(Items.INFESTED_STONE_BRICKS));
-        Setting.banItem.set(19, new ItemStack(Items.BUDDING_AMETHYST));
-        Setting.banItem.set(20, new ItemStack(Items.ICE));
-        ColorSpace.filter = Setting.banItem;
+        Setting.banItem.set(8, new ItemStack(Items.COPPER_GRATE));
+        Setting.banItem.set(9, new ItemStack(Items.CHISELED_COPPER));
+        Setting.banItem.set(10, new ItemStack(Items.COPPER_BULB));
+
+        Setting.banItem.set(11, new ItemStack(Items.EXPOSED_COPPER));
+        Setting.banItem.set(12, new ItemStack(Items.EXPOSED_CUT_COPPER));
+        Setting.banItem.set(13, new ItemStack(Items.EXPOSED_COPPER_GRATE));
+        Setting.banItem.set(14, new ItemStack(Items.EXPOSED_CHISELED_COPPER));
+        Setting.banItem.set(15, new ItemStack(Items.EXPOSED_COPPER_BULB));
+
+        Setting.banItem.set(16, new ItemStack(Items.WEATHERED_COPPER));
+        Setting.banItem.set(17, new ItemStack(Items.WEATHERED_CUT_COPPER));
+        Setting.banItem.set(18, new ItemStack(Items.WEATHERED_COPPER_GRATE));
+        Setting.banItem.set(19, new ItemStack(Items.WEATHERED_CHISELED_COPPER));
+        Setting.banItem.set(20, new ItemStack(Items.WEATHERED_COPPER_BULB));
+
+        Setting.banItem.set(21, new ItemStack(Items.INFESTED_COBBLESTONE));
+        Setting.banItem.set(22, new ItemStack(Items.INFESTED_CHISELED_STONE_BRICKS));
+        Setting.banItem.set(23, new ItemStack(Items.INFESTED_CRACKED_STONE_BRICKS));
+        Setting.banItem.set(24, new ItemStack(Items.INFESTED_DEEPSLATE));
+        Setting.banItem.set(25, new ItemStack(Items.INFESTED_STONE));
+        Setting.banItem.set(26, new ItemStack(Items.INFESTED_MOSSY_STONE_BRICKS));
+        Setting.banItem.set(27, new ItemStack(Items.INFESTED_STONE_BRICKS));
+        Setting.banItem.set(28, new ItemStack(Items.BUDDING_AMETHYST));
+        Setting.banItem.set(29, new ItemStack(Items.ICE));
+        ColorSpaces.filter = Setting.banItem;
     }
 
     public static void end() {
@@ -142,13 +157,11 @@ public class PixelLoader {
     }
 
     public static void regAllTabs() {
-        TAB = regTab("tab", CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
-                // Set name of tab to display
+        TAB = regTab("pixelloader", CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                 .title(Component.translatable("item_group." + MOD_ID))
-                // Set icon of creative tab
                 .icon(() -> new ItemStack(PixelLoader.mapLoader))
-                // Add default items to tab
                 .displayItems((params, output) -> {
+                    output.accept(PixelLoader.tagSplitter);
                     output.accept(PixelLoader.coloredBlockLoader);
                     output.accept(PixelLoader.imgLoader);
                     output.accept(PixelLoader.mapLoader);
@@ -157,7 +170,6 @@ public class PixelLoader {
                     output.accept(PixelLoader.traceBlock);
                     output.accept(PixelLoader.traceCenterBlock);
                     output.accept(PixelLoader.projectorBlock);
-
                 })
                 .build());
     }
@@ -171,6 +183,7 @@ public class PixelLoader {
     }
 
     public static void regAllItems() {
+        tagSplitter = regItem("tagsplitter", new TagSplitItem(new Item.Properties()));
         coloredBlockLoader = regItem("colorspaceloader", new ColorSpaceLoader(new Item.Properties()));
         imgLoader = regItem("imgloader", new ImgLoader(new Item.Properties()));
         mapLoader = regItem("maploader", new MapLoader(new Item.Properties()));

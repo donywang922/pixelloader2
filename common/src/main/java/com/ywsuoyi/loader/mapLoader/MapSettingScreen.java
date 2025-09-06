@@ -1,4 +1,4 @@
-package com.ywsuoyi.mapLoader;
+package com.ywsuoyi.loader.mapLoader;
 
 import com.ywsuoyi.Setting;
 import com.ywsuoyi.SettingScreen;

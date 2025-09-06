@@ -1,4 +1,4 @@
-package com.ywsuoyi.colorspace;
+package com.ywsuoyi.simpleContent;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;

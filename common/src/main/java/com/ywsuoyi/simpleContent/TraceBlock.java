@@ -1,12 +1,15 @@
-package com.ywsuoyi.imgLoader;
+package com.ywsuoyi.simpleContent;
 
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static com.ywsuoyi.PixelLoader.neb;
 
@@ -44,7 +48,7 @@ public class TraceBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(point);
     }
 
@@ -103,7 +107,7 @@ public class TraceBlock extends Block {
         updateCenter(levelAccessor, blockPos);
     }
 
-    private void updateCenter(LevelAccessor levelAccessor, BlockPos blockPos) {
+    public void updateCenter(LevelAccessor levelAccessor, BlockPos blockPos) {
         for (int i = 0; i < 26; i++) {
             BlockPos tmpPos = blockPos.offset(neb[i]);
             BlockState nb = levelAccessor.getBlockState(tmpPos);
@@ -114,7 +118,7 @@ public class TraceBlock extends Block {
     }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+    public @NotNull InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         int pn = blockState.getValue(point);
         if (pn == 0) {
             level.setBlock(blockPos, blockState.setValue(point, 1), 3);
@@ -173,6 +177,12 @@ public class TraceBlock extends Block {
 
         level.setBlock(blockPos, blockState.setValue(point, toID(pos.get("x"), pos.get("y"), pos.get("z"))), 3);
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.translatable("pixelLoader.traceBlock.tip"));
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     public static BlockPos fromID(int id) {

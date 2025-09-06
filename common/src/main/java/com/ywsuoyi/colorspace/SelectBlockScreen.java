@@ -23,7 +23,7 @@ public class SelectBlockScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        h = ColorSpace.selectBlocks.size() * lineHeight - height + 30;
+        h = ColorSpaces.selectBlocks.size() * lineHeight - height + 30;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class SelectBlockScreen extends Screen {
         }
         if (i == 0 && d < width - 20 && d > width - 40) {
             int idx = (int) ((scrollY + e - 12.5) / lineHeight);
-            if (pass.contains(idx) || idx < 0 || idx >= ColorSpace.selectBlocks.size()) return true;
-            SelectBlock block = ColorSpace.selectBlocks.get(idx);
+            if (pass.contains(idx) || idx < 0 || idx >= ColorSpaces.selectBlocks.size()) return true;
+            SelectBlock block = ColorSpaces.selectBlocks.get(idx);
             block.active = !block.active;
             pass.add(idx);
         }
@@ -52,8 +52,8 @@ public class SelectBlockScreen extends Screen {
     public boolean mouseClicked(double d, double e, int i) {
         if (i == 0 && d < width - 20 && d > width - 40) {
             int idx = (int) ((scrollY + e - 12.5) / lineHeight);
-            if (idx < 0 || idx >= ColorSpace.selectBlocks.size()) return true;
-            SelectBlock block = ColorSpace.selectBlocks.get(idx);
+            if (idx < 0 || idx >= ColorSpaces.selectBlocks.size()) return true;
+            SelectBlock block = ColorSpaces.selectBlocks.get(idx);
             block.active = !block.active;
             pass.clear();
             pass.add(idx);
@@ -67,9 +67,9 @@ public class SelectBlockScreen extends Screen {
         poseStack.fill(0, 0, width, height, 0x66000000);
         int j1 = (int) (scrollY / h * (height - lineHeight));
         poseStack.fill(width - 10, j1, width, j1 + lineHeight, 0x33ffffff);
-        for (int idx = 0; idx < ColorSpace.selectBlocks.size(); idx++) {
+        for (int idx = 0; idx < ColorSpaces.selectBlocks.size(); idx++) {
             if (idx * lineHeight + lineHeight > scrollY && idx * lineHeight - lineHeight < scrollY + height) {
-                SelectBlock block = ColorSpace.selectBlocks.get(idx);
+                SelectBlock block = ColorSpaces.selectBlocks.get(idx);
                 int yOffset = Math.round(idx * lineHeight - scrollY) + 15;
                 poseStack.renderItem(
                         block.block.asItem().getDefaultInstance(),
@@ -108,6 +108,6 @@ public class SelectBlockScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        ColorSpace.reBuildAll();
+        ColorSpaces.reBuildAll();
     }
 }

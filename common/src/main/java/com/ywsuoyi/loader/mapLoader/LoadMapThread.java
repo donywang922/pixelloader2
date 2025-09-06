@@ -1,9 +1,9 @@
-package com.ywsuoyi.mapLoader;
+package com.ywsuoyi.loader.mapLoader;
 
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.AbstractColorSpace;
-import com.ywsuoyi.colorspace.ColorSpace;
+import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColoredBlock;
 import com.ywsuoyi.loadingThreadUtil.LoadingThread;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class LoadMapThread extends LoadingThread {
     Setting.MapMode mode;
 
-    public LoadMapThread(Player player, File file, boolean dither, int size, int cutout, Level level, BlockPos anchor, Setting.MapMode mode) {
+    public LoadMapThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos anchor, Setting.MapMode mode) {
         super(player, file, dither, size, cutout, level, new BlockPos(Mth.floor((anchor.getX() + 64.0D) / 128d) * 128 - 64, anchor.getY(), Mth.floor((anchor.getZ() + 64.0D) / 128d) * 128 - 64), anchor);
         this.mode = mode;
     }
@@ -75,11 +75,11 @@ public class LoadMapThread extends LoadingThread {
                             rgb = 0xFF000000 | j << 16 | k << 8 | l;
                         }
                         if (f > 0.6) {
-                            block = ColorSpace.mapUpSpace.getBlock(calcRGB(rgb));
+                            block = ColorSpaces.mapUpSpace.getBlock(calcRGB(rgb));
                         } else if (f < -0.6) {
-                            block = ColorSpace.mapDownSpace.getBlock(calcRGB(rgb));
+                            block = ColorSpaces.mapDownSpace.getBlock(calcRGB(rgb));
                         } else {
-                            block = ColorSpace.map0Space.getBlock(calcRGB(rgb));
+                            block = ColorSpaces.map0Space.getBlock(calcRGB(rgb));
                         }
                         d = aa;
                         r -= block.r;
@@ -92,7 +92,7 @@ public class LoadMapThread extends LoadingThread {
             } else {
                 ArrayList<Tuple<Integer, Block>> line = new ArrayList<>();
                 int tmpY, minY, i;
-                AbstractColorSpace space = mode == Setting.MapMode.flat ? ColorSpace.map0Space : ColorSpace.mapSpace;
+                AbstractColorSpace space = mode == Setting.MapMode.flat ? ColorSpaces.map0Space : ColorSpaces.mapSpace;
                 for (int x = 0; x < mapW; x++) {
                     tmpY = minY = i = 0;
                     line.clear();

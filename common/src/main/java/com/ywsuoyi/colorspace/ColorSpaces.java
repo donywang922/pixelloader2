@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ColorSpace {
+public class ColorSpaces {
     public static final TreeColorSpace blockSpace = new TreeColorSpace();
     public static final TreeColorSpace mapSpace = new TreeColorSpace();
     public static final TreeColorSpace map0Space = new TreeColorSpace();
@@ -20,6 +20,7 @@ public class ColorSpace {
     public static NonNullList<ItemStack> filter = NonNullList.withSize(54, ItemStack.EMPTY);
     public static NonNullList<SelectBlock> selectBlocks = NonNullList.create();
     public static boolean whiteList = false;
+    public static String fileName = "";
 
     public static boolean waitPlace = false;
     public static boolean openFilter = false;
