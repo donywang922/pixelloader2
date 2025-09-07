@@ -14,6 +14,7 @@ public class SelectionOnlyBox extends EditBox {
     private boolean showOptions = false;
     private int selectedIndex = 0; // 当前选中项在allOptions中的索引
     private final int optionHeight;
+    public boolean lock = false;
 
     public Font font;
 
@@ -27,6 +28,7 @@ public class SelectionOnlyBox extends EditBox {
         if (!allOptions.isEmpty()) {
             setValue(allOptions.getFirst());
         }
+
         this.setEditable(false);
         this.setBordered(false);
         this.setMaxLength(100);
@@ -44,7 +46,7 @@ public class SelectionOnlyBox extends EditBox {
         }
 
         if (wasClickedOnBox) {
-            showOptions = true;
+            showOptions = !lock;
         } else {
             // 点击外部区域，失去焦点
             if (showOptions) {
@@ -199,5 +201,9 @@ public class SelectionOnlyBox extends EditBox {
             this.selectedIndex = index;
             this.setValue(allOptions.get(index));
         }
+    }
+
+    public void setLock(boolean lock) {
+        this.lock = lock;
     }
 }

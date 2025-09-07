@@ -1,6 +1,10 @@
 package com.ywsuoyi.projector;
 
+import com.ywsuoyi.ImageManager;
+import com.ywsuoyi.Selections;
+import com.ywsuoyi.Setting;
 import com.ywsuoyi.guiComponent.NumberEditBox;
+import com.ywsuoyi.guiComponent.SelectionOnlyBox;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,10 +27,10 @@ public class ProjectorScreen extends Screen {
     public NumberEditBox pitch;
     public NumberEditBox scale;
 
-    public Button sample;
     public Button load;
     public Button place;
     public Button save;
+    public SelectionOnlyBox imgFile, cutout, dither;
 
     protected ProjectorScreen(BlockPos pos, Player player) {
         super(Component.translatable("pixelLoader.projector.screen"));
@@ -38,10 +42,10 @@ public class ProjectorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        roll = addRenderableWidget(new NumberEditBox(font, 20, 40, 80, 20, rollText));
-        yaw = addRenderableWidget(new NumberEditBox(font, 20, 80, 80, 20, yawText));
-        pitch = addRenderableWidget(new NumberEditBox(font, 20, 120, 80, 20, pitchText));
-        scale = addRenderableWidget(new NumberEditBox(font, 20, 160, 80, 20, scaleText));
+        roll = addRenderableWidget(new NumberEditBox(font, 20, 90, 80, 20, rollText));
+        yaw = addRenderableWidget(new NumberEditBox(font, 20, 120, 80, 20, yawText));
+        pitch = addRenderableWidget(new NumberEditBox(font, 20, 150, 80, 20, pitchText));
+        scale = addRenderableWidget(new NumberEditBox(font, 20, 180, 80, 20, scaleText));
 
         roll.setValue(String.valueOf(setting.roll));
         yaw.setValue(String.valueOf(setting.yaw));
@@ -52,31 +56,38 @@ public class ProjectorScreen extends Screen {
         pitch.setResponder(this::updateAngle);
         scale.setResponder(this::updateAngle);
 
-        sample = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.sample." + setting.sample),
-                p -> {
-                    if (setting.sample == ProjectorSetting.Sample.center) setting.sample = ProjectorSetting.Sample.edge;
-                    else if (setting.sample == ProjectorSetting.Sample.edge)
-                        setting.sample = ProjectorSetting.Sample.lattice;
-                    else if (setting.sample == ProjectorSetting.Sample.lattice)
-                        setting.sample = ProjectorSetting.Sample.center;
-                    sample.setMessage(Component.translatable("pixelLoader.projector.screen.sample." + setting.sample));
-                    setting.changed = true;
-                }).bounds(20, 200, 80, 20).build());
+        int w = (width - 48) / 3;
 
-        load = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.load"),
-                p -> {
-                    if (setting.state == ProjectorSetting.LoadState.Select) {
-                        setting.state = ProjectorSetting.LoadState.WaitStart;
-                    }
-                }).bounds(this.width - 100, 130, 80, 20).build());
-        place = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.place"),
-                p -> {
-                    if (setting.state == ProjectorSetting.LoadState.Finish)
-                        setting.state = ProjectorSetting.LoadState.Placing;
-                }).bounds(this.width - 100, 130, 80, 20).build());
-        save = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.save"),
-                p -> {
-                }).bounds(this.width - 100, 160, 80, 20).build());
+        cutout = this.addRenderableWidget(new SelectionOnlyBox(font, 20, 44, w, 20,
+                Component.translatable("pixelLoader.setting.screen.cutout"), Selections.cutout));
+        cutout.setSelectedIndex(setting.cutout);
+        cutout.setResponder(s -> setting.cutout = cutout.getSelectedIndex());
+
+        dither = this.addRenderableWidget(new SelectionOnlyBox(font, 20 + w + 4, 44, w, 20,
+                Component.translatable("pixelLoader.setting.screen.dither"), Selections.dither));
+        dither.setSelectedIndex(setting.dither);
+        dither.setResponder(s -> setting.dither = dither.getSelectedIndex());
+
+        load = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.load"), p -> {
+            if (setting.state == ProjectorSetting.LoadState.Select) {
+                setting.state = ProjectorSetting.LoadState.WaitStart;
+                Setting.dither = setting.dither;
+                Setting.cutout = setting.cutout;
+                imgFile.setLock(true);
+            }
+        }).bounds(this.width - 100, 156, 80, 20).build());
+        place = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.place"), p -> {
+            if (setting.state == ProjectorSetting.LoadState.Finish) setting.state = ProjectorSetting.LoadState.Placing;
+        }).bounds(this.width - 100, 156, 80, 20).build());
+        save = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.save"), p -> {
+        }).bounds(this.width - 100, 180, 80, 20).build());
+
+        imgFile = addRenderableWidget(new SelectionOnlyBox(font, 20, 20, width - 40, 20,
+                Component.translatable("pixelLoader.setting.screen.file"), ImageManager.getImageListStr()));
+        imgFile.setSelectedIndex(setting.fileIndex);
+        imgFile.setResponder(s -> setting.loadimg(imgFile.getSelectedIndex()));
+        this.tick();
+        setting.loadimg();
     }
 
     @Override
@@ -90,7 +101,7 @@ public class ProjectorScreen extends Screen {
         yaw.setEditable(editable);
         pitch.setEditable(editable);
         scale.setEditable(editable);
-
+        imgFile.setLock(!editable);
     }
 
     @Override
@@ -99,13 +110,6 @@ public class ProjectorScreen extends Screen {
         yaw.setFocused(false);
         pitch.setFocused(false);
         scale.setFocused(false);
-        if (setting.state == ProjectorSetting.LoadState.Select) {
-            Component s = setting.getFileText();
-            if (d > this.width - 20 - this.font.width(s) && e > 60 && e < 80) {
-                setting.addindex();
-                return true;
-            }
-        }
         return super.mouseClicked(d, e, i);
     }
 
@@ -134,20 +138,22 @@ public class ProjectorScreen extends Screen {
     @Override
     public void render(GuiGraphics poseStack, int i, int j, float f) {
         super.render(poseStack, i, j, f);
-        poseStack.drawString(this.font, rollText, 20, 30, 0xA0A0A0);
-        poseStack.drawString(this.font, yawText, 20, 70, 0xA0A0A0);
-        poseStack.drawString(this.font, pitchText, 20, 110, 0xA0A0A0);
-        poseStack.drawString(this.font, scaleText, 20, 150, 0xA0A0A0);
+        poseStack.drawString(this.font, rollText, 20, 80, 0xA0A0A0);
+        poseStack.drawString(this.font, yawText, 20, 110, 0xA0A0A0);
+        poseStack.drawString(this.font, pitchText, 20, 140, 0xA0A0A0);
+        poseStack.drawString(this.font, scaleText, 20, 170, 0xA0A0A0);
         MutableComponent hintA = Component.translatable("pixelLoader.projector.screen.hintA");
-        poseStack.drawString(this.font, hintA, this.width - 20 - this.font.width(hintA.getVisualOrderText()), 30, 0xFFFFFF);
+        poseStack.drawString(this.font, hintA, this.width - 20 - this.font.width(hintA.getVisualOrderText()), 60, 0xFFFFFF);
         MutableComponent hintB = Component.translatable("pixelLoader.projector.screen.hintB");
-        poseStack.drawString(this.font, hintB, this.width - 20 - this.font.width(hintB.getVisualOrderText()), 50, 0xFFFFFF);
-        Component s = setting.getFileText();
-        poseStack.drawString(this.font, s, this.width - 20 - this.font.width(s), 70, 0xd5b767);
-        String sz = setting.width + " " + setting.height;
-        poseStack.drawString(this.font, sz, this.width - 20 - this.font.width(sz), 90, 0xFFFFFF);
+        poseStack.drawString(this.font, hintB, this.width - 20 - this.font.width(hintB.getVisualOrderText()), 72, 0xFFFFFF);
+        Component sz = Component.translatable("pixelLoader.projector.screen.size", setting.width + " " + setting.height);
+        poseStack.drawString(this.font, sz, this.width - 20 - this.font.width(sz.getVisualOrderText()), 44, 0xFFFFFF);
         if (setting.state != ProjectorSetting.LoadState.Finish && setting.state != ProjectorSetting.LoadState.Done)
-            poseStack.drawString(this.font, setting.message, this.width - 20 - this.font.width(setting.message.getVisualOrderText()), 160, 0xaa0000);
+            poseStack.drawString(this.font, setting.message, this.width - 20 - this.font.width(setting.message.getVisualOrderText()), 88, 0xaa0000);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f) {
     }
 
     @Override

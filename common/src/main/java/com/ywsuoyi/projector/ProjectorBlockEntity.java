@@ -2,12 +2,10 @@ package com.ywsuoyi.projector;
 
 import com.mojang.datafixers.util.Pair;
 import com.ywsuoyi.PixelLoader;
-import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
@@ -38,11 +36,12 @@ public class ProjectorBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state, ProjectorBlockEntity entity) {
         ProjectorSetting set = entity.setting;
         if (set.state == ProjectorSetting.LoadState.Placing) {
-            set.message = Component.translatable("pixelLoader.waiting");
-            set.genBlocks.forEach((pos1, state1) -> {
-                if (FallingBlock.isFree(level.getBlockState(pos1.below())))
-                    level.setBlock(pos1.below(), Blocks.GLASS.defaultBlockState(), 3);
-                level.setBlock(pos1, state1, 3);
+            set.message = Component.translatable("pixelLoader.projector.screen.waiting");
+            set.genBlocks.forEach((tuple) -> {
+                if (tuple.getB().isAir()) return;
+                if (FallingBlock.isFree(level.getBlockState(tuple.getA().below())))
+                    level.setBlock(tuple.getA().below(), Blocks.GLASS.defaultBlockState(), 3);
+                level.setBlock(tuple.getA(), tuple.getB(), 3);
             });
             set.state = ProjectorSetting.LoadState.Done;
             return;
@@ -50,20 +49,18 @@ public class ProjectorBlockEntity extends BlockEntity {
         if (set.state == ProjectorSetting.LoadState.WaitStart) {
             if (!ColorSpaces.allLoad()) {
                 set.state = ProjectorSetting.LoadState.Select;
-                set.message = Component.translatable("pixelLoader.colored_block.needload");
+                set.message = Component.translatable("pixelLoader.needload");
                 return;
             }
-            if (Setting.imglist.isEmpty()) {
+            if (set.getImg() == null) {
                 set.state = ProjectorSetting.LoadState.Select;
-                set.message = Component.translatable("pixelLoader.noFile");
+                set.message = Component.translatable("pixelLoader.projector.screen.noFile");
                 return;
             }
             set.thread = new LoadProjectorThread(
-                    null,
                     set.getImg(),
-                    Setting.dither,
-                    Setting.imgSize,
-                    Setting.cutout,
+                    set.dither,
+                    set.cutout,
                     level,
                     pos
             );
@@ -75,7 +72,6 @@ public class ProjectorBlockEntity extends BlockEntity {
         entity.tick++;
         ProjectorSetting set = entity.setting;
         if (set.state == ProjectorSetting.LoadState.Select && set.changed && entity.tick % 5 == 0) {
-            set.outLinePos.clear();
             set.latticePos.clear();
             Pair<Matrix4f, Vec3> pair = ProjectorSetting.ToM4f(pos, set);
             Matrix4f m4f = pair.getFirst();
@@ -91,43 +87,11 @@ public class ProjectorBlockEntity extends BlockEntity {
                     tryAddOutLine(-1f + px * i, -h + px * j, z, m4f, vec3From, set.latticePos, level);
                 }
             }
-
-            switch (set.sample) {
-                case center -> {
-                    for (int i = 0; i < 5; i++) {
-                        tryAddOutLine(-1f + px * i * 20, -h, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(-1f, -h + px * i * 20, z, m4f, vec3From, set.outLinePos, level);
-
-                        tryAddOutLine(1f - px * i * 20, -h, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(1f, -h + px * i * 20, z, m4f, vec3From, set.outLinePos, level);
-
-                        tryAddOutLine(-1f + px * i * 20, h, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(-1f, h - px * i * 20, z, m4f, vec3From, set.outLinePos, level);
-
-                        tryAddOutLine(1f - px * i * 20, h, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(1f, h - px * i * 20, z, m4f, vec3From, set.outLinePos, level);
-                    }
-                    tryAddOutLine(0, 0, z, m4f, vec3From, set.outLinePos, level);
-                }
-                case edge -> {
-                    step = set.width / 100;
-                    for (int i = 0; i < set.width; i += step) {
-                        tryAddOutLine(-1f + px * i, -h, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(-1f + px * i, h, z, m4f, vec3From, set.outLinePos, level);
-                    }
-                    step = set.height / 100;
-                    for (int i = 0; i < set.height; i += step) {
-                        tryAddOutLine(-1f, -h + px * i, z, m4f, vec3From, set.outLinePos, level);
-                        tryAddOutLine(1f, h - px * i, z, m4f, vec3From, set.outLinePos, level);
-                    }
-                }
-                case lattice -> set.outLinePos.addAll(set.latticePos);
-            }
             set.changed = false;
         }
         if ((set.state == ProjectorSetting.LoadState.Start || set.state == ProjectorSetting.LoadState.Finish) && entity.tick % 40 == 0) {
             entity.blocks.clear();
-            set.genBlocks.forEach((blockPos, blockState) -> entity.blocks.add(new Tuple<>(blockPos.subtract(pos), blockState)));
+            set.genBlocks.forEach((tuple) -> entity.blocks.add(new Tuple<>(tuple.getA().subtract(pos), tuple.getB())));
         }
     }
 
@@ -137,14 +101,13 @@ public class ProjectorBlockEntity extends BlockEntity {
         return new Vec3(v4fTo.x(), v4fTo.y(), v4fTo.z());
     }
 
-    public static void tryAddOutLine(float x, float y, float z, Matrix4f m4f, Vec3 vec3From, NonNullList<BlockPos> set, Level level) {
+    public static void tryAddOutLine(float x, float y, float z, Matrix4f m4f, Vec3 vec3From, ArrayList<BlockPos> set, Level level) {
         Vec3 vec3To = toVec3(x, y, z, m4f);
         BlockPos target = BlockGetter.traverseBlocks(vec3From, vec3To, null, (con, pos) -> {
             BlockState blockState = level.getBlockState(pos);
             return blockState.getCollisionShape(level, pos).isEmpty() ? null : pos;
         }, con -> null);
-        if (target != null)
-            set.add(target);
+        set.add(target);
     }
 
     @Override

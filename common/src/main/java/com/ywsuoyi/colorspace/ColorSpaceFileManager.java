@@ -142,7 +142,7 @@ public class ColorSpaceFileManager {
 
             // 读取过滤器模式
             if (root.has("whiteList")) {
-                ColorSpaces.whiteList = root.get("whiteList").getAsBoolean();
+                ColorSpaces.whiteList = root.get("whiteList").getAsInt();
             }
 
             // 读取过滤器物品
@@ -198,7 +198,6 @@ public class ColorSpaceFileManager {
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
             PixelLoader.logger.error("Failed to load color space: {}", e.getMessage());
             return false;
         }

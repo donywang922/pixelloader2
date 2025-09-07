@@ -1,5 +1,6 @@
 package com.ywsuoyi.loader;
 
+import com.ywsuoyi.ImageManager;
 import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
@@ -32,13 +33,13 @@ public abstract class AbstractLoader extends Item {
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (!ColorSpaces.allLoad()) {
             if (context.getPlayer() != null)
-                context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.colored_block.needload"), true);
+                context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.needload"), true);
             return InteractionResult.FAIL;
         }
         if (!context.getLevel().isClientSide && context.getPlayer() != null) {
             if (!context.getPlayer().isShiftKeyDown()) {
                 Setting.addindex(context.getPlayer());
-            } else if (Setting.imglist.isEmpty()) {
+            } else if (Setting.getImg() == null) {
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.noFile"), true);
             } else {
                 BaseThread.addThread(getThread(context));

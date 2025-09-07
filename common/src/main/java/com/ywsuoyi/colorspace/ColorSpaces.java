@@ -19,7 +19,7 @@ public class ColorSpaces {
 
     public static NonNullList<ItemStack> filter = NonNullList.withSize(54, ItemStack.EMPTY);
     public static NonNullList<SelectBlock> selectBlocks = NonNullList.create();
-    public static boolean whiteList = false;
+    public static int whiteList = 0;
     public static String fileName = "";
 
     public static boolean waitPlace = false;

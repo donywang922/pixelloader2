@@ -51,7 +51,7 @@ public class LoadColorSpaceThread extends BaseThread {
 
     @Override
     public void run() {
-        setMessage(Component.translatable("pixelLoader.colorspace.checkfilter"));
+        setMessage(Component.translatable("pixelLoader.colorspace.screen.checkfilter"));
         for (ItemStack stack : ColorSpaces.filter) {
             if (stack.getItem() instanceof BlockItem block) {
                 blockFilter.add(block.getBlock());
@@ -82,7 +82,7 @@ public class LoadColorSpaceThread extends BaseThread {
         ColorSpaces.clearAll();
         ArrayList<Tuple<Block, String>> colorBlocks = new ArrayList<>();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        setMessage(Component.translatable("pixelLoader.colorspace.findblock"));
+        setMessage(Component.translatable("pixelLoader.colorspace.screen.findblock"));
         for (Block b : BuiltInRegistries.BLOCK) {
             if (state == State.end) {
                 onend(true);
@@ -97,7 +97,8 @@ public class LoadColorSpaceThread extends BaseThread {
                 if (tagFilter.contains(blockTagKey)) inFilter.set(true);//in tag filter
             });
             if (blockFilter.contains(b)) inFilter.set(true);//in filter
-            if (inFilter.get() != ColorSpaces.whiteList) continue;//in filter & white list | out filter & black list
+            if (inFilter.get() != (ColorSpaces.whiteList == 1))
+                continue;//in filter & white list | out filter & black list
             if (ItemBlockRenderTypes.getChunkRenderType(blockState) != RenderType.solid()) continue;//opaque texture
             //block render
             ResourceLocation id = BuiltInRegistries.BLOCK.getKey(b);
@@ -135,8 +136,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 PixelLoader.logger.error("Failed to generate colorspace: {}", e.getMessage());
             }
         }
-        setMessage(Component.translatable("pixelLoader.colorspace.getcolor"));
-        L1:
+        setMessage(Component.translatable("pixelLoader.colorspace.screen.getcolor"));
         for (Tuple<Block, String> entry : colorBlocks) {
             if (state == State.end) {
                 onend(true);
@@ -187,10 +187,10 @@ public class LoadColorSpaceThread extends BaseThread {
                 PixelLoader.logger.error("Failed to load color space: {}", e.getMessage());
             }
         }
-        setMessage(Component.translatable("pixelLoader.colorspace.map"));
+        setMessage(Component.translatable("pixelLoader.colorspace.screen.map"));
         ColorSpaces.buildAll();
         onend(false);
-        setMessage(Component.translatable("pixelLoader.colorspace.loaded"));
+        setMessage(Component.translatable("pixelLoader.colorspace.screen.loaded"));
     }
 
     /**
@@ -311,13 +311,6 @@ public class LoadColorSpaceThread extends BaseThread {
     /**
      * 动画处理结果
      */
-    private static class AnimationResult {
-        final ColorRGB averageColor;
-        final boolean isValid;
-
-        AnimationResult(ColorRGB averageColor, boolean isValid) {
-            this.averageColor = averageColor;
-            this.isValid = isValid;
-        }
+    private record AnimationResult(ColorRGB averageColor, boolean isValid) {
     }
 }

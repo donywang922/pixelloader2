@@ -1,10 +1,6 @@
 package com.ywsuoyi.colorspace;
 
 public class ArrayColorSpace extends AbstractColorSpace {
-    @Override
-    public void clear() {
-        super.clear();
-    }
 
     @Override
     public void build() {

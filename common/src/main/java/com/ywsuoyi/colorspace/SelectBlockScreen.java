@@ -17,7 +17,7 @@ public class SelectBlockScreen extends Screen {
     Set<Integer> pass = new HashSet<>();
 
     protected SelectBlockScreen() {
-        super(Component.translatable("pixelLoader.screen.selectblock"));
+        super(Component.translatable("pixelLoader.colorspace.selectblock.screen"));
     }
 
     @Override
@@ -77,19 +77,19 @@ public class SelectBlockScreen extends Screen {
                         yOffset + 2
                 );
                 if (block.bc != null)
-                    poseStack.drawString(font, Component.translatable("pixelLoader.screen.selectblock.color",
+                    poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.bc.r, block.bc.g, block.bc.b)),
                             40, yOffset, block.bc.rgb);
                 if (block.mapB != null)
-                    poseStack.drawString(font, Component.translatable("pixelLoader.screen.selectblock.color",
+                    poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.mapB.r, block.mapB.g, block.mapB.b)),
                             40, yOffset + 10, block.mapB.rgb);
                 if (block.map != null)
-                    poseStack.drawString(font, Component.translatable("pixelLoader.screen.selectblock.color",
+                    poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.map.r, block.map.g, block.map.b)),
                             100, yOffset + 10, block.map.rgb);
                 if (block.mapT != null)
-                    poseStack.drawString(font, Component.translatable("pixelLoader.screen.selectblock.color",
+                    poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.mapT.r, block.mapT.g, block.mapT.b)),
                             160, yOffset + 10, block.mapT.rgb);
                 String descriptionId = block.block.getDescriptionId();

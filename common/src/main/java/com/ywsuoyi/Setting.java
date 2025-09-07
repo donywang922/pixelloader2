@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Setting {
-    public static File imgFolder = new File("./img");
-    public static final List<File> imglist = new ArrayList<>();
     public static int index = 0;
-    public static final NonNullList<ItemStack> banItem = NonNullList.withSize(54, ItemStack.EMPTY);
 
     public static int dither = 1;
     public static int cutout = 0;
@@ -30,42 +27,24 @@ public class Setting {
     public static int imgSize = 8;
     public static boolean flat = true;
 
-
     public static File getImg() {
-        return imglist.get(index);
+        return ImageManager.getImg(index);
     }
 
     public static void addindex(Player player) {
         index++;
-        if (index > imglist.size() - 1) {
+        if (index > ImageManager.imglist.size() - 1) {
             index = 0;
-            updateFileList();
+            ImageManager.updateFileList();
         }
         if (player != null) {
-            if (imglist.isEmpty())
+            if (!ImageManager.hasImg())
                 player.displayClientMessage(Component.translatable("pixelLoader.fileNotFind"), true);
             else
-                player.displayClientMessage(Component.translatable("pixelLoader.selectFile", imglist.get(index).getName()), true);
+                player.displayClientMessage(Component.translatable("pixelLoader.selectFile", ImageManager.getImgName(index)), true);
         }
     }
 
-    public static void updateFileList() {
-        imglist.clear();
-        try (Stream<Path> list = Files.list(Paths.get("img/"))) {
-            list.filter(f ->
-                    {
-                        String n = f.getFileName().toString().toLowerCase();
-                        return !Files.isDirectory(f) && (n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png"));
-                    })
-                    .forEach(path -> {
-                        if (Files.isDirectory(path))
-                            return;
-                        imglist.add(path.toFile());
-                    });
-        } catch (IOException e) {
-            PixelLoader.logger.error("Failed to update file list: {}", e.getMessage());
-        }
-    }
 
     public enum MapMode {
         flat,

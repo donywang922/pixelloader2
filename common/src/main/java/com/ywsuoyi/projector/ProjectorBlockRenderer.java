@@ -19,7 +19,6 @@ import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 
 public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBlockEntity> {
-    private static final RenderType projectorRenderType = RenderType.entityCutout(PixelLoader.loc("textures/block/projector.png"));
     public final ModelPart model;
     public final BlockRenderDispatcher blockRender;
 
@@ -62,7 +61,8 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
 
         if (setting != null) {
             if (setting.state == ProjectorSetting.LoadState.Select)
-                for (BlockPos pos : setting.outLinePos) {
+                for (BlockPos pos : setting.latticePos) {
+                    if (pos == null) continue;
                     poseStack.pushPose();
                     BlockPos pos1 = pos.subtract(blockEntity.getBlockPos());
                     poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());

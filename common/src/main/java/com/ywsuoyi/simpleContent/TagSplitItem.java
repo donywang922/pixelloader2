@@ -67,7 +67,7 @@ public class TagSplitItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("pixelloader.tag_split_item.tip"));
+        list.add(Component.translatable("pixelLoader.tag_split_item.tip"));
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 }

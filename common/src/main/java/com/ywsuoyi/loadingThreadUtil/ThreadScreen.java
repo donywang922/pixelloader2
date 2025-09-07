@@ -15,13 +15,13 @@ public class ThreadScreen extends Screen {
     public boolean actCool = false;
 
     protected ThreadScreen(BlockPos pos) {
-        super(Component.translatable("pixelLoader.screen.thread"));
+        super(Component.translatable("pixelLoader.thread.screen"));
         data = ThreadData.data.get(pos);
     }
 
     @Override
     protected void init() {
-        place = this.addRenderableWidget(Button.builder(Component.translatable("pixelLoader.screen.thread.place"),
+        place = this.addRenderableWidget(Button.builder(Component.translatable("pixelLoader.thread.screen.place"),
                 p_onPress_1_ -> {
                     if (data.thread.state == BaseThread.State.end) {
                         data.state = ThreadData.State.place;
@@ -30,7 +30,7 @@ public class ThreadScreen extends Screen {
                 }).bounds(width - 140, 20, 100, 20).build());
         place.visible = false;
         percentage = this.addRenderableWidget(new IntegerEditBox(this.font, width - 140, 60, 100, 20,
-                Component.translatable("pixelLoader.screen.thread.percentage"), 100, 0));
+                Component.translatable("pixelLoader.thread.screen.percentage"), 100, 0));
         if (data != null) {
             percentage.setValue(String.valueOf(Math.round(data.renderPercentage * 100)));
             actCool = data.autoLowerPercentage;
@@ -64,13 +64,13 @@ public class ThreadScreen extends Screen {
         if (data != null) {
             guiGraphics.drawString(this.font, Component.literal(data.thread.file.getName()), 20, 20, 0xFFFFFF);
             guiGraphics.drawString(this.font, data.thread.message, 20, 30, 0xFFFFFF);
-            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.center", data.center.toShortString()), 20, 40, 0xFFFFFF);
-            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.blocks", data.genBlocks.size()), 20, 50, 0xFFFFFF);
+            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.thread.screen.center", data.center.toShortString()), 20, 40, 0xFFFFFF);
+            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.thread.screen.blocks", data.genBlocks.size()), 20, 50, 0xFFFFFF);
 
-            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.percentage"), width - 140, 50, 0xFFFFFF);
-            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.rendertip"), width - 140, 90, 0xFFFFFF);
+            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.thread.screen.percentage"), width - 140, 50, 0xFFFFFF);
+            guiGraphics.drawString(this.font, Component.translatable("pixelLoader.thread.screen.rendertip"), width - 140, 90, 0xFFFFFF);
             if (!data.autoLowerPercentage) {
-                guiGraphics.drawString(this.font, Component.translatable("pixelLoader.screen.thread.renderwarning"), width - 140, 100, 0xDDDD00);
+                guiGraphics.drawString(this.font, Component.translatable("pixelLoader.thread.screen.renderwarning"), width - 140, 100, 0xDDDD00);
             }
         } else {
             guiGraphics.drawString(this.font, Component.literal("no data"), 20, 40, 0xFFFFFF);

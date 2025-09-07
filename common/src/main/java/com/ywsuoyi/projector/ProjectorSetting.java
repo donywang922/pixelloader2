@@ -2,10 +2,12 @@ package com.ywsuoyi.projector;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
+import com.ywsuoyi.ImageManager;
 import com.ywsuoyi.Setting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -16,7 +18,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ProjectorSetting {
@@ -29,7 +33,8 @@ public class ProjectorSetting {
 
     public int width = 0;
     public int height = 0;
-    public boolean fs = true;
+    public int cutout;
+    public int dither;
 
     public File img;
 
@@ -39,61 +44,43 @@ public class ProjectorSetting {
 
     public boolean changed = true;
 
-    public Sample sample = Sample.center;
-
     public LoadState state = LoadState.Select;
     public LoadProjectorThread thread;
-    public NonNullList<BlockPos> outLinePos = NonNullList.create();
-    public NonNullList<BlockPos> latticePos = NonNullList.create();
+    public ArrayList<BlockPos> latticePos = new ArrayList<>();
 
-    public ConcurrentHashMap<BlockPos, BlockState> genBlocks = new ConcurrentHashMap<>();
+    public LinkedList<Tuple<BlockPos, BlockState>> genBlocks = new LinkedList<>();
 
     public Component message = Component.empty();
 
+
     public ProjectorSetting() {
-        loadimg();
+        this.cutout = Setting.cutout;
+        this.dither = Setting.dither;
+        loadimg(0);
     }
 
     public File getImg() {
-        return Setting.imglist.get(fileIndex);
+        return ImageManager.getImg(fileIndex);
     }
 
-    public Component getFileText() {
-
-        if (Setting.imglist.isEmpty()) {
-            return Component.translatable("pixelLoader.fileNotFind");
+    public void loadimg() {
+        img = ImageManager.getImg(fileIndex);
+        if (img == null) {
+            fileIndex = 0;
+            return;
         }
-        if (img == null)
-            loadimg();
-        return Component.translatable("pixelLoader.selectFile", img.getName());
-    }
-
-    public void addindex() {
-        if (state == LoadState.Select) {
-            fileIndex++;
-            if (fileIndex > Setting.imglist.size() - 1) {
-                fileIndex = 0;
-                Setting.updateFileList();
-            }
-            loadimg();
+        try {
+            BufferedImage read = ImageIO.read(img);
+            width = read.getWidth();
+            height = read.getHeight();
             changed = true;
+        } catch (IOException ignored) {
         }
     }
 
-    private void loadimg() {
-        if (!Setting.imglist.isEmpty()) {
-            img = Setting.imglist.get(fileIndex);
-            if (img == null) {
-                fileIndex = 0;
-                img = Setting.imglist.get(fileIndex);
-            }
-            try {
-                BufferedImage read = ImageIO.read(img);
-                width = read.getWidth();
-                height = read.getHeight();
-            } catch (IOException ignored) {
-            }
-        }
+    public void loadimg(int i) {
+        fileIndex = i;
+        loadimg();
     }
 
 
@@ -163,12 +150,6 @@ public class ProjectorSetting {
         Placing,
         Done,
         Error
-    }
-
-    public enum Sample {
-        center,
-        lattice,
-        edge,
     }
 
     @Override

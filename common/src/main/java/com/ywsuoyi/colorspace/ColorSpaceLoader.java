@@ -41,7 +41,7 @@ public class ColorSpaceLoader extends Item {
                 ColorSpaces.openFilter = false;
                 ((Player) entity).openMenu(new SimpleMenuProvider((id, inventory, playerIn) ->
                         ChestMenu.sixRows(id, inventory, new FilterInv()),
-                        Component.translatable("pixelLoader.screen.colorspace.filter")));
+                        Component.translatable("pixelLoader.colorspace.screen.filter")));
             }
         }
     }
@@ -56,7 +56,7 @@ public class ColorSpaceLoader extends Item {
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         list.add(Component.translatable("pixelLoader.colorspace.tip"));
-        list.add(Component.translatable("pixelLoader.screen.colorspace.message",
+        list.add(Component.translatable("pixelLoader.colorspace.screen.message",
                 ColorSpaces.thread != null ? ColorSpaces.thread.message : Component.empty()));
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
