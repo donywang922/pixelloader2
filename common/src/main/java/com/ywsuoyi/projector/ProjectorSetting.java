@@ -3,9 +3,9 @@ package com.ywsuoyi.projector;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import com.ywsuoyi.ImageManager;
-import com.ywsuoyi.Setting;
+import com.ywsuoyi.loader.mapLoader.MapSetting;
+import com.ywsuoyi.loadingThreadUtil.CachedQuadData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ProjectorSetting {
     public static final HashMap<BlockPos, ProjectorSetting> settings = new HashMap<>();
@@ -50,12 +49,14 @@ public class ProjectorSetting {
 
     public LinkedList<Tuple<BlockPos, BlockState>> genBlocks = new LinkedList<>();
 
+    public CachedQuadData cachedQuads = null;
+
     public Component message = Component.empty();
 
 
     public ProjectorSetting() {
-        this.cutout = Setting.cutout;
-        this.dither = Setting.dither;
+        this.cutout = MapSetting.cutout;
+        this.dither = MapSetting.dither;
         loadimg(0);
     }
 

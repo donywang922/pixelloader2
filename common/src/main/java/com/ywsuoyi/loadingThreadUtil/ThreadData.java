@@ -1,7 +1,6 @@
 package com.ywsuoyi.loadingThreadUtil;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -13,10 +12,14 @@ public class ThreadData {
     public State state = State.loading;
     public LoadingThread thread;
     public LinkedList<Tuple<BlockPos, BlockState>> genBlocks = new LinkedList<>();
-    public Direction[] directions = Direction.values();
     public float renderPercentage = 0;
     public boolean autoLowerPercentage = true;
     public BlockPos center;
+    public int support;
+    public int cover;
+    public int finish;
+
+    public CachedQuadData cachedQuads = null;
 
     public ThreadData(LoadingThread thread) {
         this.thread = thread;

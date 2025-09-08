@@ -1,7 +1,6 @@
 package com.ywsuoyi.loader.mapLoader;
 
 import com.ywsuoyi.PixelLoader;
-import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.AbstractColorSpace;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColoredBlock;
@@ -24,11 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LoadMapThread extends LoadingThread {
-    Setting.MapMode mode;
+    MapSetting.MapMode mode;
+    int size;
 
-    public LoadMapThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos anchor, Setting.MapMode mode) {
-        super(player, file, dither, size, cutout, level, new BlockPos(Mth.floor((anchor.getX() + 64.0D) / 128d) * 128 - 64, anchor.getY(), Mth.floor((anchor.getZ() + 64.0D) / 128d) * 128 - 64), anchor);
+    public LoadMapThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos anchor, MapSetting.MapMode mode) {
+        super(player, file, dither, cutout, level, new BlockPos(Mth.floor((anchor.getX() + 64.0D) / 128d) * 128 - 64, anchor.getY(), Mth.floor((anchor.getZ() + 64.0D) / 128d) * 128 - 64), anchor);
         this.mode = mode;
+        this.size = size;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class LoadMapThread extends LoadingThread {
             int width = read.getWidth(), height = read.getHeight();
             float border = Math.max(width, height);
             int mapW = Math.round(width / border * 128 * size), mapH = Math.round(height / border * 128 * size);
-            if (mode == Setting.MapMode.cover || mode == Setting.MapMode.cover_c || mode == Setting.MapMode.cover_c2) {
+            if (mode == MapSetting.MapMode.cover || mode == MapSetting.MapMode.cover_c || mode == MapSetting.MapMode.cover_c2) {
                 int cx = data.center.getX(), cy = data.center.getZ();
                 for (int x = 0; x < mapW; x++) {
                     double d = 0.0;
@@ -67,8 +68,8 @@ public class LoadMapThread extends LoadingThread {
                         int px = Math.round((float) width / mapW * x), py = Math.round((float) height / mapH * y);
                         ColoredBlock block;
                         int rgb = read.getRGB(px, py);
-                        if (mode != Setting.MapMode.cover) {
-                            int i = mode == Setting.MapMode.cover_c ? 220 : 180;
+                        if (mode != MapSetting.MapMode.cover) {
+                            int i = mode == MapSetting.MapMode.cover_c ? 220 : 180;
                             int j = (rgb >> 16 & 0xFF) * i / 255;
                             int k = (rgb >> 8 & 0xFF) * i / 255;
                             int l = (rgb & 0xFF) * i / 255;
@@ -92,7 +93,7 @@ public class LoadMapThread extends LoadingThread {
             } else {
                 ArrayList<Tuple<Integer, Block>> line = new ArrayList<>();
                 int tmpY, minY, i;
-                AbstractColorSpace space = mode == Setting.MapMode.flat ? ColorSpaces.map0Space : ColorSpaces.mapSpace;
+                AbstractColorSpace space = mode == MapSetting.MapMode.flat ? ColorSpaces.map0Space : ColorSpaces.mapSpace;
                 for (int x = 0; x < mapW; x++) {
                     tmpY = minY = i = 0;
                     line.clear();

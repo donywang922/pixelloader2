@@ -1,7 +1,5 @@
 package com.ywsuoyi.loader;
 
-import com.ywsuoyi.ImageManager;
-import com.ywsuoyi.Setting;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.client.Minecraft;
@@ -18,6 +16,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 public abstract class AbstractLoader extends Item {
@@ -29,6 +28,10 @@ public abstract class AbstractLoader extends Item {
 
     public abstract Screen getScreen();
 
+    public abstract void addindex(Player player);
+
+    public abstract File getImg();
+
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (!ColorSpaces.allLoad()) {
@@ -38,11 +41,16 @@ public abstract class AbstractLoader extends Item {
         }
         if (!context.getLevel().isClientSide && context.getPlayer() != null) {
             if (!context.getPlayer().isShiftKeyDown()) {
-                Setting.addindex(context.getPlayer());
-            } else if (Setting.getImg() == null) {
+                addindex(context.getPlayer());
+            } else if (getImg() == null) {
                 context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.noFile"), true);
             } else {
-                BaseThread.addThread(getThread(context));
+                try {
+                    BaseThread thread = getThread(context);
+                    BaseThread.addThread(thread);
+                } catch (Exception e) {
+                    context.getPlayer().displayClientMessage(Component.translatable(e.getMessage()), true);
+                }
             }
         }
         return InteractionResult.SUCCESS;
@@ -52,7 +60,7 @@ public abstract class AbstractLoader extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (playerIn.isShiftKeyDown()) {
-            if (!worldIn.isClientSide) Setting.addindex(playerIn);
+            if (!worldIn.isClientSide) addindex(playerIn);
         } else {
             if (worldIn.isClientSide)
                 Minecraft.getInstance().setScreen(getScreen());

@@ -2,7 +2,7 @@ package com.ywsuoyi.colorspace;
 
 import com.ywsuoyi.Selections;
 import com.ywsuoyi.guiComponent.SelectionOnlyBox;
-import com.ywsuoyi.guiComponent.SuggestionEditBox;
+import com.ywsuoyi.guiComponent.SelectionEditBox;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ColorSettingScreen extends Screen {
     Button load, stop, filter, place, edit, read, write;
-    SuggestionEditBox colorFile;
+    SelectionEditBox colorFile;
     SelectionOnlyBox type;
     Component message = Component.empty();
     Player player;
@@ -31,8 +31,8 @@ public class ColorSettingScreen extends Screen {
         List<String> suggestions = ColorSpaceFileManager.getAvailableColorSpaceFiles();
         type = addRenderableWidget(new SelectionOnlyBox(font, 20, 20, 100, 20,
                 Component.translatable("pixelLoader.colorspace.screen.whitelist"), Selections.whitelist));
-        type.setSelectedIndex(ColorSpaces.whiteList);
-        type.setResponder(s -> ColorSpaces.whiteList = type.getSelectedIndex());
+        type.setOptionIndex(ColorSpaces.whiteList);
+        type.setResponder(s -> ColorSpaces.whiteList = type.getOptionIndex());
 
         filter = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.colorspace.screen.openfilter"),
                 p_onPress_1_ -> ColorSpaces.openFilter = true).bounds(20, 44, 100, 20).build());
@@ -43,7 +43,7 @@ public class ColorSettingScreen extends Screen {
                     if (!fileName.isEmpty()) {
                         boolean success = ColorSpaceFileManager.loadColorSpace(fileName);
                         if (success) {
-                            type.setSelectedIndex(ColorSpaces.whiteList);
+                            type.setOptionIndex(ColorSpaces.whiteList);
                             // 重新构建色域
                             ColorSpaces.reBuildAll();
                             message = Component.translatable("pixelLoader.colorspace.screen.message.load_success", fileName);
@@ -62,7 +62,7 @@ public class ColorSettingScreen extends Screen {
                         if (success) {
                             // 刷新建议列表
                             List<String> newSuggestions = ColorSpaceFileManager.getAvailableColorSpaceFiles();
-                            colorFile.updateSuggestions(newSuggestions);
+                            colorFile.updateOptions(newSuggestions);
                             message = Component.translatable("pixelLoader.colorspace.screen.message.save_success", fileName);
                         } else {
                             message = Component.translatable("pixelLoader.colorspace.screen.message.save_error", fileName);
@@ -92,7 +92,7 @@ public class ColorSettingScreen extends Screen {
                 }).bounds(width - 120, height - 40, 100, 20).build());
         stop.visible = place.visible = edit.visible = false;
 
-        colorFile = addRenderableWidget(new SuggestionEditBox(font, 20, 100, 100, 20,
+        colorFile = addRenderableWidget(new SelectionEditBox(font, 20, 100, 100, 20,
                 Component.translatable("pixelLoader.colorspace.screen.colorfile"), suggestions));
         colorFile.setValue(ColorSpaces.fileName);
         colorFile.setResponder(s -> ColorSpaces.fileName = s);

@@ -3,6 +3,7 @@ package com.ywsuoyi.projector;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.ywsuoyi.PixelLoader;
+import com.ywsuoyi.loadingThreadUtil.CachedQuadData;
 import com.ywsuoyi.loadingThreadUtil.ThreadBlockRenderer;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
@@ -69,8 +69,13 @@ public class ProjectorBlockRenderer implements BlockEntityRenderer<ProjectorBloc
                     blockRender.renderSingleBlock(PixelLoader.outlineBlock.defaultBlockState(), poseStack, multiBufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
                     poseStack.popPose();
                 }
-            else if (setting.state == ProjectorSetting.LoadState.Start || setting.state == ProjectorSetting.LoadState.Finish) {
-                ThreadBlockRenderer.renderVisualBlocks(poseStack, multiBufferSource, blockEntity.blocks, blockRender, Direction.values(), 1);
+            else if (setting.state == ProjectorSetting.LoadState.Finish) {
+                if (setting.cachedQuads == null)
+                    setting.cachedQuads = CachedQuadData.build(setting.genBlocks, blockRender);
+                poseStack.pushPose();
+                poseStack.translate(-blockEntity.getBlockPos().getX(), -blockEntity.getBlockPos().getY(), -blockEntity.getBlockPos().getZ());
+                ThreadBlockRenderer.renderVisualBlocks(poseStack, multiBufferSource, setting.cachedQuads, 1);
+                poseStack.popPose();
             }
         }
     }

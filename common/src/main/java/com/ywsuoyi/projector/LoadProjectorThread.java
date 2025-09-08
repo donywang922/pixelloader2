@@ -29,7 +29,7 @@ public class LoadProjectorThread extends LoadingThread {
     public ProjectorSetting setting;
 
     public LoadProjectorThread(File file, int dither, int cutout, Level level, BlockPos anchor) {
-        super(null, file, dither, 1, cutout, level, anchor, anchor);
+        super(null, file, dither, cutout, level, anchor, anchor);
         setting = ProjectorSetting.get(anchor);
         setting.message = Component.translatable("pixelLoader.projector.screen.waiting");
         setting.state = ProjectorSetting.LoadState.Start;

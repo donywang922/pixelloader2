@@ -1,10 +1,12 @@
 package com.ywsuoyi.loader.mapLoader;
 
-import com.ywsuoyi.Setting;
 import com.ywsuoyi.loader.AbstractLoader;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
+
+import java.io.File;
 
 public class MapLoader extends AbstractLoader {
 
@@ -17,18 +19,28 @@ public class MapLoader extends AbstractLoader {
     public BaseThread getThread(UseOnContext context) {
         return new LoadMapThread(
                 context.getPlayer(),
-                Setting.getImg(),
-                Setting.dither,
-                Setting.mapSize,
-                Setting.cutout,
+                MapSetting.getImg(),
+                MapSetting.dither,
+                MapSetting.mapSize,
+                MapSetting.cutout,
                 context.getLevel(),
                 context.getClickedPos().offset(context.getClickedFace().getNormal()),
-                Setting.mapMode
+                MapSetting.mapMode
         );
     }
 
     @Override
     public Screen getScreen() {
         return new MapSettingScreen();
+    }
+
+    @Override
+    public void addindex(Player player) {
+        MapSetting.addindex(player);
+    }
+
+    @Override
+    public File getImg() {
+        return MapSetting.getImg();
     }
 }

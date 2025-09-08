@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -20,12 +19,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProjectorBlockEntity extends BlockEntity {
     public ProjectorSetting setting;
     public int tick = 0;
-    public List<Tuple<BlockPos, BlockState>> blocks = new ArrayList<>();
 
 
     public ProjectorBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -88,10 +85,6 @@ public class ProjectorBlockEntity extends BlockEntity {
                 }
             }
             set.changed = false;
-        }
-        if ((set.state == ProjectorSetting.LoadState.Start || set.state == ProjectorSetting.LoadState.Finish) && entity.tick % 40 == 0) {
-            entity.blocks.clear();
-            set.genBlocks.forEach((tuple) -> entity.blocks.add(new Tuple<>(tuple.getA().subtract(pos), tuple.getB())));
         }
     }
 

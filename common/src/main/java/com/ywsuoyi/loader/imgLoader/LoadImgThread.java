@@ -8,8 +8,6 @@ import com.ywsuoyi.simpleContent.TraceBlock;
 import com.ywsuoyi.simpleContent.TraceCenterBlock;
 import com.ywsuoyi.loadingThreadUtil.LoadingThread;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
@@ -20,16 +18,22 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadImgThread extends LoadingThread {
-    public boolean flat;
     public boolean trace = false;
-    public NonNullList<BlockPos> axisX = NonNullList.create();
-    public NonNullList<BlockPos> axisY = NonNullList.create();
+    public List<BlockPos> axisX = new ArrayList<>();
+    public List<BlockPos> axisY = new ArrayList<>();
+    public CoordinateSystem coordinateSystem;
+    public float scale;
 
-    public LoadImgThread(Player player, File file, int dither, int size, int cutout, Level level, BlockPos center, BlockPos anchor, boolean flat) {
-        super(player, file, dither, size, cutout, level, center, anchor);
-        this.flat = flat;
+    public LoadImgThread(Player player, File file, int dither, int cutout, int support, int cover, int finish,
+                         CoordinateSystem coordinateSystem, float scale, Level level, BlockPos center, BlockPos anchor) {
+        super(player, file, dither, cutout, level, center, anchor);
+        data.support = support;
+        data.cover = cover;
+        data.finish = finish;
         if (level.getBlockState(center).is(PixelLoader.traceCenterBlock)) {
             axisY.add(BlockPos.ZERO);
             axisX.add(BlockPos.ZERO);
@@ -51,10 +55,9 @@ public class LoadImgThread extends LoadingThread {
                 else axisY.add(curpos.subtract(center));
             }
             trace = true;
-        } else data.center = anchor.east();
-        if (trace) data.directions = Direction.values();
-        else if (flat) data.directions = new Direction[]{Direction.UP, Direction.DOWN};
-        else data.directions = new Direction[]{Direction.NORTH, Direction.SOUTH};
+        }
+        this.coordinateSystem = coordinateSystem;
+        this.scale = scale;
     }
 
     @Override
@@ -63,45 +66,31 @@ public class LoadImgThread extends LoadingThread {
             BufferedImage read = ImageIO.read(file);
             int width = read.getWidth();
             int height = read.getHeight();
-            int skipx = 0;
-            int skipy = 0;
             if (trace) {
                 if (width > height && axisX.size() < axisY.size() || width < height && axisX.size() > axisY.size()) {
-                    NonNullList<BlockPos> tmp = axisX;
+                    List<BlockPos> tmp = axisX;
                     axisX = axisY;//rotate 90 degree
                     axisY = tmp;
                 }
-                int xcc = width / axisX.size();
-                int ycc = height / axisY.size();
-                if (xcc < ycc) {
-                    size = xcc;
-                    skipy = (height - axisY.size() * xcc) / 2;
-                } else {
-                    size = ycc;
-                    skipx = (width - axisX.size() * ycc) / 2;
-                }
+                int xScale = width / axisX.size();
+                int yScale = height / axisY.size();
+                axisY = axisY.reversed();
+                scale = Math.min(xScale, yScale);
             }
-            int yct = 0;
-            for (int y = height - 1 - skipy; y >= read.getMinY() + skipy; y -= size) {
-                int xct = 0;
-                for (int x = read.getMinX() + skipx; x < width - skipx; x += size) {
-                    if (state == State.end) {
-                        onend(true);
-                        return;
-                    }
-                    ColoredBlock block = ColorSpaces.blockSpace.getBlock(calcRGB(read.getRGB(x, y)));
+            float uMax = width * scale, vMax = height * scale;
+            for (int v = 0; v < vMax; v++) {
+                for (int u = 0; u < uMax; u++) {
+                    ColoredBlock block = ColorSpaces.blockSpace.getBlock(calcRGB(read.getRGB((int) (u / scale), (int) (v / scale))));
                     r -= block.r;
                     g -= block.g;
                     b -= block.b;
                     if (trace) {
-                        if (xct < axisX.size() && yct < axisY.size())
-                            data.genBlocks.add(new Tuple<>(new BlockPos(axisX.get(xct)).offset(axisY.get(yct)), block.block.defaultBlockState()));
+                        if (u < axisX.size() && v < axisY.size())
+                            data.genBlocks.add(new Tuple<>(new BlockPos(axisX.get(u)).offset(axisY.get(v)), block.block.defaultBlockState()));
                     } else
-                        data.genBlocks.add(new Tuple<>(new BlockPos(xct, flat ? 0 : yct, flat ? -yct : 0), block.block.defaultBlockState()));
-                    xct++;
+                        data.genBlocks.add(new Tuple<>(coordinateSystem.getWorldCoords(u, v, (int) uMax, (int) vMax, 1), block.block.defaultBlockState()));
                 }
-                this.message = Component.literal((height - y) + "/" + height);
-                yct++;
+                this.message = Component.literal(v + "/" + vMax);
             }
         } catch (IOException e) {
             PixelLoader.logger.error("Failed to generate image: {}", e.getMessage());

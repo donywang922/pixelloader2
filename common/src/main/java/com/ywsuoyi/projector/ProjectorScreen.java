@@ -2,7 +2,7 @@ package com.ywsuoyi.projector;
 
 import com.ywsuoyi.ImageManager;
 import com.ywsuoyi.Selections;
-import com.ywsuoyi.Setting;
+import com.ywsuoyi.loader.mapLoader.MapSetting;
 import com.ywsuoyi.guiComponent.NumberEditBox;
 import com.ywsuoyi.guiComponent.SelectionOnlyBox;
 import net.minecraft.client.gui.GuiGraphics;
@@ -60,19 +60,19 @@ public class ProjectorScreen extends Screen {
 
         cutout = this.addRenderableWidget(new SelectionOnlyBox(font, 20, 44, w, 20,
                 Component.translatable("pixelLoader.setting.screen.cutout"), Selections.cutout));
-        cutout.setSelectedIndex(setting.cutout);
-        cutout.setResponder(s -> setting.cutout = cutout.getSelectedIndex());
+        cutout.setOptionIndex(setting.cutout);
+        cutout.setResponder(s -> setting.cutout = cutout.getOptionIndex());
 
         dither = this.addRenderableWidget(new SelectionOnlyBox(font, 20 + w + 4, 44, w, 20,
                 Component.translatable("pixelLoader.setting.screen.dither"), Selections.dither));
-        dither.setSelectedIndex(setting.dither);
-        dither.setResponder(s -> setting.dither = dither.getSelectedIndex());
+        dither.setOptionIndex(setting.dither);
+        dither.setResponder(s -> setting.dither = dither.getOptionIndex());
 
         load = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.load"), p -> {
             if (setting.state == ProjectorSetting.LoadState.Select) {
                 setting.state = ProjectorSetting.LoadState.WaitStart;
-                Setting.dither = setting.dither;
-                Setting.cutout = setting.cutout;
+                MapSetting.dither = setting.dither;
+                MapSetting.cutout = setting.cutout;
                 imgFile.setLock(true);
             }
         }).bounds(this.width - 100, 156, 80, 20).build());
@@ -84,8 +84,8 @@ public class ProjectorScreen extends Screen {
 
         imgFile = addRenderableWidget(new SelectionOnlyBox(font, 20, 20, width - 40, 20,
                 Component.translatable("pixelLoader.setting.screen.file"), ImageManager.getImageListStr()));
-        imgFile.setSelectedIndex(setting.fileIndex);
-        imgFile.setResponder(s -> setting.loadimg(imgFile.getSelectedIndex()));
+        imgFile.setOptionIndex(setting.fileIndex);
+        imgFile.setResponder(s -> setting.loadimg(imgFile.getOptionIndex()));
         this.tick();
         setting.loadimg();
     }

@@ -1,31 +1,22 @@
-package com.ywsuoyi;
+package com.ywsuoyi.loader.mapLoader;
 
-import net.minecraft.core.NonNullList;
+import com.ywsuoyi.ImageManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
-public class Setting {
+public class MapSetting {
     public static int index = 0;
 
     public static int dither = 1;
     public static int cutout = 0;
+    public static int support = 0;
+    public static int cover = 0;
 
     public static int mapSize = 1;
 
     public static MapMode mapMode = MapMode.threeD;
-
-    public static int imgSize = 8;
-    public static boolean flat = true;
 
     public static File getImg() {
         return ImageManager.getImg(index);
@@ -47,10 +38,6 @@ public class Setting {
 
 
     public enum MapMode {
-        flat,
-        threeD,
-        cover,
-        cover_c,
-        cover_c2,
+        flat, threeD, cover, cover_c, cover_c2,
     }
 }
