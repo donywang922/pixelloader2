@@ -6,7 +6,6 @@ import com.ywsuoyi.guiComponent.ExpEditBox;
 import com.ywsuoyi.guiComponent.IntegerEditBox;
 import com.ywsuoyi.guiComponent.NumberEditBox;
 import com.ywsuoyi.guiComponent.SelectionOnlyBox;
-import com.ywsuoyi.loader.mapLoader.MapSetting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -23,13 +22,13 @@ public class ImgSettingScreen extends SettingScreen {
     @Override
     public void init() {
         super.init();
-        dither.setOptionIndex(MapSetting.dither);
-        support.setOptionIndex(MapSetting.support);
-        cutout.setOptionIndex(MapSetting.cutout);
-        imgFile.setOptionIndex(MapSetting.index);
-        cover.setOptionIndex(MapSetting.cover);
+        dither.setOptionIndex(ImgSetting.dither);
+        support.setOptionIndex(ImgSetting.support);
+        cutout.setOptionIndex(ImgSetting.cutout);
+        imgFile.setOptionIndex(ImgSetting.index);
+        cover.setOptionIndex(ImgSetting.cover);
         imgFile.setResponder(s -> {
-            MapSetting.index = imgFile.getOptionIndex();
+            ImgSetting.index = imgFile.getOptionIndex();
             reload();
         });
 
@@ -67,6 +66,7 @@ public class ImgSettingScreen extends SettingScreen {
 
         onfinish = addRenderableWidget(new SelectionOnlyBox(font, 20 + w * 2 + 8, 106, w * 2 + 4, 20,
                 Component.translatable("pixelLoader.setting.screen.onfinish"), Selections.onfinish));
+        onfinish.setOptionIndex(ImgSetting.onfinish);
 
         hx = Component.translatable("pixelLoader.setting.screen.pixel.xhint");
         hy = Component.translatable("pixelLoader.setting.screen.pixel.yhint");

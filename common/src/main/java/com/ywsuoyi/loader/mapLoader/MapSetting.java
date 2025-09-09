@@ -12,11 +12,13 @@ public class MapSetting {
     public static int dither = 1;
     public static int cutout = 0;
     public static int support = 0;
-    public static int cover = 0;
+    public static int cover = 1;
+    public static int onfinish = 0;
 
-    public static int mapSize = 1;
+    public static int size = 1;
+    public static int fit = 0;
 
-    public static MapMode mapMode = MapMode.threeD;
+    public static MapMode mode = MapMode.threeD;
 
     public static File getImg() {
         return ImageManager.getImg(index);

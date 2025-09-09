@@ -3,11 +3,20 @@ package com.ywsuoyi.loadingThreadUtil;
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.colorspace.ColorRGB;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LoadingThread extends BaseThread {
     public boolean dither;
@@ -48,5 +57,109 @@ public class LoadingThread extends BaseThread {
             b = tb;
         }
         return new ColorRGB(Mth.clamp(r, 0, 255), Mth.clamp(g, 0, 255), Mth.clamp(b, 0, 255));
+    }
+
+    public void postProcess(){
+        this.message = Component.translatable("pixelLoader.LoadingThread.post");
+        // 创建方块位置集合用于快速查找
+        Set<BlockPos> generatedBlocks = new HashSet<>();
+        for (Tuple<BlockPos, BlockState> tuple : data.genBlocks) {
+            generatedBlocks.add(tuple.getA());
+        }
+        // 处理支撑方块
+        processSupportBlocks(generatedBlocks);
+        // 处理覆盖方块
+        processCoverBlocks(generatedBlocks);
+    }
+    public void processSupportBlocks(Set<BlockPos> generatedBlocks) {
+        if (data.support == 0) return;
+
+
+        List<Tuple<BlockPos, BlockState>> supportBlocks = new ArrayList<>();
+
+        for (Tuple<BlockPos, BlockState> tuple : data.genBlocks) {
+            if (state == State.end) {
+                onend(true);
+                return;
+            }
+
+            BlockPos pos = tuple.getA();
+
+            if (data.support == 1) {
+                // 在所有方块下方放玻璃
+                BlockPos belowPos = pos.below();
+                if (!generatedBlocks.contains(belowPos) && !level.getBlockState(belowPos).isSolid()) {
+                    supportBlocks.add(new Tuple<>(belowPos, Blocks.GLASS.defaultBlockState()));
+                    generatedBlocks.add(belowPos);
+                }
+            } else if (data.support == 0) {
+                // 只在可以下落的方块下方放玻璃
+                if (canBlockFall(tuple.getB())) {
+                    BlockPos belowPos = pos.below();
+                    if (!generatedBlocks.contains(belowPos) && !level.getBlockState(belowPos).isSolid()) {
+                        supportBlocks.add(new Tuple<>(belowPos, Blocks.GLASS.defaultBlockState()));
+                        generatedBlocks.add(belowPos);
+                    }
+                }
+            } else if (data.support == 2) {
+                // 用玻璃充填直到碰到另一个方块
+                BlockPos currentPos = pos.below();
+                while (!generatedBlocks.contains(currentPos) && !level.getBlockState(currentPos).isSolid()) {
+                    supportBlocks.add(new Tuple<>(currentPos, Blocks.GLASS.defaultBlockState()));
+                    generatedBlocks.add(currentPos);
+                    currentPos = currentPos.below();
+
+                    // 防止无限循环，设置一个合理的深度限制
+                    if (currentPos.getY() < level.getMinBuildHeight()) break;
+                }
+            }
+        }
+
+        data.genBlocks.addAll(supportBlocks);
+    }
+
+    public void processCoverBlocks(Set<BlockPos> generatedBlocks) {
+        if (data.cover == 0) return;
+        List<Tuple<BlockPos, BlockState>> coverBlocks = new ArrayList<>();
+        if (data.cover == 1) {
+            // 在所有方块上方放玻璃
+            for (Tuple<BlockPos, BlockState> tuple : new ArrayList<>(data.genBlocks)) {
+                if (state == State.end) {
+                    onend(true);
+                    return;
+                }
+                BlockPos pos = tuple.getA();
+                BlockPos abovePos = pos.above();
+
+                if (!generatedBlocks.contains(abovePos) && level.getBlockState(abovePos).isAir()) {
+                    coverBlocks.add(new Tuple<>(abovePos, Blocks.GLASS.defaultBlockState()));
+                    generatedBlocks.add(abovePos);
+                }
+            }
+
+            data.genBlocks.addAll(coverBlocks);
+        }
+    }
+
+    public boolean canBlockFall(BlockState blockState) {
+        // 检查方块是否可以下落（如沙子、砾石等）
+        return blockState.getBlock() instanceof FallingBlock;
+    }
+
+    public void processFinish() {
+        // 如果finish是2或3，创建保存NBT线程
+        if (data.finish == 2 || data.finish == 3) {
+            String fileName = file.getName();
+            if (fileName.contains(".")) {
+                fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+            }
+            SaveSchematicThread saveThread = new SaveSchematicThread(player, data.genBlocks, fileName);
+            BaseThread.addThread(saveThread);
+        }
+
+        // 如果finish是1或3，设置状态为place
+        if (data.finish == 1 || data.finish == 3) {
+            data.state = ThreadData.State.place; // 假设LoadingThread中有State枚举
+        }
     }
 }

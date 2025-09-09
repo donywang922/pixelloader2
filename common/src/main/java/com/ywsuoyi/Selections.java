@@ -15,6 +15,8 @@ public class Selections {
     public static List<String> onfinish = new ArrayList<>(4);
     public static List<String> projectorMode = new ArrayList<>(2);
     public static List<List<String>> presets = new ArrayList<>(3);
+    public static List<String> mapMode = new ArrayList<>(5);
+    public static List<String> mapFit = new ArrayList<>(2);
 
     static {
         cutout.add(Component.translatable("pixelLoader.setting.screen.cutout.0").getString());
@@ -45,6 +47,15 @@ public class Selections {
 
         projectorMode.add(Component.translatable("pixelLoader.projector.screen.mode.0").getString());
         projectorMode.add(Component.translatable("pixelLoader.projector.screen.mode.1").getString());
+
+        mapMode.add(Component.translatable("pixelLoader.setting.screen.map.mode.0").getString());
+        mapMode.add(Component.translatable("pixelLoader.setting.screen.map.mode.1").getString());
+        mapMode.add(Component.translatable("pixelLoader.setting.screen.map.mode.2").getString());
+        mapMode.add(Component.translatable("pixelLoader.setting.screen.map.mode.3").getString());
+        mapMode.add(Component.translatable("pixelLoader.setting.screen.map.mode.4").getString());
+
+        mapFit.add(Component.translatable("pixelLoader.setting.screen.map.fit.0").getString());
+        mapFit.add(Component.translatable("pixelLoader.setting.screen.map.fit.1").getString());
 
         ArrayList<String> vertical = new ArrayList<>();
         vertical.add("u+1");

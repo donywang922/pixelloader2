@@ -1,25 +1,28 @@
 package com.ywsuoyi.loader.imgLoader;
 
-
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColoredBlock;
+import com.ywsuoyi.loadingThreadUtil.ThreadData;
 import com.ywsuoyi.simpleContent.TraceBlock;
 import com.ywsuoyi.simpleContent.TraceCenterBlock;
 import com.ywsuoyi.loadingThreadUtil.LoadingThread;
+import com.ywsuoyi.loadingThreadUtil.BaseThread;
+import com.ywsuoyi.loadingThreadUtil.SaveSchematicThread;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class LoadImgThread extends LoadingThread {
     public boolean trace = false;
@@ -80,6 +83,10 @@ public class LoadImgThread extends LoadingThread {
             float uMax = width * scale, vMax = height * scale;
             for (int v = 0; v < vMax; v++) {
                 for (int u = 0; u < uMax; u++) {
+                    if (state == State.end) {
+                        onend(true);
+                        return;
+                    }
                     ColoredBlock block = ColorSpaces.blockSpace.getBlock(calcRGB(read.getRGB((int) (u / scale), (int) (v / scale))));
                     r -= block.r;
                     g -= block.g;
@@ -92,11 +99,16 @@ public class LoadImgThread extends LoadingThread {
                 }
                 this.message = Component.literal(v + "/" + vMax);
             }
+            postProcess();
         } catch (IOException e) {
             PixelLoader.logger.error("Failed to generate image: {}", e.getMessage());
+            this.endMessage = Component.translatable("pixelLoader.LoadingThread.error", e.getMessage());
         }
         if (data.genBlocks.size() > 10000) data.renderPercentage = Math.round(1000000f / data.genBlocks.size()) / 100f;
         else data.renderPercentage = 1;
+
+        // 处理完成参数
+        processFinish();
         onend(false);
     }
 }

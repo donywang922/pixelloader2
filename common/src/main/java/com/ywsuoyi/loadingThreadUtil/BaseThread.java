@@ -10,6 +10,7 @@ public class BaseThread extends Thread {
     public Player player;
     public State state = State.wait;
     public Component message = Component.empty();
+    public Component endMessage = Component.translatable("pixelLoader.LoadingThread.finish");
 
     public BaseThread(Player player) {
         this.player = player;
@@ -24,7 +25,7 @@ public class BaseThread extends Thread {
 
     public void onend(boolean force) {
         state = State.end;
-        setMessage(force ? Component.translatable("pixelLoader.LoadingThread.stop") : Component.translatable("pixelLoader.LoadingThread.finish"));
+        setMessage(force ? Component.translatable("pixelLoader.LoadingThread.stop") : endMessage);
         startNextThread();
     }
 

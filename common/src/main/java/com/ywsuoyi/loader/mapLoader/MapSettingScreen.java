@@ -1,29 +1,58 @@
 package com.ywsuoyi.loader.mapLoader;
 
+import com.ywsuoyi.Selections;
+import com.ywsuoyi.guiComponent.IntegerEditBox;
+import com.ywsuoyi.guiComponent.SelectionOnlyBox;
 import com.ywsuoyi.loader.SettingScreen;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class MapSettingScreen extends SettingScreen {
-    public Button mapsize, lt;
+    public IntegerEditBox size;
+    public SelectionOnlyBox mode, fit, onfinish;
+    int w;
 
     @Override
     public void init() {
         super.init();
-        mapsize = this.addRenderableWidget(Button.builder(Component.translatable("pixelLoader.setting.screen.mapsize", MapSetting.mapSize),
-                p_onPress_1_ -> {
-                    MapSetting.mapSize++;
-                    MapSetting.mapSize = MapSetting.mapSize > 8 ? 1 : MapSetting.mapSize;
-                    mapsize.setMessage(Component.translatable("pixelLoader.setting.screen.mapsize", MapSetting.mapSize));
-                }).bounds(this.width / 2 - 100, height / 2 - 12, 200, 20).build());
-        lt = this.addRenderableWidget(Button.builder(Component.translatable("pixelLoader.setting.screen.mapmode." + MapSetting.mapMode),
-                p_onPress_1_ -> {
-                    if (MapSetting.mapMode == MapSetting.MapMode.flat) MapSetting.mapMode = MapSetting.MapMode.threeD;
-                    else if (MapSetting.mapMode == MapSetting.MapMode.threeD) MapSetting.mapMode = MapSetting.MapMode.cover;
-                    else if (MapSetting.mapMode == MapSetting.MapMode.cover) MapSetting.mapMode = MapSetting.MapMode.cover_c;
-                    else if (MapSetting.mapMode == MapSetting.MapMode.cover_c) MapSetting.mapMode = MapSetting.MapMode.cover_c2;
-                    else MapSetting.mapMode = MapSetting.MapMode.flat;
-                    lt.setMessage(Component.translatable("pixelLoader.setting.screen.mapmode." + MapSetting.mapMode));
-                }).bounds(this.width / 2 - 100, height / 2 + 12, 200, 20).build());
+        dither.setOptionIndex(MapSetting.dither);
+        support.setOptionIndex(MapSetting.support);
+        cutout.setOptionIndex(MapSetting.cutout);
+        imgFile.setOptionIndex(MapSetting.index);
+        cover.setOptionIndex(MapSetting.cover);
+
+        w = (width - 40 - 4 * 3) / 4;
+        size = addRenderableWidget(new IntegerEditBox(font, 20, 70, w, 20,
+                Component.translatable("pixelLoader.setting.screen.map.size"), 8, 1));
+        size.setValue(String.valueOf(MapSetting.size));
+        fit = this.addRenderableWidget(new SelectionOnlyBox(font, 20 + w * 2 + 8, 70, w, 20,
+                Component.translatable("pixelLoader.setting.screen.map.fit"), Selections.mapFit));
+        fit.setOptionIndex(MapSetting.fit);
+        onfinish = addRenderableWidget(new SelectionOnlyBox(font, 20 + w * 3 + 12, 70, w, 20,
+                Component.translatable("pixelLoader.setting.screen.onfinish"), Selections.onfinish));
+        onfinish.setOptionIndex(MapSetting.onfinish);
+        mode = this.addRenderableWidget(new SelectionOnlyBox(font, 20, 96, width - 40, 20,
+                Component.translatable("pixelLoader.setting.screen.map.mode"), Selections.mapMode));
+        mode.setOptionIndex(MapSetting.mode.ordinal());
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        super.render(guiGraphics, i, j, f);
+        int sizeI = Integer.parseInt(size.getValue());
+        guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.map.hint", sizeI, sizeI * sizeI),
+                20 + w + 4, 76, 0xFFFFFF);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        MapSetting.cutout = cutout.getOptionIndex();
+        MapSetting.support = support.getOptionIndex();
+        MapSetting.dither = dither.getOptionIndex();
+        MapSetting.cover = cover.getOptionIndex();
+        MapSetting.onfinish = onfinish.getOptionIndex();
+        MapSetting.mode = MapSetting.MapMode.values()[mode.getOptionIndex()];
+        MapSetting.size = Integer.parseInt(size.getValue());
     }
 }

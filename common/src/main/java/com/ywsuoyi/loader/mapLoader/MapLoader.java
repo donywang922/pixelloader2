@@ -21,11 +21,15 @@ public class MapLoader extends AbstractLoader {
                 context.getPlayer(),
                 MapSetting.getImg(),
                 MapSetting.dither,
-                MapSetting.mapSize,
                 MapSetting.cutout,
+                MapSetting.support,
+                MapSetting.cover,
+                MapSetting.onfinish,
                 context.getLevel(),
                 context.getClickedPos().offset(context.getClickedFace().getNormal()),
-                MapSetting.mapMode
+                MapSetting.size,
+                MapSetting.mode,
+                MapSetting.fit
         );
     }
 

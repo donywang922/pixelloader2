@@ -18,7 +18,7 @@ public class ImgSetting {
     public static int cutout = 0;
     public static int support = 0;
     public static int cover = 0;
-    public static int onfinish;
+    public static int onfinish=0;
 
     public static int imgWidth = 0;
     public static int imgHeight = 0;
