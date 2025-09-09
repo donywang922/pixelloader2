@@ -2,20 +2,19 @@ package com.ywsuoyi.loadingThreadUtil;
 
 import com.ywsuoyi.PixelLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.IdMapper;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import com.mojang.datafixers.util.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
 
 public class SaveSchematicThread extends BaseThread {
     private final LinkedList<Tuple<BlockPos, BlockState>> genBlocks;
@@ -36,20 +35,19 @@ public class SaveSchematicThread extends BaseThread {
                 schematicsDir.mkdirs();
             }
 
-            // 创建NBT结构
-            CompoundTag rootTag = new CompoundTag();
-
-            // 计算结构尺寸
             if (genBlocks.isEmpty()) {
                 this.endMessage = (Component.translatable("pixelLoader.LoadingThread.error.empty"));
                 onend(false);
                 return;
             }
 
+            CompoundTag rootTag = new CompoundTag();
+            NbtUtils.addCurrentDataVersion(rootTag);
+            rootTag.putString("author", "PixelLoader");
+            rootTag.put("entities", new ListTag());
+
             BlockPos minPos = genBlocks.getFirst().getA();
             BlockPos maxPos = genBlocks.getFirst().getA();
-
-            // 寻找边界
             for (Tuple<BlockPos, BlockState> entry : genBlocks) {
                 BlockPos pos = entry.getA();
                 minPos = new BlockPos(
@@ -64,70 +62,91 @@ public class SaveSchematicThread extends BaseThread {
                 );
             }
 
-            int width = maxPos.getX() - minPos.getX() + 1;
-            int height = maxPos.getY() - minPos.getY() + 1;
-            int length = maxPos.getZ() - minPos.getZ() + 1;
-
-            // 设置基本信息
-            rootTag.putShort("Width", (short) width);
-            rootTag.putShort("Height", (short) height);
-            rootTag.putShort("Length", (short) length);
-            rootTag.putString("Materials", "Alpha");
-
-            // 创建方块数据
-            ListTag blocksList = new ListTag();
+            SimplePalette simplePalette = new SimplePalette();
+            ListTag blocks = new ListTag();
 
             int processed = 0;
             int total = genBlocks.size();
 
             for (Tuple<BlockPos, BlockState> entry : genBlocks) {
-                if (state == State.end) {
-                    onend(true);
-                    return;
-                }
-                BlockPos pos = entry.getA();
-                BlockState blockState = entry.getB();
-
-                CompoundTag blockTag = new CompoundTag();
-                blockTag.putString("Name", blockState.getBlock().getDescriptionId());
-
-                // 相对坐标
-                blockTag.putInt("x", pos.getX() - minPos.getX());
-                blockTag.putInt("y", pos.getY() - minPos.getY());
-                blockTag.putInt("z", pos.getZ() - minPos.getZ());
-
-                // 方块状态属性
-                if (!blockState.getProperties().isEmpty()) {
-                    CompoundTag propertiesTag = new CompoundTag();
-                    blockState.getProperties().forEach(property -> {
-                        propertiesTag.putString(property.getName(), blockState.getValue(property).toString());
-                    });
-                    blockTag.put("Properties", propertiesTag);
-                }
-
-                blocksList.add(blockTag);
-
+                BlockPos pos = entry.getA().subtract(minPos);
+                BlockState state = entry.getB();
+                CompoundTag block = new CompoundTag();
+                block.put("pos", this.newIntegerList(pos.getX(), pos.getY(), pos.getZ()));
+                int k = simplePalette.idFor(state);
+                block.putInt("state", k);
+                blocks.add(block);
                 processed++;
-                if (processed % 100 == 0 || processed == total) {
-                    this.message = Component.literal(processed + "/" + total);
-                }
+                this.message = Component.literal(processed + "/" + total);
             }
 
-            rootTag.put("Blocks", blocksList);
+            int width = maxPos.getX() - minPos.getX() + 1;
+            int height = maxPos.getY() - minPos.getY() + 1;
+            int length = maxPos.getZ() - minPos.getZ() + 1;
+            rootTag.put("size", this.newIntegerList(width, height, length));
+
+            ListTag palette = new ListTag();
+            for (BlockState blockState : simplePalette) {
+                palette.add(NbtUtils.writeBlockState(blockState));
+            }
+            rootTag.put("palette", palette);
+            rootTag.put("blocks", blocks);
 
             // 保存文件
             File outputFile = new File(schematicsDir, fileName + ".nbt");
             try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                 NbtIo.writeCompressed(rootTag, fos);
             }
-            this.endMessage = (Component.translatable("pixelLoader.LoadingThread.saved", fileName));
+
+            this.endMessage = (Component.translatable("pixelLoader.LoadingThread.saved", fileName + ".nbt"));
+
         } catch (IOException e) {
-            PixelLoader.logger.error("Failed to save nbt: {}", e.getMessage());
+            PixelLoader.logger.error("Failed to save structure: {}", e.getMessage());
             this.endMessage = (Component.translatable("pixelLoader.LoadingThread.error", e.getMessage()));
         } catch (Exception e) {
-            PixelLoader.logger.error("Failed to save nbt: {}", e.getMessage());
+            PixelLoader.logger.error("Unexpected error saving structure: {}", e.getMessage());
             this.endMessage = (Component.translatable("pixelLoader.LoadingThread.error", e.getMessage()));
         }
         onend(false);
+    }
+
+    private ListTag newIntegerList(int... is) {
+        ListTag listTag = new ListTag();
+
+        for (int i : is) {
+            listTag.add(IntTag.valueOf(i));
+        }
+
+        return listTag;
+    }
+
+    static class SimplePalette implements Iterable<BlockState> {
+        public static final BlockState DEFAULT_BLOCK_STATE = Blocks.AIR.defaultBlockState();
+        private final IdMapper<BlockState> ids = new IdMapper<>(16);
+        private int lastId;
+
+        public int idFor(BlockState blockState) {
+            int i = this.ids.getId(blockState);
+            if (i == -1) {
+                i = this.lastId++;
+                this.ids.addMapping(blockState, i);
+            }
+
+            return i;
+        }
+
+        @Nullable
+        public BlockState stateFor(int i) {
+            BlockState blockState = this.ids.byId(i);
+            return blockState == null ? DEFAULT_BLOCK_STATE : blockState;
+        }
+
+        public Iterator<BlockState> iterator() {
+            return this.ids.iterator();
+        }
+
+        public void addMapping(BlockState blockState, int i) {
+            this.ids.addMapping(blockState, i);
+        }
     }
 }

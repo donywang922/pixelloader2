@@ -27,8 +27,6 @@ public class ThreadBlockEntity extends BlockEntity {
             BlockPos center = data.center;
             data.genBlocks.forEach((tuple) -> {
                 if (tuple.getB().isAir()) return;
-                if (tuple.getB().getBlock() instanceof FallingBlock && FallingBlock.isFree(level.getBlockState(center.offset(tuple.getA().below()))))
-                    level.setBlock(center.offset(tuple.getA().below()), Blocks.GLASS.defaultBlockState(), 3);
                 level.setBlock(center.offset(tuple.getA()), tuple.getB(), 3);
             });
         }

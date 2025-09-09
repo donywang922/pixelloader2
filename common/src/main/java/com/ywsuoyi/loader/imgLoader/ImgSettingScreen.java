@@ -134,7 +134,7 @@ public class ImgSettingScreen extends SettingScreen {
         guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.scale"), 20 + w * 2 + 8, 70, 0xFFFFFF);
         guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.urange", ImgSetting.genWidth), 20 + w * 3 + 12, 70, 0xFFFFFF);
         guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.vrange", ImgSetting.genHeight), 20 + w * 3 + 12, 81, 0xFFFFFF);
-        guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.wrange", 1), 20 + w * 3 + 12, 92, 0xFFFFFF);
+        guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.wrange", ImgSetting.zRange), 20 + w * 3 + 12, 92, 0xFFFFFF);
 
         guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.xhint"), 20, 137, 0xFFFFFF);
         guiGraphics.drawString(this.font, Component.translatable("pixelLoader.setting.screen.pixel.yhint"), 20, 163, 0xFFFFFF);

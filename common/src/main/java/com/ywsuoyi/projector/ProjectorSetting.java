@@ -18,9 +18,15 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import static com.ywsuoyi.ImageManager.isImageFile;
 
 public class ProjectorSetting {
     public static final HashMap<BlockPos, ProjectorSetting> settings = new HashMap<>();
@@ -61,11 +67,21 @@ public class ProjectorSetting {
     }
 
     public File getImg() {
-        return ImageManager.getImg(fileIndex);
+        File selectedFile = ImageManager.getImg(fileIndex);
+        if (selectedFile == null) return null;
+
+        if (selectedFile.isDirectory()) {
+            // 如果选中的是文件夹，返回文件夹中的第一张图片
+            return ImageManager.getFirstImageFromDirectory(selectedFile);
+        } else {
+            // 如果选中的是文件，直接返回
+            return selectedFile;
+        }
     }
 
+
     public void loadimg() {
-        img = ImageManager.getImg(fileIndex);
+        img = getImg();
         if (img == null) {
             fileIndex = 0;
             return;

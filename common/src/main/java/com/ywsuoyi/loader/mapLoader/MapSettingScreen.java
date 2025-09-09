@@ -54,5 +54,7 @@ public class MapSettingScreen extends SettingScreen {
         MapSetting.onfinish = onfinish.getOptionIndex();
         MapSetting.mode = MapSetting.MapMode.values()[mode.getOptionIndex()];
         MapSetting.size = Integer.parseInt(size.getValue());
+        MapSetting.fit = fit.getOptionIndex();
+        MapSetting.index = imgFile.getOptionIndex();
     }
 }

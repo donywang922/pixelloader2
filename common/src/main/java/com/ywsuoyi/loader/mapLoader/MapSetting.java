@@ -21,7 +21,16 @@ public class MapSetting {
     public static MapMode mode = MapMode.threeD;
 
     public static File getImg() {
-        return ImageManager.getImg(index);
+        File selectedFile = ImageManager.getImg(index);
+        if (selectedFile == null) return null;
+
+        if (selectedFile.isDirectory()) {
+            // 如果选中的是文件夹，返回文件夹中的第一张图片
+            return ImageManager.getFirstImageFromDirectory(selectedFile);
+        } else {
+            // 如果选中的是文件，直接返回
+            return selectedFile;
+        }
     }
 
     public static void addindex(Player player) {

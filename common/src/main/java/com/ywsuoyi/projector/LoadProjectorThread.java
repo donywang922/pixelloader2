@@ -121,6 +121,10 @@ public class LoadProjectorThread extends LoadingThread {
 
     @Override
     public void run() {
+        if (file == null) {
+            onend(false);
+            return;
+        }
         try {
             BufferedImage read = ImageIO.read(file);
 

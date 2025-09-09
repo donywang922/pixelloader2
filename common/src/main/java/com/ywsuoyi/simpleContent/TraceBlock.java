@@ -77,9 +77,16 @@ public class TraceBlock extends Block {
                 boolean flagNpt = true;
                 for (int j = 0; j < 26; j++) {
                     BlockPos tmpPos2 = tmpPos.offset(neb[j]);
-                    if (tmpPos2.equals(blockPos)) break;
+                    if (tmpPos2.equals(blockPos)) continue;
                     BlockState nb2 = level.getBlockState(tmpPos2);
-                    if (nb2.is(this) && tmpPos2.offset(fromID(nb2.getValue(point))).equals(tmpPos)) {
+                    if (nb2.is(this))
+                        if (tmpPos2.offset(fromID(nb2.getValue(point))).equals(tmpPos)) {
+                            flagNpt = false;
+                            break;
+                        }
+                    if (nb2.is(PixelLoader.traceCenterBlock)
+                            && (tmpPos2.offset(fromID(nb2.getValue(TraceCenterBlock.pointX))).equals(tmpPos)
+                            || tmpPos2.offset(fromID(nb2.getValue(TraceCenterBlock.pointY))).equals(tmpPos))) {
                         flagNpt = false;
                         break;
                     }

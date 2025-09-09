@@ -18,10 +18,11 @@ public class ImgSetting {
     public static int cutout = 0;
     public static int support = 0;
     public static int cover = 0;
-    public static int onfinish=0;
+    public static int onfinish = 0;
 
     public static int imgWidth = 0;
     public static int imgHeight = 0;
+    public static int zRange = 0;
     public static int genWidth = 0;
     public static int genHeight = 0;
     public static float genScale = 0.125f;
@@ -52,14 +53,65 @@ public class ImgSetting {
     }
 
     public static void reload() {
-        File img = getImg();
-        if (img == null) return;
-        try {
-            BufferedImage read = ImageIO.read(img);
-            imgWidth = read.getWidth();
-            imgHeight = read.getHeight();
-        } catch (IOException ignored) {
+        File selectedFile = ImageManager.getImg(ImgSetting.index);
+        if (selectedFile == null) {
+            // 没有选中的文件
+            imgWidth = 1;
+            imgHeight = 1;
+            zRange = 0;
+            return;
         }
+
+        if (selectedFile.isDirectory()) {
+            // 文件夹模式
+            List<File> imageFiles = ImageManager.getAllImagesFromDirectory(selectedFile);
+            zRange = imageFiles.size() - 1;
+
+            // 使用第一张图片的尺寸
+            if (!imageFiles.isEmpty()) {
+                File firstImage = imageFiles.get(0);
+                try {
+                    BufferedImage img = ImageIO.read(firstImage);
+                    if (img != null) {
+                        ImgSetting.imgWidth = img.getWidth();
+                        ImgSetting.imgHeight = img.getHeight();
+                    } else {
+                        // 图片读取失败，使用默认值
+                        ImgSetting.imgWidth = 1;
+                        ImgSetting.imgHeight = 1;
+                    }
+                } catch (IOException e) {
+                    // 读取错误，使用默认值
+                    ImgSetting.imgWidth = 1;
+                    ImgSetting.imgHeight = 1;
+                }
+            } else {
+                // 文件夹为空
+                imgWidth = 1;
+                imgHeight = 1;
+                zRange = 0;
+            }
+        } else {
+            // 单个图片文件模式
+            ImgSetting.zRange = 0;
+
+            try {
+                BufferedImage img = ImageIO.read(selectedFile);
+                if (img != null) {
+                    ImgSetting.imgWidth = img.getWidth();
+                    ImgSetting.imgHeight = img.getHeight();
+                } else {
+                    // 图片读取失败，使用默认值
+                    ImgSetting.imgWidth = 1;
+                    ImgSetting.imgHeight = 1;
+                }
+            } catch (IOException e) {
+                // 读取错误，使用默认值
+                ImgSetting.imgWidth = 1;
+                ImgSetting.imgHeight = 1;
+            }
+        }
+
     }
 
     public static float getScale() {

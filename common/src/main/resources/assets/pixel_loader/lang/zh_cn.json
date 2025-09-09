@@ -93,7 +93,7 @@
   "pixelLoader.setting.screen.pixel.zhint": "Z =",
   "pixelLoader.setting.screen.pixel.urange": "U：[1,%1$s] W=%1$s",
   "pixelLoader.setting.screen.pixel.vrange": "V：[1,%1$s] H=%1$s",
-  "pixelLoader.setting.screen.pixel.wrange": "Z：[1,%s]",
+  "pixelLoader.setting.screen.pixel.wrange": "Z：[0,%s]",
 
   "pixelLoader.setting.screen.map.mode": "生成方式",
   "pixelLoader.setting.screen.map.mode.0": "生成方式：平面",
@@ -108,14 +108,18 @@
   "pixelLoader.setting.screen.map.hint": "%2$s (%1$s*%1$s) 张地图",
 
   "pixelLoader.LoadingThread.start": "开始",
+  "pixelLoader.LoadingThread.gen": "生成 %s",
+  "pixelLoader.LoadingThread.post": "后处理 %s",
   "pixelLoader.LoadingThread.stop": "停止",
   "pixelLoader.LoadingThread.finish": "完成",
+  "pixelLoader.LoadingThread.saved": "文件已保存：%s",
   "pixelLoader.LoadingThread.error": "错误：%s",
   "pixelLoader.LoadingThread.error.fill": "线程列队已满",
   "pixelLoader.LoadingThread.error.empty": "方块列表为空",
 
   "pixelLoader.thread.screen": "线程",
   "pixelLoader.thread.screen.place": "放置到世界",
+  "pixelLoader.thread.screen.save": "保存nbt",
   "pixelLoader.thread.screen.center": "开始位置: %s",
   "pixelLoader.thread.screen.blocks": "方块数量: %s",
   "pixelLoader.thread.screen.percentage": "预览完整性%",
@@ -134,6 +138,8 @@
   "pixelLoader.projector.screen.mode.1": "投影模式：覆盖",
   "pixelLoader.projector.screen.load": "生成",
   "pixelLoader.projector.screen.place": "放置",
-  "pixelLoader.projector.screen.save": "保存nbt",
-  "pixelLoader.projector.screen.waiting": "等待……"
+
+  "pixelLoader.projector.screen.waiting": "等待……",
+  "pixelLoader.projector.screen.noFile": "未选择图片",
+  "pixelLoader.projector.screen.size": "尺寸： %s"
 }

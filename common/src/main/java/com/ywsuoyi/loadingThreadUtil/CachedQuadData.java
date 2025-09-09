@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -30,12 +31,14 @@ public record CachedQuadData(List<CachedQuad> quads) {
         // 创建位置集合用于快速查找
         Set<BlockPos> blockPositions = new HashSet<>();
         for (Tuple<BlockPos, BlockState> tuple : blocks) {
+            if (tuple.getB().is(Blocks.GLASS) || tuple.getB().isAir()) continue;
             blockPositions.add(tuple.getA());
         }
 
         RandomSource randomSource = RandomSource.create(42);
 
         for (Tuple<BlockPos, BlockState> tuple : blocks) {
+            if (tuple.getB().is(Blocks.GLASS) || tuple.getB().isAir()) continue;
             BlockPos pos = tuple.getA();
             BlockState blockState = tuple.getB();
             BakedModel blockModel = blockRender.getBlockModel(blockState);

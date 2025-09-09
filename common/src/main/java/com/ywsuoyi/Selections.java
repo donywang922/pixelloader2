@@ -22,6 +22,7 @@ public class Selections {
         cutout.add(Component.translatable("pixelLoader.setting.screen.cutout.0").getString());
         cutout.add(Component.translatable("pixelLoader.setting.screen.cutout.1").getString());
         cutout.add(Component.translatable("pixelLoader.setting.screen.cutout.2").getString());
+        cutout.add(Component.translatable("pixelLoader.setting.screen.cutout.3").getString());
 
         dither.add(Component.translatable("pixelLoader.setting.screen.dither.0").getString());
         dither.add(Component.translatable("pixelLoader.setting.screen.dither.1").getString());
@@ -60,12 +61,12 @@ public class Selections {
         ArrayList<String> vertical = new ArrayList<>();
         vertical.add("u+1");
         vertical.add("h-v");
-        vertical.add("(z-1)*2");
+        vertical.add("z*2");
         presets.add(vertical);
 
         ArrayList<String> flat = new ArrayList<>();
         flat.add("u+1");
-        flat.add("0");
+        flat.add("1");
         flat.add("v");
         presets.add(flat);
 

@@ -81,9 +81,6 @@
   "pixelLoader.setting.screen.pixel.width": "width",
   "pixelLoader.setting.screen.pixel.height": "height",
   "pixelLoader.setting.screen.pixel.scale": "scale%",
-  "pixelLoader.setting.screen.pixel.xvalue": "",
-  "pixelLoader.setting.screen.pixel.yvalue": "",
-  "pixelLoader.setting.screen.pixel.zvalue": "",
   "pixelLoader.setting.screen.pixel.preset": "preset",
   "pixelLoader.setting.screen.pixel.preset.0": "preset: vertical",
   "pixelLoader.setting.screen.pixel.preset.1": "preset: flat",
@@ -96,7 +93,7 @@
   "pixelLoader.setting.screen.pixel.zhint": "Z =",
   "pixelLoader.setting.screen.pixel.urange": "U: [1,%1$s] W=%1$s",
   "pixelLoader.setting.screen.pixel.vrange": "V: [1,%1$s] H=%1$s",
-  "pixelLoader.setting.screen.pixel.wrange": "Z: [1,%s]",
+  "pixelLoader.setting.screen.pixel.wrange": "Z: [0,%s]",
 
   "pixelLoader.setting.screen.map.mode": "generation method",
   "pixelLoader.setting.screen.map.mode.0": "generation method: flat",
@@ -112,7 +109,8 @@
 
 
   "pixelLoader.LoadingThread.start": "start",
-  "pixelLoader.LoadingThread.post": "post-processing",
+  "pixelLoader.LoadingThread.gen": "generating %s",
+  "pixelLoader.LoadingThread.post": "post-processing %s",
   "pixelLoader.LoadingThread.stop": "stop",
   "pixelLoader.LoadingThread.finish": "finish",
   "pixelLoader.LoadingThread.saved": "file saved: %s",
@@ -122,6 +120,7 @@
 
   "pixelLoader.thread.screen": "thread",
   "pixelLoader.thread.screen.place": "place to world",
+  "pixelLoader.thread.screen.save": "save nbt",
   "pixelLoader.thread.screen.center": "start position: %s",
   "pixelLoader.thread.screen.blocks": "block count: %s",
   "pixelLoader.thread.screen.percentage": "preview render percentage",
@@ -139,7 +138,6 @@
   "pixelLoader.projector.screen.hintB": "Hold shift to fine turn",
   "pixelLoader.projector.screen.load": "generate",
   "pixelLoader.projector.screen.place": "place",
-  "pixelLoader.projector.screen.save": "save",
   "pixelLoader.projector.screen.mode": "place mode",
   "pixelLoader.projector.screen.mode.0": "place mode: replace",
   "pixelLoader.projector.screen.mode.1": "place mode: cover",
