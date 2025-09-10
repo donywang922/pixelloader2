@@ -2,17 +2,16 @@
   "schemaVersion": 1,
   "id": "pixel_loader",
   "version": "${version}",
-  "name": "Pixel loader",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Pixel Loader 2",
+  "description": "Ingame pixel art generator",
   "authors": [
-    "Me!"
+    "YWsuoyi"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/donywang922/pixelloader2/"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/pixel_loader/icon.png",
+  "license": "MIT",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [

@@ -42,10 +42,10 @@ public class ProjectorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        roll = addRenderableWidget(new NumberEditBox(font, 20, 90, 80, 20, rollText));
-        yaw = addRenderableWidget(new NumberEditBox(font, 20, 120, 80, 20, yawText));
-        pitch = addRenderableWidget(new NumberEditBox(font, 20, 150, 80, 20, pitchText));
-        scale = addRenderableWidget(new NumberEditBox(font, 20, 180, 80, 20, scaleText));
+        roll = addRenderableWidget(new NumberEditBox(font, 20, 80, 80, 20, rollText));
+        yaw = addRenderableWidget(new NumberEditBox(font, 20, 114, 80, 20, yawText));
+        pitch = addRenderableWidget(new NumberEditBox(font, 20, 148, 80, 20, pitchText));
+        scale = addRenderableWidget(new NumberEditBox(font, 20, 182, 80, 20, scaleText));
 
         roll.setValue(String.valueOf(setting.roll));
         yaw.setValue(String.valueOf(setting.yaw));
@@ -73,13 +73,12 @@ public class ProjectorScreen extends Screen {
                 setting.state = ProjectorSetting.LoadState.WaitStart;
                 MapSetting.dither = setting.dither;
                 MapSetting.cutout = setting.cutout;
-                imgFile.setLock(true);
             }
         }).bounds(this.width - 100, 156, 80, 20).build());
         place = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.place"), p -> {
             if (setting.state == ProjectorSetting.LoadState.Finish) setting.state = ProjectorSetting.LoadState.Placing;
         }).bounds(this.width - 100, 156, 80, 20).build());
-        save = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.projector.screen.save"), p -> {
+        save = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.thread.screen.save"), p -> {
         }).bounds(this.width - 100, 180, 80, 20).build());
 
         imgFile = addRenderableWidget(new SelectionOnlyBox(font, 20, 20, width - 40, 20,
@@ -102,6 +101,8 @@ public class ProjectorScreen extends Screen {
         pitch.setEditable(editable);
         scale.setEditable(editable);
         imgFile.setLock(!editable);
+        cutout.setLock(!editable);
+        dither.setLock(!editable);
     }
 
     @Override
@@ -138,10 +139,10 @@ public class ProjectorScreen extends Screen {
     @Override
     public void render(GuiGraphics poseStack, int i, int j, float f) {
         super.render(poseStack, i, j, f);
-        poseStack.drawString(this.font, rollText, 20, 80, 0xA0A0A0);
-        poseStack.drawString(this.font, yawText, 20, 110, 0xA0A0A0);
-        poseStack.drawString(this.font, pitchText, 20, 140, 0xA0A0A0);
-        poseStack.drawString(this.font, scaleText, 20, 170, 0xA0A0A0);
+        poseStack.drawString(this.font, rollText, 20, 70, 0xA0A0A0);
+        poseStack.drawString(this.font, yawText, 20, 104, 0xA0A0A0);
+        poseStack.drawString(this.font, pitchText, 20, 138, 0xA0A0A0);
+        poseStack.drawString(this.font, scaleText, 20, 172, 0xA0A0A0);
         MutableComponent hintA = Component.translatable("pixelLoader.projector.screen.hintA");
         poseStack.drawString(this.font, hintA, this.width - 20 - this.font.width(hintA.getVisualOrderText()), 60, 0xFFFFFF);
         MutableComponent hintB = Component.translatable("pixelLoader.projector.screen.hintB");
