@@ -62,6 +62,7 @@ public class ColorSpaceFileManager {
 
             // 保存过滤器模式
             root.addProperty("whiteList", ColorSpaces.whiteList);
+            root.addProperty("lightWeight", ColorSpaces.lightWeight);
 
             // 保存过滤器物品
             JsonArray filterArray = new JsonArray();
@@ -89,6 +90,7 @@ public class ColorSpaceFileManager {
 
                 // 四种颜色
                 blockData.add("bc", serializeColorRGB(selectBlock.bc));
+                blockData.addProperty("lightWeight", selectBlock.lightWeight);
                 blockData.add("map", serializeColorRGB(selectBlock.map));
                 blockData.add("mapB", serializeColorRGB(selectBlock.mapB));
                 blockData.add("mapT", serializeColorRGB(selectBlock.mapT));
@@ -145,6 +147,10 @@ public class ColorSpaceFileManager {
                 ColorSpaces.whiteList = root.get("whiteList").getAsInt();
             }
 
+            if (root.has("lightWeight")) {
+                ColorSpaces.lightWeight = root.get("lightWeight").getAsFloat();
+            }
+
             // 读取过滤器物品
             if (root.has("filter")) {
                 JsonArray filterArray = root.getAsJsonArray("filter");
@@ -177,9 +183,10 @@ public class ColorSpaceFileManager {
                         ColorRGB map = deserializeColorRGB(blockData.getAsJsonObject("map"));
                         ColorRGB mapB = deserializeColorRGB(blockData.getAsJsonObject("mapB"));
                         ColorRGB mapT = deserializeColorRGB(blockData.getAsJsonObject("mapT"));
+                        float lightWeight = blockData.has("lightWeight") ? blockData.get("lightWeight").getAsFloat() : 0;
 
                         // 创建SelectBlock
-                        SelectBlock selectBlock = new SelectBlock(block, bc, map, mapB, mapT);
+                        SelectBlock selectBlock = new SelectBlock(block, bc, map, mapB, mapT, lightWeight);
 
                         // 设置是否启用
                         if (blockData.has("active")) {

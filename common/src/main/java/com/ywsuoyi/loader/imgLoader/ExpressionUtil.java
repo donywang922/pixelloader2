@@ -1,5 +1,7 @@
 package com.ywsuoyi.loader.imgLoader;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +47,12 @@ public class ExpressionUtil {
                 double result = (op == '+') ? left.value + right.value : left.value - right.value;
                 left = new ParseResult(result, right.nextIndex);
             } else {
-                break;
+                if (op == ')') {
+                    break; // 这是有效的结束，让上层处理
+                } else {
+                    // 遇到未知操作符，报错
+                    throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.invalidChar", String.valueOf(op)).getString());
+                }
             }
         }
 
@@ -62,7 +69,12 @@ public class ExpressionUtil {
                 double result = (op == '*') ? left.value * right.value : left.value / right.value;
                 left = new ParseResult(result, right.nextIndex);
             } else {
-                break;
+                if (op == '+' || op == '-' || op == ')') {
+                    break; // 这些是有效的结束，让上层处理
+                } else {
+                    // 遇到未知操作符，报错
+                    throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.invalidChar", String.valueOf(op)).getString());
+                }
             }
         }
 
@@ -83,7 +95,7 @@ public class ExpressionUtil {
 
     private static ParseResult parseFactor(String expr, int index, Map<String, Double> vars) {
         if (index >= expr.length()) {
-            throw new IllegalArgumentException("表达式不完整");
+            throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.incomplete").getString());
         }
 
         char ch = expr.charAt(index);
@@ -91,7 +103,7 @@ public class ExpressionUtil {
         if (ch == '(') {
             ParseResult result = parseExpression(expr, index + 1, vars);
             if (result.nextIndex >= expr.length() || expr.charAt(result.nextIndex) != ')') {
-                throw new IllegalArgumentException("缺少右括号");
+                throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.missingRightParen").getString());
             }
             return new ParseResult(result.value, result.nextIndex + 1);
         }
@@ -113,7 +125,7 @@ public class ExpressionUtil {
             return parseNumber(expr, index);
         }
 
-        throw new IllegalArgumentException("无效字符: " + ch);
+        throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.invalidChar", String.valueOf(ch)).getString());
     }
 
     private static ParseResult parseNumber(String expr, int index) {
@@ -156,7 +168,7 @@ public class ExpressionUtil {
         return switch (name) {
             case "PI" -> new ParseResult(Math.PI, index);
             case "E" -> new ParseResult(Math.E, index);
-            default -> throw new IllegalArgumentException("未知变量: " + name);
+            default -> throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.unknownVariable", name).getString());
         };
     }
 
@@ -166,7 +178,7 @@ public class ExpressionUtil {
         ParseResult arg = parseExpression(expr, index, vars);
 
         if (arg.nextIndex >= expr.length() || expr.charAt(arg.nextIndex) != ')') {
-            throw new IllegalArgumentException("函数调用缺少右括号");
+            throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.functionMissingRightParen").getString());
         }
 
         double result = applyFunction(funcName, arg.value);
@@ -189,7 +201,7 @@ public class ExpressionUtil {
             case "floor" -> Math.floor(arg);
             case "ceil" -> Math.ceil(arg);
             case "round" -> Math.round(arg);
-            default -> throw new IllegalArgumentException("未知函数: " + name);
+            default -> throw new IllegalArgumentException(Component.translatable("pixelLoader.expression.error.unknownFunction", name).getString());
         };
     }
 }

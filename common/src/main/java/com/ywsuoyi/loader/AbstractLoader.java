@@ -49,7 +49,7 @@ public abstract class AbstractLoader extends Item {
                     BaseThread thread = getThread(context);
                     BaseThread.addThread(thread);
                 } catch (Exception e) {
-                    context.getPlayer().displayClientMessage(Component.translatable(e.getMessage()), true);
+                    context.getPlayer().displayClientMessage(Component.translatable("pixelLoader.LoadingThread.error", e.getMessage()), true);
                 }
             }
         }

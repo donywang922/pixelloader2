@@ -2,6 +2,7 @@
   "item.pixel_loader.colorspaceloader": "色域加载器",
   "item.pixel_loader.imgloader": "图片加载器",
   "item.pixel_loader.maploader": "地图加载器",
+  "item.pixel_loader.beaconloader": "信标加载器",
   "item.pixel_loader.autotracer": "自动跟踪器",
   "item.pixel_loader.tagsplitter": "标签拆分器",
   "item_group.pixel_loader": "像素加载器",
@@ -50,9 +51,11 @@
   "pixelLoader.colorspace.screen.getcolor": "获取平均色",
   "pixelLoader.colorspace.screen.map": "整理",
   "pixelLoader.colorspace.screen.loaded": "完成",
+  "pixelLoader.colorspace.screen.light": "发光加权",
 
   "pixelLoader.colorspace.selectblock.screen": "方块列表",
   "pixelLoader.colorspace.selectblock.screen.color": "█ #%s",
+  "pixelLoader.colorspace.selectblock.screen.light": "发光加权 += %s",
 
   "pixelLoader.setting.screen": "设置",
   "pixelLoader.setting.screen.dither": "仿色",
@@ -95,6 +98,13 @@
   "pixelLoader.setting.screen.pixel.vrange": "V：[1,%1$s] H=%1$s",
   "pixelLoader.setting.screen.pixel.wrange": "Z：[0,%s]",
 
+  "pixelLoader.expression.error.incomplete": "表达式不完整",
+  "pixelLoader.expression.error.invalidChar": "无效字符：%s",
+  "pixelLoader.expression.error.missingRightParen": "缺少右括号",
+  "pixelLoader.expression.error.functionMissingRightParen": "函数调用缺少右括号",
+  "pixelLoader.expression.error.unknownVariable": "未知变量：%s",
+  "pixelLoader.expression.error.unknownFunction": "未知函数：%s",
+
   "pixelLoader.setting.screen.map.mode": "生成方式",
   "pixelLoader.setting.screen.map.mode.0": "生成方式：平面",
   "pixelLoader.setting.screen.map.mode.1": "生成方式：3D",
@@ -120,8 +130,8 @@
   "pixelLoader.thread.screen": "线程",
   "pixelLoader.thread.screen.place": "放置到世界",
   "pixelLoader.thread.screen.save": "保存nbt",
-  "pixelLoader.thread.screen.center": "开始位置: %s",
-  "pixelLoader.thread.screen.blocks": "方块数量: %s",
+  "pixelLoader.thread.screen.center": "开始位置：%s",
+  "pixelLoader.thread.screen.blocks": "方块数量：%s",
   "pixelLoader.thread.screen.percentage": "预览完整性%",
   "pixelLoader.thread.screen.rendertip": "预览大量方块可能会导致卡顿",
   "pixelLoader.thread.screen.renderwarning": "因为卡顿，以自动降低比例，你仍然可以再次上调",
@@ -141,5 +151,5 @@
 
   "pixelLoader.projector.screen.waiting": "等待……",
   "pixelLoader.projector.screen.noFile": "未选择图片",
-  "pixelLoader.projector.screen.size": "尺寸： %s"
+  "pixelLoader.projector.screen.size": "尺寸：%s"
 }

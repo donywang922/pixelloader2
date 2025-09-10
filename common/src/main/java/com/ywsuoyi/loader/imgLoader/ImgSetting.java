@@ -123,7 +123,10 @@ public class ImgSetting {
     }
 
     public static CoordinateSystem getCoordinateSystem() {
-        return new CoordinateSystem(xExpr, yExpr, zExpr);
+        CoordinateSystem coordinateSystem = new CoordinateSystem(xExpr, yExpr, zExpr);
+        coordinateSystem.getWorldCoords(0, 0, genWidth, genHeight, 0);
+        coordinateSystem.getWorldCoords(genWidth, genHeight, genWidth, genHeight, zRange);
+        return coordinateSystem;
     }
 
     static {

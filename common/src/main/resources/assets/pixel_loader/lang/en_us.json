@@ -2,6 +2,7 @@
   "item.pixel_loader.colorspaceloader": "color space loader",
   "item.pixel_loader.imgloader": "image loader",
   "item.pixel_loader.maploader": "map loader",
+  "item.pixel_loader.beaconloader": "beacon loader",
   "item.pixel_loader.autotracer": "auto tracer",
   "item.pixel_loader.tagsplitter": "tag splitter",
   "item_group.pixel_loader": "Pixel Loader",
@@ -50,9 +51,11 @@
   "pixelLoader.colorspace.screen.getcolor": "Generate average color",
   "pixelLoader.colorspace.screen.map": "Mapping",
   "pixelLoader.colorspace.screen.loaded": "loaded",
+  "pixelLoader.colorspace.screen.light": "light weight",
 
   "pixelLoader.colorspace.selectblock.screen": "Block List",
   "pixelLoader.colorspace.selectblock.screen.color": "█ #%s",
+  "pixelLoader.colorspace.selectblock.screen.light": "light weight += %s",
 
   "pixelLoader.setting.screen": "setting",
   "pixelLoader.setting.screen.dither": "dither",
@@ -94,6 +97,13 @@
   "pixelLoader.setting.screen.pixel.urange": "U: [1,%1$s] W=%1$s",
   "pixelLoader.setting.screen.pixel.vrange": "V: [1,%1$s] H=%1$s",
   "pixelLoader.setting.screen.pixel.wrange": "Z: [0,%s]",
+
+  "pixelLoader.expression.error.incomplete": "Expression incomplete",
+  "pixelLoader.expression.error.invalidChar": "Invalid character: %s",
+  "pixelLoader.expression.error.missingRightParen": "Missing right parenthesis",
+  "pixelLoader.expression.error.functionMissingRightParen": "Function call missing right parenthesis",
+  "pixelLoader.expression.error.unknownVariable": "Unknown variable: %s",
+  "pixelLoader.expression.error.unknownFunction": "Unknown function: %s",
 
   "pixelLoader.setting.screen.map.mode": "generation method",
   "pixelLoader.setting.screen.map.mode.0": "generation method: flat",

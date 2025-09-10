@@ -1,6 +1,7 @@
 package com.ywsuoyi.colorspace;
 
 import com.ywsuoyi.Selections;
+import com.ywsuoyi.guiComponent.NumberEditBox;
 import com.ywsuoyi.guiComponent.SelectionOnlyBox;
 import com.ywsuoyi.guiComponent.SelectionEditBox;
 import com.ywsuoyi.loadingThreadUtil.BaseThread;
@@ -18,6 +19,7 @@ public class ColorSettingScreen extends Screen {
     Button load, stop, filter, place, edit, read, write;
     SelectionEditBox colorFile;
     SelectionOnlyBox type;
+    NumberEditBox light;
     Component message = Component.empty();
     Player player;
 
@@ -44,6 +46,7 @@ public class ColorSettingScreen extends Screen {
                         boolean success = ColorSpaceFileManager.loadColorSpace(fileName);
                         if (success) {
                             type.setOptionIndex(ColorSpaces.whiteList);
+                            light.setValue(String.valueOf(ColorSpaces.lightWeight));
                             // 重新构建色域
                             ColorSpaces.reBuildAll();
                             message = Component.translatable("pixelLoader.colorspace.screen.message.load_success", fileName);
@@ -76,26 +79,40 @@ public class ColorSettingScreen extends Screen {
                 p_onPress_1_ -> {
                     ColorSpaces.thread = new LoadColorSpaceThread(player, player.level());
                     ColorSpaces.thread.start();
-                }).bounds(width - 120, 20, 100, 20).build());
+                }).bounds(width - 120, 60, 100, 20).build());
         edit = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.colorspace.screen.edit"),
-                p_onPress_1_ -> Minecraft.getInstance().setScreen(new SelectBlockScreen())).bounds(width - 120, 70, 100, 20).build());
+                p_onPress_1_ -> Minecraft.getInstance().setScreen(new SelectBlockScreen())).bounds(width - 120, 115, 100, 20).build());
         place = addRenderableWidget(Button.builder(Component.translatable("pixelLoader.colorspace.screen.place"),
                 p_onPress_1_ -> {
                     ColorSpaces.waitPlace = true;
                     onClose();
-                }).bounds(width - 120, 94, 100, 20).build());
+                }).bounds(width - 120, 139, 100, 20).build());
         stop = addRenderableWidget(Button.builder(
                 Component.translatable("pixelLoader.colorspace.screen.forcestop"), p_onPress_1_ -> {
                     if (ColorSpaces.thread != null) {
                         ColorSpaces.thread.forceStop();
                     }
-                }).bounds(width - 120, height - 40, 100, 20).build());
+                }).bounds(width - 120, 60, 100, 20).build());
         stop.visible = place.visible = edit.visible = false;
 
         colorFile = addRenderableWidget(new SelectionEditBox(font, 20, 100, 100, 20,
                 Component.translatable("pixelLoader.colorspace.screen.colorfile"), suggestions));
         colorFile.setValue(ColorSpaces.fileName);
         colorFile.setResponder(s -> ColorSpaces.fileName = s);
+
+        light = addRenderableWidget(new NumberEditBox(font, width - 120, 30, 100, 20, Component.translatable("pixelLoader.colorspace.screen.light")));
+        light.setValue(String.valueOf(ColorSpaces.lightWeight));
+        light.setResponder(s -> {
+            try {
+                float lightWeight = Float.parseFloat(s);
+                float clampLightWeight = Math.clamp(lightWeight, 0, 15);
+                ColorSpaces.lightWeight = lightWeight;
+                if (lightWeight != clampLightWeight)
+                    light.setValue(String.valueOf(clampLightWeight));
+            } catch (Exception e) {
+                light.setValue("0");
+            }
+        });
 
     }
 
@@ -113,10 +130,11 @@ public class ColorSettingScreen extends Screen {
         poseStack.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.file"), 20, 82, 0xFFFFFF);
         MutableComponent msg = Component.translatable("pixelLoader.colorspace.screen.message",
                 ColorSpaces.thread != null ? ColorSpaces.thread.message : Component.empty());
-        poseStack.drawString(this.font, msg, this.width - 120, 45, 0xFFFFFF);
+        poseStack.drawString(this.font, msg, this.width - 120, 85, 0xFFFFFF);
         MutableComponent cnt = Component.translatable("pixelLoader.colorspace.screen.count", ColorSpaces.selectBlocks.size());
-        poseStack.drawString(this.font, cnt, this.width - 120, 55, 0xFFFFFF);
+        poseStack.drawString(this.font, cnt, this.width - 120, 95, 0xFFFFFF);
         poseStack.drawString(this.font, message, 20, 180, 0xFFFFFF);
+        poseStack.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.light"), width - 120, 20, 0xFFFFFF);
     }
 
     @Override

@@ -26,4 +26,12 @@ public class ColorRGB {
         int r = bgr & 0xff;
         return new ColorRGB(r, g, b);
     }
+
+    public static float rgbSq(ColorRGB rgb1, ColorRGB rgb2) {
+        int rmean = (rgb1.r + rgb2.r) / 2;
+        int dr = rgb1.r - rgb2.r;
+        int dg = rgb1.g - rgb2.g;
+        int db = rgb1.b - rgb2.b;
+        return (((512 + rmean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - rmean) * db * db) >> 8);
+    }
 }

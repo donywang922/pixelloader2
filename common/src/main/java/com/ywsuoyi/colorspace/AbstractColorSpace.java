@@ -4,7 +4,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.block.Blocks;
 
 public abstract class AbstractColorSpace {
-    public static final ColoredBlock air = new ColoredBlock(0, Blocks.AIR, 0);
+    public static final ColoredBlock air = new ColoredBlock(0, 0, Blocks.AIR, 0);
     public static LoadColorSpaceThread thread;
     ColoredBlock[] history = new ColoredBlock[16777216];
     public NonNullList<ColoredBlock> blocks = NonNullList.create();

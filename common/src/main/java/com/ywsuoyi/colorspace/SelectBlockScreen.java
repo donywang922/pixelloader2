@@ -76,10 +76,14 @@ public class SelectBlockScreen extends Screen {
                         15,
                         yOffset + 2
                 );
-                if (block.bc != null)
+                if (block.bc != null) {
                     poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.bc.r, block.bc.g, block.bc.b)),
                             40, yOffset, block.bc.rgb);
+                    poseStack.drawString(font,
+                            Component.translatable("pixelLoader.colorspace.selectblock.screen.light", block.lightWeight),
+                            100, yOffset, block.bc.rgb);
+                }
                 if (block.mapB != null)
                     poseStack.drawString(font, Component.translatable("pixelLoader.colorspace.selectblock.screen.color",
                                     String.format("%02x%02x%02x", block.mapB.r, block.mapB.g, block.mapB.b)),

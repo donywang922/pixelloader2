@@ -4,18 +4,20 @@ import net.minecraft.world.level.block.Block;
 
 public class ColoredBlock {
     public int r, g, b, y = 0;
+    public float lightWeight;
 
     public Block block;
 
-    public ColoredBlock(int r, int g, int b, Block block) {
+    public ColoredBlock(int r, int g, int b, float lightWeight, Block block) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.block = block;
+        this.lightWeight = lightWeight * lightWeight;
     }
 
-    public ColoredBlock(int rgb, Block block, int y) {
-        this((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff, block);
+    public ColoredBlock(int rgb, float lightWeight, Block block, int y) {
+        this((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff, lightWeight, block);
         this.y = y;
     }
 
@@ -35,6 +37,6 @@ public class ColoredBlock {
         int dr = r - value.r;
         int dg = g - value.g;
         int db = b - value.b;
-        return (((512 + rmean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - rmean) * db * db) >> 8);
+        return (((512 + rmean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - rmean) * db * db) >> 8) - lightWeight;
     }
 }

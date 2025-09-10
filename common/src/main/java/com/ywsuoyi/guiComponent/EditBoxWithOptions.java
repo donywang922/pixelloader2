@@ -44,13 +44,6 @@ public class EditBoxWithOptions extends EditBox {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        boolean result = super.charTyped(codePoint, modifiers);
-        updateFilteredOptions();
-        return result;
-    }
-
-    @Override
     public void deleteChars(int num) {
         super.deleteChars(num);
         updateFilteredOptions();

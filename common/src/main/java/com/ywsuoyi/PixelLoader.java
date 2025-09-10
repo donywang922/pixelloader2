@@ -3,6 +3,7 @@ package com.ywsuoyi;
 import com.mojang.logging.LogUtils;
 import com.ywsuoyi.colorspace.ColorSpaces;
 import com.ywsuoyi.colorspace.ColorSpaceLoader;
+import com.ywsuoyi.loader.beaconLoader.BeaconLoader;
 import com.ywsuoyi.simpleContent.AutoTraceItem;
 import com.ywsuoyi.loader.imgLoader.ImgLoader;
 import com.ywsuoyi.simpleContent.TraceBlock;
@@ -41,6 +42,7 @@ public class PixelLoader {
     public static Item coloredBlockLoader;
     public static Item imgLoader;
     public static Item mapLoader;
+    public static Item beaconLoader;
     public static Item autoTracer;
 
     public static TraceBlock traceBlock;
@@ -164,6 +166,7 @@ public class PixelLoader {
                     output.accept(PixelLoader.coloredBlockLoader);
                     output.accept(PixelLoader.imgLoader);
                     output.accept(PixelLoader.mapLoader);
+                    output.accept(PixelLoader.beaconLoader);
                     output.accept(PixelLoader.autoTracer);
 
                     output.accept(PixelLoader.traceBlock);
@@ -186,6 +189,7 @@ public class PixelLoader {
         coloredBlockLoader = regItem("colorspaceloader", new ColorSpaceLoader(new Item.Properties()));
         imgLoader = regItem("imgloader", new ImgLoader(new Item.Properties()));
         mapLoader = regItem("maploader", new MapLoader(new Item.Properties()));
+        beaconLoader = regItem("beaconloader", new BeaconLoader(new Item.Properties()));
         autoTracer = regItem("autotracer", new AutoTraceItem(new Item.Properties()));
         traceBlockItem = regItem("traceblock", new BlockItem(traceBlock, new Item.Properties()));
         traceCenterBlockItem = regItem("tracecenterblock", new BlockItem(traceCenterBlock, new Item.Properties()));
