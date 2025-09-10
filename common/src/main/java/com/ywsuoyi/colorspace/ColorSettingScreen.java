@@ -125,16 +125,18 @@ public class ColorSettingScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics poseStack, int i, int j, float f) {
-        super.render(poseStack, i, j, f);
-        poseStack.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.file"), 20, 82, 0xFFFFFF);
-        MutableComponent msg = Component.translatable("pixelLoader.colorspace.screen.message",
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        super.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.file"), 20, 82, 0xFFFFFF);
+        Component msg = Component.translatable("pixelLoader.colorspace.screen.message",
                 ColorSpaces.thread != null ? ColorSpaces.thread.message : Component.empty());
-        poseStack.drawString(this.font, msg, this.width - 120, 85, 0xFFFFFF);
+        guiGraphics.drawString(this.font, msg, this.width - 120, 85, 0xFFFFFF);
+        Component debug = ColorSpaces.thread != null ? ColorSpaces.thread.debugMessage : Component.empty();
+        guiGraphics.drawString(this.font, debug, 20, 190, 0xFFFFFF);
         MutableComponent cnt = Component.translatable("pixelLoader.colorspace.screen.count", ColorSpaces.selectBlocks.size());
-        poseStack.drawString(this.font, cnt, this.width - 120, 95, 0xFFFFFF);
-        poseStack.drawString(this.font, message, 20, 180, 0xFFFFFF);
-        poseStack.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.light"), width - 120, 20, 0xFFFFFF);
+        guiGraphics.drawString(this.font, cnt, this.width - 120, 95, 0xFFFFFF);
+        guiGraphics.drawString(this.font, message, 20, 180, 0xFFFFFF);
+        guiGraphics.drawString(this.font, Component.translatable("pixelLoader.colorspace.screen.light"), width - 120, 20, 0xFFFFFF);
     }
 
     @Override

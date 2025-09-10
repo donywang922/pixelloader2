@@ -43,6 +43,7 @@ public class LoadColorSpaceThread extends BaseThread {
     private final HashSet<TagKey<Block>> tagFilter = new HashSet<>();
     private final HashSet<Block> blockFilter = new HashSet<>();
     private static final float MAX_ANIMATION_COLOR_DIFF = 15.0f; // 最大允许的帧间色差
+    public Component debugMessage = Component.empty();
 
     public LoadColorSpaceThread(Player player, Level world) {
         super(player);
@@ -88,6 +89,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 onend(true);
                 return;
             }
+            debugMessage = Component.literal(b.toString());
 
             if (b instanceof EntityBlock) continue;//not a block entity
             BlockState blockState = b.defaultBlockState();
@@ -132,8 +134,8 @@ public class LoadColorSpaceThread extends BaseThread {
                     else b1 &= j.getValue().getAsString().equals(s1);
                 }
                 if (b1) colorBlocks.add(new Tuple<>(b, s1)); //all 6 face have same texture
-            } catch (IOException e) {
-                PixelLoader.logger.error("Failed to generate colorspace: {}", e.getMessage());
+            } catch (Exception e) {
+                PixelLoader.logger.error("Failed to read block: {} {}", b.toString(), e.getMessage());
             }
         }
         setMessage(Component.translatable("pixelLoader.colorspace.screen.getcolor"));
@@ -142,6 +144,7 @@ public class LoadColorSpaceThread extends BaseThread {
                 onend(true);
                 return;
             }
+            debugMessage = Component.literal(entry.getB());
             try {
                 String[] s1 = decompose(entry.getB());
                 Optional<Resource> Resources = resourceManager.getResource(PixelLoader.loc(s1[0], "textures/" + s1[1] + ".png"));
@@ -183,10 +186,11 @@ public class LoadColorSpaceThread extends BaseThread {
                                 ColorRGB.BGR(color.calculateRGBColor(MapColor.Brightness.HIGH))));
                     }
                 }
-            } catch (IOException e) {
-                PixelLoader.logger.error("Failed to load color space: {}", e.getMessage());
+            } catch (Exception e) {
+                PixelLoader.logger.error("Failed to read block: {}{}", entry.getB(), e.getMessage());
             }
         }
+        debugMessage = Component.empty();
         setMessage(Component.translatable("pixelLoader.colorspace.screen.map"));
         ColorSpaces.buildAll();
         onend(false);
@@ -253,7 +257,7 @@ public class LoadColorSpaceThread extends BaseThread {
             float maxColorDiff = 0;
             for (int i = 0; i < frameColors.size(); i++) {
                 for (int j = i + 1; j < frameColors.size(); j++) {
-                    float diff = rgbSq2(frameColors.get(i), frameColors.get(j));
+                    float diff = ColorRGB.rgbSq(frameColors.get(i), frameColors.get(j));
                     maxColorDiff = Math.max(maxColorDiff, diff);
                 }
             }
@@ -280,21 +284,12 @@ public class LoadColorSpaceThread extends BaseThread {
                 return new AnimationResult(null, false);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             PixelLoader.logger.error("Failed to process animated texture: {}", e.getMessage());
             return null;
         }
     }
 
-    /**
-     * 计算加权RGB色差的平方
-     */
-    private float rgbSq2(ColorRGB color1, ColorRGB color2) {
-        float x = (color1.r - color2.r) * 0.3f;
-        float y = (color1.g - color2.g) * 0.59f;
-        float z = (color1.b - color2.b) * 0.11f;
-        return x * x + y * y + z * z;
-    }
 
     public String[] decompose(String resourceName) {
         String[] astring = new String[]{"minecraft", resourceName};

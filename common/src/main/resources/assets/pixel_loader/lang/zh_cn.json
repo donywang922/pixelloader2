@@ -9,6 +9,7 @@
   "block.pixel_loader.traceblock": "跟踪块",
   "block.pixel_loader.tracecenterblock": "跟踪中心",
   "block.pixel_loader.projectorblock": "投影加载器",
+  "block.pixel_loader.threadblock": "线程块",
 
   "pixelLoader.loader.tip1": "右键打开设置",
   "pixelLoader.loader.tip2": "潜行右键或右键方块选择图片",

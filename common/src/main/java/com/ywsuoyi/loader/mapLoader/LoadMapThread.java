@@ -246,9 +246,12 @@ public class LoadMapThread extends LoadingThread {
             Shape shape = shapes.pollFirst();
             if (shape.flat) {
                 Shape next = shapes.peekFirst();
-                int hOffset = Math.max(next == null ? 0 : next.data.peekFirst() + 1, optimizedHeights.peekLast() + 1);
+                int hOffset;
+                hOffset = next == null ? 0 : next.data.peekFirst();
+                if (!optimizedHeights.isEmpty()) hOffset = Math.max(hOffset, optimizedHeights.peekLast() + 1);
+                int finalHOffset = hOffset;
                 shape.data.forEach(h -> {
-                    optimizedHeights.add(h + hOffset);
+                    optimizedHeights.add(h + finalHOffset);
                 });
                 continue;
             } else {

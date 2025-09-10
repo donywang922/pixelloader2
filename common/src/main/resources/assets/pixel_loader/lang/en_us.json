@@ -9,6 +9,7 @@
   "block.pixel_loader.traceblock": "Trace Block",
   "block.pixel_loader.tracecenterblock": "Trace Center Block",
   "block.pixel_loader.projectorblock": "Projector",
+  "block.pixel_loader.threadblock": "Thread Block",
 
   "pixelLoader.loader.tip1": "Right click to open settings",
   "pixelLoader.loader.tip2": "Shift right-click or right-click a block to select the picture",
@@ -67,8 +68,8 @@
   "pixelLoader.setting.screen.cutout.2": "Cutout: Black Pixels",
   "pixelLoader.setting.screen.cutout.3": "Cutout: Transparent Pixels",
   "pixelLoader.setting.screen.support": "Support",
-  "pixelLoader.setting.screen.support.0": "Support: Falling Blocks",
-  "pixelLoader.setting.screen.support.1": "Support: All Blocks",
+  "pixelLoader.setting.screen.support.0": "Support: Falling",
+  "pixelLoader.setting.screen.support.1": "Support: All",
   "pixelLoader.setting.screen.support.2": "Support: Solid Fill",
   "pixelLoader.setting.screen.cover": "Cover",
   "pixelLoader.setting.screen.cover.0": "Cover: Off",

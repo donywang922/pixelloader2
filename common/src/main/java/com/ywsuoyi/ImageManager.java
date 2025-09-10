@@ -31,7 +31,7 @@ public class ImageManager {
         updateFileList();
         List<String> suggestions = new java.util.ArrayList<>(imglist.stream().map(File::getName).toList());
         if (suggestions.isEmpty()) {
-            suggestions.add(Component.translatable("pixelLoader.fileNotFind").toString());
+            suggestions.add(Component.translatable("pixelLoader.fileNotFind").getString());
         }
         return suggestions;
     }

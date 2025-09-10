@@ -36,7 +36,7 @@ public class ProjectorBlockEntity extends BlockEntity {
             set.message = Component.translatable("pixelLoader.projector.screen.waiting");
             set.genBlocks.forEach((tuple) -> {
                 if (tuple.getB().isAir()) return;
-                if (FallingBlock.isFree(level.getBlockState(tuple.getA().below())))
+                if (tuple.getB().getBlock() instanceof FallingBlock && FallingBlock.isFree(level.getBlockState(tuple.getA().below())))
                     level.setBlock(tuple.getA().below(), Blocks.GLASS.defaultBlockState(), 3);
                 level.setBlock(tuple.getA(), tuple.getB(), 3);
             });
