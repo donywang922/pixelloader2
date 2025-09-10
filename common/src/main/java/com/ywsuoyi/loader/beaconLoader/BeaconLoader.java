@@ -44,7 +44,8 @@ public class BeaconLoader extends AbstractLoader {
                 BeaconSetting.dither,
                 context.getLevel(),
                 context.getClickedPos().offset(context.getClickedFace().getNormal()),
-                BeaconSetting.size);
+                BeaconSetting.size,
+                BeaconSetting.onfinish);
     }
 
     @Override

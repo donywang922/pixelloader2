@@ -23,9 +23,10 @@ import java.io.IOException;
 public class LoadBeaconThread extends LoadingThread {
     int genWidth;
 
-    public LoadBeaconThread(Player player, File file, int dither, Level level, BlockPos center, int genWidth) {
+    public LoadBeaconThread(Player player, File file, int dither, Level level, BlockPos center, int genWidth, int finish) {
         super(player, file, dither, 0, level, center, center);
         this.genWidth = genWidth;
+        data.finish = finish;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class LoadBeaconThread extends LoadingThread {
             for (int x = 0; x < genWidth; x++) {
                 int curColor = 0;
                 for (int y = 0; y < genHeight; y++) {
-                    ColoredBlock block = getGlass(curColor, calcRGB(read.getRGB((int) (x * scale), (int) (y * scale))).rgb);
+                    ColoredBlock block = getGlass(curColor, calcRGB(read.getRGB((int) (x * scale), (int) ((genHeight - 1 - y) * scale))).rgb);
                     if (block != AbstractColorSpace.air)
                         curColor = getColor(curColor, (StainedGlassPaneBlock) block.block);
                     ColorRGB c = new ColorRGB(curColor);
@@ -84,12 +85,14 @@ public class LoadBeaconThread extends LoadingThread {
     public ColoredBlock getGlass(int curColor, int tarColor) {
         ColoredBlock result = AbstractColorSpace.air;
         ColorRGB curColorRGB = new ColorRGB(curColor);
-        ColorRGB tarColorRGB = new ColorRGB(curColor);
-        float dist = ColorRGB.rgbSq(curColorRGB, tarColorRGB);
+        ColorRGB tarColorRGB = new ColorRGB(tarColor);
+        float dist = ColorRGB.rgbSq(tarColorRGB, curColorRGB);
         for (ColoredBlock coloredBlock : ColorSpaces.beaconSpace) {
             ColorRGB newColor = new ColorRGB(getColor(curColor, (StainedGlassPaneBlock) coloredBlock.block));
-            if (ColorRGB.rgbSq(curColorRGB, newColor) < dist) {
+            float newDist = ColorRGB.rgbSq(tarColorRGB, newColor);
+            if (newDist < dist) {
                 result = coloredBlock;
+                dist = newDist;
             }
         }
         return result;

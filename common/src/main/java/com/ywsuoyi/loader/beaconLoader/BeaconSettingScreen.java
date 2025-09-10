@@ -33,12 +33,13 @@ public class BeaconSettingScreen extends Screen {
 
         dither = this.addRenderableWidget(new SelectionOnlyBox(font, 20 + w * 2 + 8, 44, w, 20,
                 Component.translatable("pixelLoader.setting.screen.dither"), Selections.dither));
+        dither.setOptionIndex(BeaconSetting.dither);
         size = addRenderableWidget(new IntegerEditBox(font, 20 + tmp + 4, 44, w * 2 - tmp, 20,
                 Component.translatable("pixelLoader.setting.screen.map.size"), 512, 1));
         size.setValue(String.valueOf(BeaconSetting.size));
         onfinish = addRenderableWidget(new SelectionOnlyBox(font, 20 + w * 3 + 12, 44, w, 20,
                 Component.translatable("pixelLoader.setting.screen.onfinish"), Selections.onfinish));
-        onfinish.setOptionIndex(MapSetting.onfinish);
+        onfinish.setOptionIndex(BeaconSetting.onfinish);
     }
 
     @Override

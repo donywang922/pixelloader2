@@ -21,17 +21,15 @@ public class ColoredBlock {
         this.y = y;
     }
 
-    public float rgbSq2(ColorRGB rgb) {
-        float x = (r - rgb.r) * 0.3f, y = (g - rgb.g) * 0.59f, z = (b - rgb.b) * 0.11f;
-        return x * x + y * y + z * z;
-    }
-
 
     public float disSq(ColorRGB value) {
         float x = r - value.r, y = g - value.g, z = b - value.b;
         return x * x + y * y + z * z;
     }
 
+    /**
+     * redmean算法 原文 https://www.compuphase.com/cmetric.htm
+     * */
     public float rgbSq(ColorRGB value) {
         int rmean = (r + value.r) / 2;
         int dr = r - value.r;
