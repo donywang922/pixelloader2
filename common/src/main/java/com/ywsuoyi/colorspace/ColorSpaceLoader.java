@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FallingBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,8 +33,11 @@ public class ColorSpaceLoader extends Item {
                 BlockPos pos = entity.blockPosition();
                 if (ColorSpaces.allLoad()) {
                     ColorSpaces.blockSpace.blocks.forEach(coloredBlock -> {
-                        level.setBlock(pos.offset(coloredBlock.r / 6, coloredBlock.g / 6 - 1, coloredBlock.b / 6), Blocks.GLASS.defaultBlockState(), 3);
-                        level.setBlock(pos.offset(coloredBlock.r / 6, coloredBlock.g / 6, coloredBlock.b / 6), coloredBlock.block.defaultBlockState(), 3);
+                        BlockPos pos2 = pos.offset(coloredBlock.r / 6, coloredBlock.g / 6, coloredBlock.b / 6);
+                        BlockPos pos1 = pos2.below();
+                        level.setBlock(pos2, coloredBlock.block.defaultBlockState(), 3);
+                        if (coloredBlock.block instanceof FallingBlock && FallingBlock.isFree(level.getBlockState(pos2)))
+                            level.setBlock(pos1, Blocks.GLASS.defaultBlockState(), 3);
                     });
                 }
             }
