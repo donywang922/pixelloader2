@@ -2,6 +2,7 @@ package com.ywsuoyi.projector;
 
 import com.mojang.math.Axis;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import com.ywsuoyi.PixelLoader;
 import com.ywsuoyi.Vec2i;
@@ -87,7 +88,7 @@ public class LoadProjectorThread extends LoadingThread {
         }
 
         // 如果周围有null点，按最大距离*2；否则使用最大距离
-        int calculatedDepth = hasNullNeighbor ? maxDistance * 4 : maxDistance*2;
+        int calculatedDepth = hasNullNeighbor ? maxDistance : maxDistance/2;
 
         // 设置合理的最小值和最大值
         calculatedDepth = Math.min(calculatedDepth, 256);
@@ -194,7 +195,8 @@ public class LoadProjectorThread extends LoadingThread {
                     for (Direction direction : Direction.values()) {
                         if (!isFaceVisibleFromAnchor(pos1, direction, anchor)) continue;
                         BlockPos offset = pos1.offset(direction.getNormal());
-                        if (level.getBlockState(offset).getCollisionShape(level, offset).isEmpty()) {
+                        BlockState blockState = level.getBlockState(offset);
+                        if (!blockState.isSolidRender(level, offset)) {
                             waitForCheck.addLast(new WaitPos(pos1, wp.dep + 1, wp.maxDepth));
                             break;
                         }
