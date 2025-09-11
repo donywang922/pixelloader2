@@ -87,10 +87,10 @@ public class LoadProjectorThread extends LoadingThread {
         }
 
         // 如果周围有null点，按最大距离*2；否则使用最大距离
-        int calculatedDepth = hasNullNeighbor ? maxDistance * 2 : maxDistance;
+        int calculatedDepth = hasNullNeighbor ? maxDistance * 4 : maxDistance*2;
 
         // 设置合理的最小值和最大值
-        calculatedDepth = Math.min(calculatedDepth, (int) (10 * setting.scale));
+        calculatedDepth = Math.min(calculatedDepth, 256);
 
         return calculatedDepth;
     }
