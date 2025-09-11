@@ -87,7 +87,7 @@ public class LoadProjectorThread extends LoadingThread {
         }
 
         // 如果周围有null点，按最大距离*2；否则使用最大距离
-        int calculatedDepth = hasNullNeighbor ? maxDistance : maxDistance / 2;
+        int calculatedDepth = hasNullNeighbor ? maxDistance * 2 : maxDistance;
 
         // 设置合理的最小值和最大值
         calculatedDepth = Math.min(calculatedDepth, (int) (10 * setting.scale));
@@ -97,8 +97,9 @@ public class LoadProjectorThread extends LoadingThread {
 
     /**
      * 判断方块的某个面是否对anchor位置可见
-     * @param blockPos 方块位置
-     * @param face 方块的面方向
+     *
+     * @param blockPos  方块位置
+     * @param face      方块的面方向
      * @param anchorPos anchor位置（通常是投影仪位置）
      * @return 如果面对anchor可见返回true
      */
