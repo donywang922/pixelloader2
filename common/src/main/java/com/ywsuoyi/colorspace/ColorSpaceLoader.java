@@ -36,7 +36,7 @@ public class ColorSpaceLoader extends Item {
                         BlockPos pos2 = pos.offset(coloredBlock.r / 6, coloredBlock.g / 6, coloredBlock.b / 6);
                         BlockPos pos1 = pos2.below();
                         level.setBlock(pos2, coloredBlock.block.defaultBlockState(), 3);
-                        if (coloredBlock.block instanceof FallingBlock && FallingBlock.isFree(level.getBlockState(pos2)))
+                        if (coloredBlock.block instanceof FallingBlock)
                             level.setBlock(pos1, Blocks.GLASS.defaultBlockState(), 3);
                     });
                 }
