@@ -93,6 +93,9 @@ public class ColorSpaces {
      * 添加地图方块，如果有相同地图颜色的方块，选择bc颜色更接近地图颜色的那个
      */
     private static void addMBlock(int mapRgb, float diff, SelectBlock block, int y, Map<Integer, Tuple<Float, ColoredBlock>> colorTracker) {
+        if (mapRgb == 0) {
+            return;
+        }
         Tuple<Float, ColoredBlock> prev = colorTracker.get(mapRgb);
         if (prev == null) {
             colorTracker.put(mapRgb, new Tuple<>(diff, new ColoredBlock(mapRgb, block.lightWeight, block.block, y)));
