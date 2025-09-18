@@ -3,6 +3,7 @@ package com.ywsuoyi.projector;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import com.ywsuoyi.ImageManager;
+import com.ywsuoyi.loader.imgLoader.ImgSetting;
 import com.ywsuoyi.loader.mapLoader.MapSetting;
 import com.ywsuoyi.loadingThreadUtil.CachedQuadData;
 import net.minecraft.core.BlockPos;
@@ -88,11 +89,19 @@ public class ProjectorSetting {
         }
         try {
             BufferedImage read = ImageIO.read(img);
-            width = read.getWidth();
-            height = read.getHeight();
-            changed = true;
+            if (read != null) {
+                width = read.getWidth();
+                height = read.getHeight();
+            } else {
+                // 图片读取失败，使用默认值
+                width = 1;
+                height = 1;
+            }
         } catch (IOException ignored) {
+            width = 1;
+            height = 1;
         }
+        changed = true;
     }
 
     public void loadimg(int i) {

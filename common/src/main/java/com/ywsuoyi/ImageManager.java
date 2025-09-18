@@ -17,16 +17,6 @@ public class ImageManager {
     public static File imgFolder = new File("./img");
     public static final List<File> imglist = new ArrayList<>();
 
-    // Java ImageIO支持的所有格式
-    private static final Set<String> SUPPORTED_FORMATS = Set.of(
-            // 常见格式
-            "jpg", "jpeg", "png", "gif", "bmp", "wbmp",
-            // 额外的ImageIO支持格式
-            "tiff", "tif", "pnm", "pbm", "pgm", "ppm",
-            // 可能支持的其他格式（取决于系统和已安装的ImageIO插件）
-            "webp", "ico", "cur", "pcx", "ras", "sgi"
-    );
-
     public static List<String> getImageListStr() {
         updateFileList();
         List<String> suggestions = new java.util.ArrayList<>(imglist.stream().map(File::getName).toList());
@@ -103,12 +93,6 @@ public class ImageManager {
         }
 
         String extension = fileName.substring(dotIndex + 1);
-
-        // 首先检查预定义的格式
-        if (SUPPORTED_FORMATS.contains(extension)) {
-            return true;
-        }
-
         // 然后检查ImageIO实际支持的格式
         return supportedFormats.contains(extension.toUpperCase()) ||
                 supportedFormats.contains(extension.toLowerCase()) ||
